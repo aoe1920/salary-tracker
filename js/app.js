@@ -112,10 +112,13 @@ const updateWeekNavButtons = () => {
 };
 
 let isProgrammaticWheelScroll = false;
+let programmaticScrollTimer = null;
+let isUserInteractingWithWheel = false;
+let userWheelEndTimer = null;
 let wheelScrollEndTimer = null;
 
 const onWheelTrackScroll = () => {
-  if (isProgrammaticWheelScroll) return;
+  if (isProgrammaticWheelScroll || !isUserInteractingWithWheel) return;
   const container = document.getElementById('weekPillsList');
   if (!container || !state.weeks || !state.weeks.length) return;
 
@@ -149,7 +152,7 @@ const onWheelTrackScroll = () => {
 
   clearTimeout(wheelScrollEndTimer);
   wheelScrollEndTimer = setTimeout(() => {
-    if (!isProgrammaticWheelScroll) {
+    if (!isProgrammaticWheelScroll && isUserInteractingWithWheel) {
       scrollWheelToActive('smooth');
     }
   }, 160);
@@ -162,6 +165,8 @@ const scrollWheelToActive = (behavior = 'smooth') => {
   if (!activeItem) return;
 
   isProgrammaticWheelScroll = true;
+  clearTimeout(programmaticScrollTimer);
+
   const containerWidth = container.clientWidth;
   const itemWidth = activeItem.offsetWidth || 150;
   const sidePad = Math.max(8, Math.round((containerWidth - itemWidth) / 2));
@@ -172,9 +177,10 @@ const scrollWheelToActive = (behavior = 'smooth') => {
   const targetLeft = itemOffset - sidePad;
   container.scrollTo({ left: Math.max(0, targetLeft), behavior });
   updateWeekNavButtons();
-  setTimeout(() => {
+
+  programmaticScrollTimer = setTimeout(() => {
     isProgrammaticWheelScroll = false;
-  }, behavior === 'smooth' ? 320 : 60);
+  }, behavior === 'smooth' ? 400 : 80);
 };
 
 const renderWeekPills = () => {
@@ -219,6 +225,72 @@ const renderWeekPills = () => {
   updateWeekNavButtons();
 };
 
+let kpiAnimId = null;
+let currentRenderedSalary = null;
+let currentRenderedHours = null;
+
+const animateKpiNumbers = (targetSalary, targetHours) => {
+  const salaryEl = document.getElementById('kpiWeekSalary');
+  const hoursEl = document.getElementById('kpiWeekHours');
+  if (!salaryEl || !hoursEl) return;
+
+  const prefersReduced = typeof window !== 'undefined' &&
+    window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (currentRenderedSalary === null || prefersReduced) {
+    currentRenderedSalary = targetSalary;
+    currentRenderedHours = targetHours;
+    salaryEl.textContent = fmtCurrency(targetSalary);
+    hoursEl.textContent = fmtHours(targetHours);
+    return;
+  }
+
+  if (kpiAnimId) {
+    cancelAnimationFrame(kpiAnimId);
+    kpiAnimId = null;
+  }
+
+  const startSalary = currentRenderedSalary;
+  const startHours = currentRenderedHours;
+
+  if (Math.abs(startSalary - targetSalary) < 1 && Math.abs(startHours - targetHours) < 0.001) {
+    salaryEl.textContent = fmtCurrency(targetSalary);
+    hoursEl.textContent = fmtHours(targetHours);
+    return;
+  }
+
+  const duration = 250;
+  const startTime = performance.now();
+
+  const tick = (now) => {
+    const elapsed = now - startTime;
+    const progress = Math.min(1, Math.max(0, elapsed / duration));
+    const ease = 1 - Math.pow(1 - progress, 3);
+
+    const curSalary = Math.round(startSalary + (targetSalary - startSalary) * ease);
+    const curHours = startHours + (targetHours - startHours) * ease;
+
+    currentRenderedSalary = curSalary;
+    currentRenderedHours = curHours;
+
+    salaryEl.textContent = fmtCurrency(curSalary);
+    hoursEl.textContent = fmtHours(curHours);
+
+    if (progress < 1) {
+      kpiAnimId = requestAnimationFrame(tick);
+    } else {
+      kpiAnimId = null;
+      currentRenderedSalary = targetSalary;
+      currentRenderedHours = targetHours;
+      salaryEl.textContent = fmtCurrency(targetSalary);
+      hoursEl.textContent = fmtHours(targetHours);
+    }
+  };
+
+  kpiAnimId = requestAnimationFrame(tick);
+};
+
 const renderWeekDetails = () => {
   const week = getCurrentWeek();
   if (!week) return;
@@ -247,8 +319,7 @@ const renderWeekDetails = () => {
   const shiftCount = week.shifts.length;
   const avgHours = shiftCount > 0 ? (totalHours / shiftCount).toFixed(2) : '0.00';
 
-  document.getElementById('kpiWeekSalary').textContent = fmtCurrency(totalSalary);
-  document.getElementById('kpiWeekHours').textContent = fmtHours(totalHours);
+  animateKpiNumbers(totalSalary, totalHours);
   document.getElementById('kpiWeekHoursDetail').textContent = hoursToHourMinutes(totalHours);
   document.getElementById('kpiShiftCount').textContent = `${shiftCount} ${t('unit_shift', 'ca')}`;
   document.getElementById('kpiAvgHours').textContent = `${avgHours} ${t('unit_per_shift', 'h/ca')}`;
@@ -983,6 +1054,20 @@ const bindEvents = () => {
 
   const weekWheelTrack = document.getElementById('weekPillsList');
   if (weekWheelTrack) {
+    weekWheelTrack.addEventListener('pointerdown', () => {
+      isUserInteractingWithWheel = true;
+      clearTimeout(userWheelEndTimer);
+    });
+    window.addEventListener('pointerup', () => {
+      clearTimeout(userWheelEndTimer);
+      userWheelEndTimer = setTimeout(() => {
+        isUserInteractingWithWheel = false;
+      }, 120);
+    });
+    window.addEventListener('pointercancel', () => {
+      isUserInteractingWithWheel = false;
+    });
+
     weekWheelTrack.addEventListener('scroll', onWheelTrackScroll, { passive: true });
     if ('onscrollend' in window) {
       weekWheelTrack.addEventListener('scrollend', () => {
