@@ -969,6 +969,10 @@ body.dark-mode .dashboard-chart-strip {
     min-width: 0;
     max-width: none;
     height: 38px;
+    padding: 0 4px;
+  }
+  .week-wheel-container .week-nav-step-btn {
+    display: none !important;
   }
   .week-actions-group {
     order: 2;

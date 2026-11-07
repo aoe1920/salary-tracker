@@ -1968,12 +1968,16 @@ body.dark-mode .btn-logout-action {
   }
 
   .week-wheel-container {
-    width: 248px;
-    height: 36px;
-    max-width: 255px;
+    flex: 1;
+    width: 0;
+    min-width: 0;
+    max-width: none;
+    height: 38px;
     padding: 3px 6px;
     gap: 4px;
-    flex-shrink: 0;
+  }
+  .week-wheel-container .week-nav-step-btn {
+    display: none !important;
   }
 
   .week-wheel-track {
@@ -2052,15 +2056,31 @@ body.dark-mode .btn-logout-action {
 .shift-modal-body select,
 .shift-modal-body select option,
 .shift-modal-body .form-input,
+.shift-modal-body input,
 .shift-modal-body .custom-select-option,
 .shift-modal-body .custom-select-option.is-selected,
 .shift-modal-body .custom-select-option span,
 .shift-modal-body .input-with-tag input {
   font-family: var(--font-sans) !important;
-  font-size: 0.875rem !important;
+  font-size: 0.9375rem !important;
   font-weight: 500 !important;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.4 !important;
+}
+
+body.dark-mode .shift-modal-body .custom-select-trigger,
+body.dark-mode .shift-modal-body .custom-select-label,
+body.dark-mode .shift-modal-body .form-select,
+body.dark-mode .shift-modal-body select,
+body.dark-mode .shift-modal-body select option,
+body.dark-mode .shift-modal-body .form-input,
+body.dark-mode .shift-modal-body input,
+body.dark-mode .shift-modal-body .custom-select-option,
+body.dark-mode .shift-modal-body .custom-select-option.is-selected,
+body.dark-mode .shift-modal-body .custom-select-option span,
+body.dark-mode .shift-modal-body .input-with-tag input {
+  color: #ededef !important;
 }
 
 .shift-modal-body .form-item {
@@ -3875,9 +3895,17 @@ body.dark-mode .input-with-tag .tag {
   .form-select,
   select,
   .custom-select-trigger,
+  .custom-select-label,
+  .shift-modal-body .custom-select-label,
+  .shift-modal-body .form-input,
+  .shift-modal-body input,
   .time-input-styled,
   .settings-wp-rate-input {
     font-size: 16px !important;
+    font-weight: 500 !important;
+    font-family: var(--font-sans) !important;
+    letter-spacing: -0.01em !important;
+    line-height: 1.4 !important;
   }
 }
 

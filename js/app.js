@@ -896,6 +896,44 @@ const bindEvents = () => {
     }
   });
 
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchStartTime = 0;
+  let touchStartedInWheel = false;
+
+  document.addEventListener('touchstart', (e) => {
+    if (!e.touches || e.touches.length !== 1) return;
+    const t = e.touches[0];
+    touchStartX = t.clientX;
+    touchStartY = t.clientY;
+    touchStartTime = performance.now();
+    touchStartedInWheel = Boolean(e.target.closest('#weekPillsList, .week-wheel-container, .modal-backdrop, .app-dialog-backdrop, button, input, select, textarea, .custom-select-menu'));
+  }, { passive: true });
+
+  document.addEventListener('touchend', (e) => {
+    if (touchStartedInWheel) return;
+    if (!e.changedTouches || e.changedTouches.length !== 1) return;
+
+    const hasOpenModal = Array.from(document.querySelectorAll('.modal-backdrop, .app-dialog-backdrop'))
+      .some(m => m.style.display && m.style.display !== 'none');
+    if (hasOpenModal) return;
+
+    const t = e.changedTouches[0];
+    const deltaX = t.clientX - touchStartX;
+    const deltaY = t.clientY - touchStartY;
+    const deltaTime = performance.now() - touchStartTime;
+
+    if (deltaTime > 600) return;
+
+    if (Math.abs(deltaX) >= 48 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+      if (deltaX < 0) {
+        goToAdjacentWeek(1);
+      } else {
+        goToAdjacentWeek(-1);
+      }
+    }
+  }, { passive: true });
+
   setupCustomSelect('shiftDay');
   setupCustomSelect('shiftType');
   setupCustomSelect('shiftOtRate');
