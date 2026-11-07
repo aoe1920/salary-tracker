@@ -10,7 +10,7 @@ import { drawDashboardWeekChart, setAllWeeksModalOpener, renderAnalyticsDashboar
 import { renderSlipCanvas, openShareSlipModal, downloadSlipImage, copySlipImageToClipboard } from './ui/canvas-slip.js';
 import { exportCurrentWeekCSV, exportAllWeeksCSV, backupJSON, restoreJSON, setExportAppRenderer } from './ui/export.js';
 import { showConfirmDialog, showAlertDialog, initDialogHandlers } from './ui/dialog.js';
-import { closeModal, openAddShiftModal, openEditShiftModal, updateModalComputedPreview, saveShiftFromModal, deleteShift, undoLastDeleteShift, createNewWeek, openEditWeekModal, saveWeekMeta, deleteCurrentWeek, undoLastDeleteWeek, navigateWeek, renderMonthlyReport, switchSummaryTab, openAllWeeksModal, renderShiftWorkplacesList, addWorkplaceFromShiftModal, toggleWorkplacePanel, openAuthModal, switchAuthTab, clearAuthErrors, openUserProfileModal, collapsePasswordSection, collapseAvatarPicker, setupPasswordToggles, setModalAppRenderer, openResetPasswordModal } from './ui/modals.js';
+import { closeModal, openAddShiftModal, openEditShiftModal, updateModalComputedPreview, saveShiftFromModal, deleteShift, undoLastDeleteShift, createNewWeek, openEditWeekModal, saveWeekMeta, deleteCurrentWeek, undoLastDeleteWeek, navigateWeek, renderMonthlyReport, switchSummaryTab, openAllWeeksModal, renderShiftWorkplacesList, addWorkplaceFromShiftModal, toggleWorkplacePanel, openWorkplaceModal, closeWorkplaceModal, openAuthModal, switchAuthTab, clearAuthErrors, openUserProfileModal, collapsePasswordSection, collapseAvatarPicker, setupPasswordToggles, setModalAppRenderer, openResetPasswordModal } from './ui/modals.js';
 
 const updateWheelIndicator = () => {};
 
@@ -569,7 +569,7 @@ const bindEvents = () => {
   document.querySelectorAll('.modal-backdrop:not(.app-dialog-backdrop)').forEach(modal => {
     modal.addEventListener('click', (e) => {
       if (e.target === modal) {
-        modal.style.display = 'none';
+        closeModal(modal.id);
       }
     });
   });
@@ -936,13 +936,12 @@ const bindEvents = () => {
 
   setupCustomSelect('shiftDay');
   setupCustomSelect('shiftType');
-  setupCustomSelect('shiftOtRate');
   setupCustomSelect('shiftWorkplace');
   setupCustomSelect('filterWorkplaceSelect');
 
   const btnToggleWp = document.getElementById('btnToggleWorkplacePanel');
   if (btnToggleWp) {
-    btnToggleWp.addEventListener('click', toggleWorkplacePanel);
+    btnToggleWp.addEventListener('click', openWorkplaceModal);
   }
   const btnShiftAddWp = document.getElementById('btnShiftAddWp');
   if (btnShiftAddWp) {
@@ -977,7 +976,14 @@ const bindEvents = () => {
   const btnCloseWp = document.getElementById('btnCloseWorkplacePanel');
   if (btnCloseWp) {
     btnCloseWp.addEventListener('click', () => {
-      toggleWorkplacePanel(false);
+      closeWorkplaceModal();
+    });
+  }
+
+  const btnProfileOpenWp = document.getElementById('btnProfileOpenWorkplaces');
+  if (btnProfileOpenWp) {
+    btnProfileOpenWp.addEventListener('click', () => {
+      openWorkplaceModal();
     });
   }
 
@@ -985,12 +991,7 @@ const bindEvents = () => {
   if (kpiCardWp) {
     kpiCardWp.addEventListener('click', () => {
       triggerHaptic('light');
-      openAddShiftModal();
-      toggleWorkplacePanel(true);
-      const manageBox = document.getElementById('shiftWorkplaceManageBox');
-      if (manageBox) {
-        manageBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
+      openWorkplaceModal();
     });
   }
 

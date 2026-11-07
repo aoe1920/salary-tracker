@@ -98,15 +98,6 @@ export const openAddShiftModal = (prefill = null) => {
   const defaultWp = getDefaultWorkplace();
   updateWorkplaceInputOptions(defaultWp);
 
-  const manageBox = document.getElementById('shiftWorkplaceManageBox');
-  const btnToggleWp = document.getElementById('btnToggleWorkplacePanel');
-  const shouldOpenManage = !hasWorkplaces();
-  if (manageBox) {
-    manageBox.style.display = shouldOpenManage ? 'flex' : 'none';
-  }
-  if (btnToggleWp) {
-    btnToggleWp.classList.toggle('is-active', shouldOpenManage);
-  }
   renderShiftWorkplacesList();
 
   const smartDefaults = calculateSmartShiftDefaults(prefill, new Date());
@@ -115,7 +106,6 @@ export const openAddShiftModal = (prefill = null) => {
   document.getElementById('shiftType').value = smartDefaults.type;
   setupCustomSelect('shiftDay');
   setupCustomSelect('shiftType');
-  setupCustomSelect('shiftOtRate');
   setupCustomSelect('shiftWorkplace');
   syncCustomSelect('shiftDay');
   syncCustomSelect('shiftType');
@@ -127,7 +117,6 @@ export const openAddShiftModal = (prefill = null) => {
   if (breakInput) breakInput.value = String(smartDefaults.breakMinutes || 0);
   const otInput = document.getElementById('shiftOtRate');
   if (otInput) otInput.value = '1.0';
-  syncCustomSelect('shiftOtRate');
   const allowanceInput = document.getElementById('shiftAllowance');
   if (allowanceInput) allowanceInput.value = '0';
   const deductionInput = document.getElementById('shiftDeduction');
@@ -136,6 +125,10 @@ export const openAddShiftModal = (prefill = null) => {
 
   updateModalComputedPreview();
   modal.style.display = 'flex';
+
+  if (!hasWorkplaces()) {
+    openWorkplaceModal();
+  }
 };
 
 export const openEditShiftModal = (shift) => {
@@ -152,17 +145,12 @@ export const openEditShiftModal = (shift) => {
   updateShiftDayOptions(week);
   updateWorkplaceInputOptions(shift.workplace || '');
 
-  const manageBox = document.getElementById('shiftWorkplaceManageBox');
-  const btnToggleWp = document.getElementById('btnToggleWorkplacePanel');
-  if (manageBox) manageBox.style.display = 'none';
-  if (btnToggleWp) btnToggleWp.classList.remove('is-active');
   renderShiftWorkplacesList();
 
   document.getElementById('shiftDay').value = shift.day;
   document.getElementById('shiftType').value = shift.type;
   setupCustomSelect('shiftDay');
   setupCustomSelect('shiftType');
-  setupCustomSelect('shiftOtRate');
   setupCustomSelect('shiftWorkplace');
   syncCustomSelect('shiftDay');
   syncCustomSelect('shiftType');
@@ -174,7 +162,6 @@ export const openEditShiftModal = (shift) => {
   if (breakInput) breakInput.value = shift.breakMinutes || 0;
   const otInput = document.getElementById('shiftOtRate');
   if (otInput) otInput.value = String(shift.otRate || '1.0');
-  syncCustomSelect('shiftOtRate');
   const allowanceInput = document.getElementById('shiftAllowance');
   if (allowanceInput) allowanceInput.value = String(shift.allowance || '0');
   const deductionInput = document.getElementById('shiftDeduction');
@@ -189,7 +176,8 @@ export const updateModalComputedPreview = () => {
   const rawStart = document.getElementById('shiftStart')?.value;
   const rawEnd = document.getElementById('shiftEnd')?.value;
   const breakMins = Number(document.getElementById('shiftBreak')?.value || 0);
-  const otRate = Number(document.getElementById('shiftOtRate')?.value || 1.0);
+  const rawOt = Number(document.getElementById('shiftOtRate')?.value);
+  const otRate = (!isNaN(rawOt) && rawOt > 0) ? rawOt : 1.0;
   const allowance = Number(document.getElementById('shiftAllowance')?.value || 0);
   const deduction = Number(document.getElementById('shiftDeduction')?.value || 0);
   const workplace = (document.getElementById('shiftWorkplace')?.value || '').trim();
@@ -220,9 +208,7 @@ export const saveShiftFromModal = async (e) => {
   e.preventDefault();
   if (!hasWorkplaces()) {
     showToast(t('warn_no_workplace', 'Vui lòng thêm nơi làm việc trước.'));
-    const manageBox = document.getElementById('shiftWorkplaceManageBox');
-    if (manageBox) manageBox.style.display = 'flex';
-    document.getElementById('shiftNewWpName')?.focus();
+    openWorkplaceModal();
     return;
   }
 
@@ -245,7 +231,8 @@ export const saveShiftFromModal = async (e) => {
   document.getElementById('shiftEnd').value = end;
 
   const breakMinutes = Math.max(0, Number(document.getElementById('shiftBreak')?.value || 0));
-  const otRate = Number(document.getElementById('shiftOtRate')?.value || 1.0);
+  const rawOt = Number(document.getElementById('shiftOtRate')?.value);
+  const otRate = (!isNaN(rawOt) && rawOt > 0) ? rawOt : 1.0;
   const allowance = Math.max(0, Number(document.getElementById('shiftAllowance')?.value || 0));
   const deduction = Math.max(0, Number(document.getElementById('shiftDeduction')?.value || 0));
   const workplace = (document.getElementById('shiftWorkplace')?.value || '').trim();
@@ -1166,21 +1153,28 @@ export const addWorkplaceFromShiftModal = () => {
   showToast(`Đã thêm nơi làm việc: ${val}`);
 };
 
+export const openWorkplaceModal = () => {
+  const modal = document.getElementById('workplaceModal');
+  if (!modal) return;
+  renderShiftWorkplacesList();
+  modal.style.display = 'flex';
+  const nameInput = document.getElementById('shiftNewWpName');
+  if (nameInput) setTimeout(() => nameInput.focus(), 100);
+};
+
+export const closeWorkplaceModal = () => {
+  const modal = document.getElementById('workplaceModal');
+  if (modal) modal.style.display = 'none';
+  updateWorkplaceInputOptions();
+  updateModalComputedPreview();
+  triggerAppRender();
+};
+
 export const toggleWorkplacePanel = (forceOpen = null) => {
-  const box = document.getElementById('shiftWorkplaceManageBox');
-  const btn = document.getElementById('btnToggleWorkplacePanel');
-  if (!box) return;
-  const shouldOpen = (forceOpen !== null)
-    ? !!forceOpen
-    : (box.style.display === 'none' || !box.style.display);
-  box.style.display = shouldOpen ? 'flex' : 'none';
-  if (btn) {
-    btn.classList.toggle('is-active', shouldOpen);
-  }
-  if (shouldOpen) {
-    renderShiftWorkplacesList();
-    const nameInput = document.getElementById('shiftNewWpName');
-    if (nameInput) nameInput.focus();
+  if (forceOpen === false) {
+    closeWorkplaceModal();
+  } else {
+    openWorkplaceModal();
   }
 };
 
@@ -1630,4 +1624,9 @@ export const setupPasswordToggles = () => {
 export const closeModal = (modalId) => {
   const modal = document.getElementById(modalId);
   if (modal) modal.style.display = 'none';
+  if (modalId === 'workplaceModal') {
+    updateWorkplaceInputOptions();
+    updateModalComputedPreview();
+    triggerAppRender();
+  }
 };

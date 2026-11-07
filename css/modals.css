@@ -11,6 +11,10 @@
   overscroll-behavior: contain;
 }
 
+#workplaceModal {
+  z-index: 10020 !important;
+}
+
 .modal-surface {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
@@ -2343,6 +2347,10 @@ body.dark-mode .shift-add-wp-card {
   max-height: 270px;
   overflow-y: auto;
   padding-right: 2px;
+}
+
+#workplaceModal .shift-wp-quick-list {
+  max-height: 380px;
 }
 
 .swq-item-card {
