@@ -1854,6 +1854,11 @@ body.dark-mode .btn-profile-wp-manage.is-active {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+  max-height: 175px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  padding-right: 2px;
 }
 
 .profile-wp-edit-item {
@@ -2045,6 +2050,44 @@ body.dark-mode .profile-wp-rename-input {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  max-height: 80px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  padding-right: 2px;
+}
+
+.profile-workplaces-chip-list::-webkit-scrollbar,
+.profile-wp-edit-list::-webkit-scrollbar {
+  display: block !important;
+  width: 4px !important;
+}
+
+.profile-workplaces-chip-list::-webkit-scrollbar-track,
+.profile-wp-edit-list::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.profile-workplaces-chip-list::-webkit-scrollbar-thumb,
+.profile-wp-edit-list::-webkit-scrollbar-thumb {
+  background: var(--border-default) !important;
+  border-radius: var(--radius-pill);
+}
+
+body.dark-mode .profile-workplaces-chip-list::-webkit-scrollbar-thumb,
+body.dark-mode .profile-wp-edit-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+.profile-workplaces-chip-list,
+.profile-wp-edit-list {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-default) transparent;
+}
+
+body.dark-mode .profile-workplaces-chip-list,
+body.dark-mode .profile-wp-edit-list {
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 }
 
 .profile-wp-item {
