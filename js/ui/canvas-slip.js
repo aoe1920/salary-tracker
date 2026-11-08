@@ -241,7 +241,7 @@ export const copySlipImageToClipboard = async () => {
         await navigator.clipboard.write([
           new ClipboardItem({ 'image/png': blob })
         ]);
-        showToast(t('toast_slip_copied', 'Đã chép ảnh vào Clipboard. Mở Zalo bấm Ctrl+V để gửi.'));
+        showToast(t('toast_slip_copied', 'Đã lưu hình ảnh vào khay nhớ tạm.'));
       } else {
         downloadSlipImage();
       }

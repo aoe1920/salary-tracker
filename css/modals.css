@@ -457,12 +457,19 @@ input[type="number"] {
   justify-content: space-between;
   align-items: center;
   margin-top: 0.25rem;
+  min-width: 0;
+  overflow: hidden;
+  gap: 0.5rem;
 }
 
 .calc-strip-right {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
 }
 
 .calc-dot {
@@ -477,6 +484,8 @@ input[type="number"] {
   display: flex;
   align-items: center;
   gap: 0.45rem;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .calc-label svg {
@@ -493,10 +502,15 @@ input[type="number"] {
 }
 
 .calc-val#previewSalary {
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
+  font-weight: 700;
   color: var(--color-money);
   letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: right;
+  max-width: 100%;
 }
 
 body.dark-mode .calc-val#previewSalary {
@@ -510,6 +524,8 @@ body.dark-mode .calc-val#previewSalary {
   font-size: 0.775rem;
   color: var(--text-main);
   border: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .input-with-tag {
@@ -1614,6 +1630,138 @@ body.dark-mode .btn-profile-edit-name:hover {
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--text-main);
+}
+
+.profile-workplaces-card {
+  padding: 0.75rem 0.85rem;
+  background: #f8fafc;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.profile-card-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profile-card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--text-main);
+  font-size: 0.825rem;
+  font-weight: 600;
+}
+
+.profile-card-header-left svg {
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.btn-profile-wp-manage {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--primary);
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.15s ease;
+}
+
+.btn-profile-wp-manage:hover {
+  background: var(--primary-subtle);
+}
+
+.profile-workplaces-chip-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.profile-wp-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 0.65rem;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.profile-wp-item:hover {
+  border-color: var(--primary-subtle, rgba(37, 99, 235, 0.3));
+  background: var(--surface-hover, rgba(37, 99, 235, 0.02));
+}
+
+.profile-wp-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.profile-wp-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.profile-wp-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-wp-tag-default {
+  font-size: 0.65rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--primary);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.profile-wp-rate {
+  font-size: 0.825rem;
+  font-weight: 700;
+  color: var(--text-main);
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+}
+
+body.dark-mode .btn-profile-wp-manage {
+  background: #181924;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .btn-profile-wp-manage:hover {
+  background: #1e202c;
+}
+
+body.dark-mode .profile-wp-item {
+  background: #181924;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+body.dark-mode .profile-wp-item:hover {
+  background: #1e202c;
+  border-color: rgba(59, 130, 246, 0.3);
 }
 
 .profile-name-edit-row {
@@ -3556,6 +3704,7 @@ body.dark-mode .slip-canvas-container {
 
 body.dark-mode .profile-header-card,
 body.dark-mode .profile-stats-card,
+body.dark-mode .profile-workplaces-card,
 body.dark-mode .profile-change-pwd-box {
   background: #121319;
   border-color: rgba(255, 255, 255, 0.08);

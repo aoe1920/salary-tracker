@@ -39,8 +39,10 @@ export const exportCurrentWeekCSV = () => {
   const y = now.getFullYear();
   const m = String(now.getMonth() + 1).padStart(2, '0');
   const d = String(now.getDate()).padStart(2, '0');
+  const hh = String(now.getHours()).padStart(2, '0');
+  const mm = String(now.getMinutes()).padStart(2, '0');
   const weekSlug = slugify(week.name).replace(/-/g, '_').toUpperCase();
-  const fileName = `Bang_Luong_${weekSlug}_${y}${m}${d}.csv`;
+  const fileName = `SalaryTracker_Export_${weekSlug}_${y}-${m}-${d}_${hh}${mm}.csv`;
 
   downloadFile(csvContent, fileName, 'text/csv;charset=utf-8;');
   showToast(`${t('toast_csv_exported', 'Đã xuất file CSV cho')} ${getLocalizedWeekName(week.name)}`);
@@ -76,7 +78,9 @@ export const exportAllWeeksCSV = () => {
   const y = now.getFullYear();
   const m = String(now.getMonth() + 1).padStart(2, '0');
   const d = String(now.getDate()).padStart(2, '0');
-  const allWeeksFileName = `Bang_Luong_Tong_Hop_Tat_Ca_Cac_Tuan_${y}${m}${d}.csv`;
+  const hh = String(now.getHours()).padStart(2, '0');
+  const mm = String(now.getMinutes()).padStart(2, '0');
+  const allWeeksFileName = `SalaryTracker_Export_AllWeeks_${y}-${m}-${d}_${hh}${mm}.csv`;
   downloadFile(csvContent, allWeeksFileName, 'text/csv;charset=utf-8;');
   showToast(t('toast_csv_all_exported', 'Đã xuất tổng hợp toàn bộ các tuần'));
 };

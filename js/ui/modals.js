@@ -189,19 +189,43 @@ export const updateModalComputedPreview = () => {
   const end = parseSmartTime(rawEnd);
 
   if (!start || !end) {
-    if (prevDur) prevDur.textContent = '0.00h';
-    if (prevSal) prevSal.textContent = fmtCurrency(0);
+    if (prevDur) {
+      prevDur.textContent = '0.00h';
+      prevDur.title = '0.00h';
+    }
+    if (prevSal) {
+      prevSal.textContent = fmtCurrency(0);
+      prevSal.title = fmtCurrency(0);
+    }
     return;
   }
 
   const hours = calculateHoursDiff(start, end, breakMins);
   const rate = getShiftRate({ workplace });
-  const wage = Math.max(0, Math.round(hours * rate * otRate + allowance - deduction));
+  const rawWage = hours * rate * otRate + allowance - deduction;
+  const wage = Math.max(0, Math.round(Number.isFinite(rawWage) ? rawWage : 0));
+  const effectiveHours = Math.max(0, Math.round(hours * otRate * 100) / 100);
 
-  const breakLabel = breakMins > 0 ? ` (${t('break_tag', 'nghỉ')} ${breakMins}${t('unit_min', 'm')})` : '';
-  const otLabel = otRate > 1 ? ` • x${otRate}` : '';
-  if (prevDur) prevDur.textContent = `${hours.toFixed(2)}h${breakLabel}${otLabel}`;
-  if (prevSal) prevSal.textContent = fmtCurrency(wage);
+  if (prevDur) {
+    prevDur.textContent = `${effectiveHours.toFixed(2)}h`;
+    prevDur.title = `${effectiveHours.toFixed(2)}h`;
+  }
+
+  if (prevSal) {
+    const fullFormatted = fmtCurrency(wage);
+    prevSal.title = fullFormatted;
+    if (wage >= 1_000_000_000_000_000) {
+      prevSal.textContent = '> 999 nghìn tỷ đ';
+    } else if (wage >= 1_000_000_000_000) {
+      const val = (wage / 1_000_000_000_000).toLocaleString('vi-VN', { maximumFractionDigits: 2 });
+      prevSal.textContent = `${val} nghìn tỷ đ`;
+    } else if (wage >= 1_000_000_000) {
+      const val = (wage / 1_000_000_000).toLocaleString('vi-VN', { maximumFractionDigits: 2 });
+      prevSal.textContent = `${val} tỷ đ`;
+    } else {
+      prevSal.textContent = fullFormatted;
+    }
+  }
 };
 
 export const saveShiftFromModal = async (e) => {
@@ -1153,9 +1177,16 @@ export const addWorkplaceFromShiftModal = () => {
   showToast(`Đã thêm nơi làm việc: ${val}`);
 };
 
-export const openWorkplaceModal = () => {
+let returnToProfileAfterWorkplaceModal = false;
+
+export const openWorkplaceModal = (opts = {}) => {
   const modal = document.getElementById('workplaceModal');
   if (!modal) return;
+  returnToProfileAfterWorkplaceModal = Boolean(opts && opts.returnToProfile);
+  if (returnToProfileAfterWorkplaceModal) {
+    const profileModal = document.getElementById('userProfileModal');
+    if (profileModal) profileModal.style.display = 'none';
+  }
   renderShiftWorkplacesList();
   modal.style.display = 'flex';
   const nameInput = document.getElementById('shiftNewWpName');
@@ -1168,6 +1199,10 @@ export const closeWorkplaceModal = () => {
   updateWorkplaceInputOptions();
   updateModalComputedPreview();
   triggerAppRender();
+  if (returnToProfileAfterWorkplaceModal) {
+    returnToProfileAfterWorkplaceModal = false;
+    openUserProfileModal();
+  }
 };
 
 export const toggleWorkplacePanel = (forceOpen = null) => {
@@ -1344,6 +1379,47 @@ export const expandPasswordSection = () => {
   if (iconChevron) iconChevron.style.transform = 'rotate(180deg)';
   const pwdInput = document.getElementById('changeNewPassword');
   if (pwdInput) setTimeout(() => pwdInput.focus(), 60);
+};
+
+export const renderProfileWorkplaces = () => {
+  const container = document.getElementById('profileWorkplacesChipList');
+  if (!container) return;
+  normalizeWorkplacesAndRates();
+  const workplaces = state.settings.workplaces || [];
+  const defWp = state.settings.defaultWorkplace || '';
+
+  if (workplaces.length === 0) {
+    container.innerHTML = `
+      <div class="profile-wp-empty font-mono" style="font-size:0.8rem; color:var(--text-muted); padding:0.4rem 0;">
+        ${t('empty_workplaces_hint', 'Chưa có nơi làm việc. Bấm Chỉnh sửa để thêm.')}
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = workplaces.map(wp => {
+    const color = getWorkplaceColor(wp);
+    const rate = getShiftRate({ workplace: wp });
+    const isDefault = wp === defWp;
+    return `
+      <div class="profile-wp-item" data-wp-name="${escapeHtml(wp)}" title="${t('btn_edit', 'Chỉnh sửa')}">
+        <div class="profile-wp-left">
+          <span class="profile-wp-dot" style="background-color: ${color};"></span>
+          <span class="profile-wp-name font-sans">${escapeHtml(wp)}</span>
+          ${isDefault ? `<span class="profile-wp-tag-default font-mono">${t('tag_default_workplace', 'Mặc định')}</span>` : ''}
+        </div>
+        <span class="profile-wp-rate font-mono">${fmtCurrency(rate)}/h</span>
+      </div>
+    `;
+  }).join('');
+
+  container.querySelectorAll('.profile-wp-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      triggerHaptic('light');
+      openWorkplaceModal({ returnToProfile: true });
+    });
+  });
 };
 
 export const openUserProfileModal = () => {
@@ -1536,6 +1612,17 @@ export const openUserProfileModal = () => {
   document.getElementById('profileTotalShifts').textContent = totalShifts;
   document.getElementById('profileTotalHours').textContent = `${Math.round(totalHours)}h`;
 
+  renderProfileWorkplaces();
+
+  const btnManageWp = document.getElementById('btnProfileManageWorkplaces');
+  if (btnManageWp) {
+    btnManageWp.onclick = (e) => {
+      e.preventDefault();
+      triggerHaptic('light');
+      openWorkplaceModal({ returnToProfile: true });
+    };
+  }
+
   const pwdBox = document.querySelector('.profile-change-pwd-box');
   if (pwdBox) {
     pwdBox.style.display = 'block';
@@ -1628,5 +1715,9 @@ export const closeModal = (modalId) => {
     updateWorkplaceInputOptions();
     updateModalComputedPreview();
     triggerAppRender();
+    if (returnToProfileAfterWorkplaceModal) {
+      returnToProfileAfterWorkplaceModal = false;
+      openUserProfileModal();
+    }
   }
 };
