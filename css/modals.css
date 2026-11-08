@@ -1903,8 +1903,9 @@ body.dark-mode .profile-wp-edit-item.is-default-item {
 }
 
 .profile-wp-edit-name {
-  font-size: 0.825rem;
+  font-size: 0.85rem;
   font-weight: 600;
+  font-family: var(--font-sans);
   color: var(--text-main);
   white-space: nowrap;
   overflow: hidden;
@@ -1942,6 +1943,27 @@ body.dark-mode .profile-wp-edit-item.is-default-item {
   color: var(--text-main);
 }
 
+.profile-wp-edit-actions .btn-set-default-wp {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  min-height: 26px;
+  border-color: transparent;
+  background: transparent;
+}
+
+.profile-wp-edit-actions .btn-set-default-wp:hover {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #d97706;
+}
+
+body.dark-mode .profile-wp-edit-actions .btn-set-default-wp:hover {
+  background: rgba(245, 158, 11, 0.18);
+  border-color: rgba(251, 191, 36, 0.4);
+  color: #fbbf24;
+}
+
 .profile-wp-icon-btn.is-danger:hover {
   background: rgba(239, 68, 68, 0.1);
   border-color: rgba(239, 68, 68, 0.3);
@@ -1964,7 +1986,8 @@ body.dark-mode .profile-wp-edit-item.is-default-item {
 }
 
 .profile-wp-edit-bottom .profile-wp-rate-label {
-  font-size: 0.725rem;
+  font-size: 0.75rem;
+  font-family: var(--font-sans);
   color: var(--text-muted);
 }
 
@@ -1972,23 +1995,23 @@ body.dark-mode .profile-wp-edit-item.is-default-item {
   position: relative;
   display: flex;
   align-items: center;
-  width: 105px;
+  width: 110px;
 }
 
 .profile-wp-rate-input {
   width: 100%;
   height: 28px;
   min-height: 28px;
-  padding: 0.2rem 1.7rem 0.2rem 0.5rem;
-  font-size: 0.8rem;
-  font-weight: 400;
-  font-family: var(--font-sans);
+  padding: 0.2rem 2.2rem 0.2rem 0.55rem;
+  font-size: 0.825rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   border: 1px solid var(--border-default);
   border-radius: var(--radius-xs);
   background: var(--bg-surface);
   color: var(--text-main);
-  text-align: left;
+  text-align: right;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -1999,9 +2022,11 @@ body.dark-mode .profile-wp-rate-input {
 
 .profile-wp-rate-tag {
   position: absolute;
-  right: 0.45rem;
-  font-size: 0.7rem;
-  color: var(--text-muted);
+  right: 0.5rem;
+  font-size: 0.825rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-main);
   pointer-events: none;
 }
 
@@ -2018,7 +2043,9 @@ body.dark-mode .profile-wp-rate-input {
   height: 28px;
   min-height: 28px;
   padding: 0.2rem 0.5rem;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
   border: 1px solid var(--primary);
   border-radius: var(--radius-xs);
   background: var(--bg-surface);

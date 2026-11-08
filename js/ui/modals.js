@@ -1532,22 +1532,17 @@ export const renderProfileWorkplacesEditList = () => {
       <div class="profile-wp-edit-top">
         <div class="profile-wp-edit-info">
           <span class="profile-wp-dot" style="background-color: ${wpCol.fill};"></span>
-          <span class="profile-wp-edit-name" title="${escapeHtml(wp)}">${escapeHtml(wp)}</span>
-          ${isDefault ? `
-            <span class="wp-default-tag" title="${t('tag_default_workplace', 'Mặc định')}">
-              <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-              </svg>
-            </span>
-          ` : (hasMultiple ? `
-            <button type="button" class="btn-set-default-wp" data-p-set-default="${escapeHtml(wp)}" title="${t('btn_set_default_wp', 'Đặt làm nơi làm việc mặc định')}" aria-label="${t('btn_set_default_wp', 'Đặt làm nơi làm việc mặc định')}">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="11" height="11">
+          <span class="profile-wp-edit-name font-sans" title="${escapeHtml(wp)}">${escapeHtml(wp)}</span>
+          ${isDefault ? `<span class="profile-wp-tag-default font-mono">${t('tag_default_workplace', 'Mặc định')}</span>` : ''}
+        </div>
+        <div class="profile-wp-edit-actions">
+          ${hasMultiple && !isDefault ? `
+            <button type="button" class="profile-wp-icon-btn btn-set-default-wp" data-p-set-default="${escapeHtml(wp)}" title="${t('btn_set_default_wp', 'Đặt làm nơi làm việc mặc định')}" aria-label="${t('btn_set_default_wp', 'Đặt làm nơi làm việc mặc định')}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12">
                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
               </svg>
             </button>
-          ` : '')}
-        </div>
-        <div class="profile-wp-edit-actions">
+          ` : ''}
           <button type="button" class="profile-wp-icon-btn btn-p-rename-wp" data-p-rename="${idx}" title="${t('btn_rename_wp', 'Đổi tên')}" aria-label="Đổi tên">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12">
               <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
@@ -1564,10 +1559,10 @@ export const renderProfileWorkplacesEditList = () => {
         </div>
       </div>
       <div class="profile-wp-edit-bottom">
-        <span class="profile-wp-rate-label">Đơn giá theo giờ:</span>
+        <span class="profile-wp-rate-label font-sans">Đơn giá theo giờ:</span>
         <div class="profile-wp-rate-input-wrap">
-          <input type="text" inputmode="numeric" class="form-input profile-wp-rate-input" data-p-rate="${escapeHtml(wp)}" value="${formatWpRateDisplay(rate)}" placeholder="0" autocomplete="off">
-          <span class="profile-wp-rate-tag">đ/h</span>
+          <input type="text" inputmode="numeric" class="form-input profile-wp-rate-input font-mono" data-p-rate="${escapeHtml(wp)}" value="${formatWpRateDisplay(rate)}" placeholder="0" autocomplete="off">
+          <span class="profile-wp-rate-tag font-mono">đ/h</span>
         </div>
       </div>
     `;
