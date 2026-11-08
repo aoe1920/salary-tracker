@@ -15,7 +15,7 @@ An offline-first, zero-build Progressive Web App (PWA) for shift scheduling, wag
 ## Preview
 
 <p align="center">
-  <img src="docs/screenshots/poster.png" alt="Salary Tracker Product Showcase Poster" width="100%" style="border-radius: 14px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);" />
+  <img src="pictures/poster.png" alt="Salary Tracker Product Showcase Poster" width="100%" style="border-radius: 14px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);" />
 </p>
 
 ---
@@ -54,8 +54,10 @@ salary-tracker/
 │   ├── base.css        # Design tokens, reset and typography
 │   ├── components.css  # Buttons, cards, header and navigation pills
 │   └── modals.css      # Modal dialogs, toast notifications and forms
-├── docs/
-│   └── screenshots/    # Application showcase and preview illustrations
+├── pictures/
+│   ├── poster.png          # Product showcase poster
+│   ├── preview-desktop.png # Desktop interface preview
+│   └── preview-mobile.png  # Mobile interface preview
 ├── js/
 │   ├── services/
 │   │   └── supabase.js # Supabase client, auth state and cloud sync
