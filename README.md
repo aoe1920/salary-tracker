@@ -15,25 +15,21 @@ An offline-first, zero-build Progressive Web App (PWA) for shift scheduling, wag
 ## Preview
 
 <p align="center">
-  <img src="docs/screenshots/preview-desktop.png" alt="Salary Tracker Desktop Interface" width="85%" style="border-radius: 12px; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);" />
-</p>
-
-<p align="center">
-  <img src="docs/screenshots/preview-mobile.png" alt="Salary Tracker Mobile Interface" width="38%" style="border-radius: 16px; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);" />
+  <img src="docs/screenshots/poster.png" alt="Salary Tracker Product Showcase Poster" width="100%" style="border-radius: 14px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);" />
 </p>
 
 ---
 
 ## Highlights
 
-- **Smart Shift Detection & Overlap Calculation:** Automatic determination of morning, noon, and evening shifts based on working time overlap ratios, with tie-breaking logic.
+- **Smart Shift Detection and Overlap Calculation:** Automatic determination of morning, noon, and evening shifts based on working time overlap ratios, with tie-breaking logic.
 - **Precision Wage Engine:** Accurate computation of base hourly rates, overnight shifts crossing midnight, overtime multipliers, fixed allowances, and deductions.
 - **Multi-Workplace Management:** Individual workplace rate configs, custom color coding, and quick workplace switching.
 - **Enterprise-Grade Authentication:** Dual sign-in with clean usernames or email, Google OAuth 2.0 PKCE, account identity linking, and self-service password recovery.
 - **Security by Design:** Database-level Row Level Security (RLS) policies guaranteeing complete tenant data isolation (`auth.uid() = user_id`).
 - **Offline-First PWA:** Service Worker Cache API with optimistic local persistence and seamless automatic cloud synchronization on reconnection.
-- **Export & Share:** High-resolution HTML5 Canvas payslip generator with 1-click clipboard image copy, and multi-week CSV data export.
-- **Refined UX & Micro-Interactions:** Smooth hardware-accelerated animations, iOS frosted-glass bottom dock, SVG avatar system, and non-intrusive toast notifications.
+- **Export and Share:** High-resolution HTML5 Canvas payslip generator with 1-click clipboard image copy, and multi-week CSV data export.
+- **Refined UX and Micro-Interactions:** Smooth hardware-accelerated animations, iOS frosted-glass bottom dock, SVG avatar system, and non-intrusive toast notifications.
 
 ---
 
@@ -41,9 +37,9 @@ An offline-first, zero-build Progressive Web App (PWA) for shift scheduling, wag
 
 - **Frontend Core:** Vanilla ES2022 JavaScript (ES Modules), zero build tools required.
 - **Styling:** Modular CSS3 with custom properties, responsive grid/flexbox, and light/dark theme variables.
-- **Backend & Auth:** Supabase Cloud (PostgreSQL 15, Auth GoTrue, Realtime PostgreSQL Changes).
+- **Backend and Auth:** Supabase Cloud (PostgreSQL 15, Auth GoTrue, Realtime PostgreSQL Changes).
 - **Offline PWA:** Service Worker Cache Storage API, Web App Manifest.
-- **Icons & Avatars:** Handcrafted SVG icons and curated vector illustrations from [alohe/avatars](https://github.com/alohe/avatars).
+- **Icons and Avatars:** Handcrafted SVG icons and curated vector illustrations from [alohe/avatars](https://github.com/alohe/avatars).
 
 ---
 
@@ -53,34 +49,33 @@ An offline-first, zero-build Progressive Web App (PWA) for shift scheduling, wag
 salary-tracker/
 ├── assets/
 │   ├── avatars/        # Curated avatar illustrations (alohe/avatars)
-│   └── icons/          # PWA app icons & favicon
+│   └── icons/          # PWA app icons and favicon
 ├── css/
-│   ├── base.css        # Design tokens, reset & typography
-│   ├── components.css  # Buttons, cards, header & navigation pills
-│   └── modals.css      # Modal dialogs, toast notifications & forms
+│   ├── base.css        # Design tokens, reset and typography
+│   ├── components.css  # Buttons, cards, header and navigation pills
+│   └── modals.css      # Modal dialogs, toast notifications and forms
 ├── docs/
-│   ├── screenshots/    # Application preview illustrations
-│   └── templates/      # Password recovery email HTML template
+│   └── screenshots/    # Application showcase and preview illustrations
 ├── js/
 │   ├── services/
-│   │   └── supabase.js # Supabase client, auth state & cloud sync
+│   │   └── supabase.js # Supabase client, auth state and cloud sync
 │   ├── ui/
-│   │   ├── avatars.js  # Avatar selection & randomizer
+│   │   ├── avatars.js  # Avatar selection and randomizer
 │   │   ├── canvas-slip.js # HTML5 Canvas payslip generator
 │   │   ├── chart.js    # Interactive financial analytics
 │   │   ├── dialog.js   # Accessible dialog boxes
-│   │   ├── export.js   # CSV & JSON backup exporter
+│   │   ├── export.js   # CSV and JSON backup exporter
 │   │   ├── haptic.js   # Mobile vibration feedback
-│   │   ├── modals.js   # Modal orchestrator & forms
+│   │   ├── modals.js   # Modal orchestrator and forms
 │   │   ├── select.js   # Accessible custom dropdowns
 │   │   └── toast.js    # Adaptive toast notification engine
 │   ├── vendor/         # Isolated third-party helper runtimes
 │   ├── app.js          # Main application bootstrapper
-│   ├── calculator.js   # Pure wage calculation & time diff engine
-│   ├── config.js       # App constants & palette presets
+│   ├── calculator.js   # Pure wage calculation and time diff engine
+│   ├── config.js       # App constants and palette presets
 │   ├── i18n.js         # Localization dictionary
 │   ├── state.js        # Reactive central application store
-│   └── theme.js        # Theme state & system preference listener
+│   └── theme.js        # Theme state and system preference listener
 ├── index.html          # Semantic HTML5 application shell
 ├── manifest.json       # Progressive Web App manifest
 └── sw.js               # Offline-first Service Worker
