@@ -1366,27 +1366,6 @@ export const collapsePasswordSection = () => {
   }
 };
 
-export const collapseAvatarPicker = () => {
-  const shelf = document.getElementById('avatarPickerShelf');
-  if (shelf) shelf.style.display = 'none';
-};
-
-export const expandAvatarPicker = () => {
-  collapsePasswordSection();
-  const shelf = document.getElementById('avatarPickerShelf');
-  if (shelf) shelf.style.display = 'flex';
-};
-
-export const expandPasswordSection = () => {
-  collapseAvatarPicker();
-  const formChangePwd = document.getElementById('formChangePassword');
-  const iconChevron = document.getElementById('iconChangePwdChevron');
-  if (formChangePwd) formChangePwd.style.display = 'flex';
-  if (iconChevron) iconChevron.style.transform = 'rotate(180deg)';
-  const pwdInput = document.getElementById('changeNewPassword');
-  if (pwdInput) setTimeout(() => pwdInput.focus(), 60);
-};
-
 let isProfileWpEditMode = false;
 
 export const collapseProfileWorkplacesEdit = () => {
@@ -1409,7 +1388,46 @@ export const collapseProfileWorkplacesEdit = () => {
   }
 };
 
+export const closeProfileWorkplacesEditIfOpen = () => {
+  if (isProfileWpEditMode) {
+    collapseProfileWorkplacesEdit();
+    renderProfileWorkplaces();
+    saveSettings();
+    triggerAppRender();
+  }
+};
+
+export const collapseAvatarPicker = () => {
+  const shelf = document.getElementById('avatarPickerShelf');
+  if (shelf) shelf.style.display = 'none';
+};
+
+export const expandAvatarPicker = () => {
+  collapsePasswordSection();
+  closeProfileWorkplacesEditIfOpen();
+  const shelf = document.getElementById('avatarPickerShelf');
+  if (shelf) shelf.style.display = 'flex';
+};
+
+export const expandPasswordSection = () => {
+  collapseAvatarPicker();
+  closeProfileWorkplacesEditIfOpen();
+  const formChangePwd = document.getElementById('formChangePassword');
+  const iconChevron = document.getElementById('iconChangePwdChevron');
+  if (formChangePwd) formChangePwd.style.display = 'flex';
+  if (iconChevron) iconChevron.style.transform = 'rotate(180deg)';
+  const pwdInput = document.getElementById('changeNewPassword');
+  if (pwdInput) setTimeout(() => pwdInput.focus(), 60);
+};
+
 export const expandProfileWorkplacesEdit = () => {
+  collapseAvatarPicker();
+  collapsePasswordSection();
+  const viewWrap = document.getElementById('profileUsernameView');
+  const editWrap = document.getElementById('profileUsernameEdit');
+  if (viewWrap) viewWrap.style.display = 'inline-flex';
+  if (editWrap) editWrap.style.display = 'none';
+
   isProfileWpEditMode = true;
   const viewMode = document.getElementById('profileWpViewMode');
   const editMode = document.getElementById('profileWpEditMode');
@@ -1794,6 +1812,39 @@ export const openUserProfileModal = () => {
   collapsePasswordSection();
   collapseProfileWorkplacesEdit();
 
+  document.getElementById('profileUsername').textContent = `@${username}`;
+
+  const viewWrap = document.getElementById('profileUsernameView');
+  const editWrap = document.getElementById('profileUsernameEdit');
+  const inputEl = document.getElementById('inputEditUsername');
+  const btnEditUsername = document.getElementById('btnEditUsername');
+  const btnSaveUsername = document.getElementById('btnSaveUsername');
+  const btnCancelUsername = document.getElementById('btnCancelUsername');
+
+  const setUsernameViewMode = () => {
+    if (viewWrap) viewWrap.style.display = 'inline-flex';
+    if (editWrap) editWrap.style.display = 'none';
+  };
+
+  const setUsernameEditMode = () => {
+    collapseAvatarPicker();
+    collapsePasswordSection();
+    closeProfileWorkplacesEditIfOpen();
+    if (viewWrap) viewWrap.style.display = 'none';
+    if (editWrap) {
+      editWrap.style.display = 'inline-flex';
+      if (inputEl) {
+        inputEl.value = state.currentUser?.username || '';
+        requestAnimationFrame(() => {
+          inputEl.focus();
+          inputEl.select();
+        });
+      }
+    }
+  };
+
+  setUsernameViewMode();
+
   renderAvatarPickerGrid();
 
   const btnToggleAvatar = document.getElementById('btnToggleAvatarPicker');
@@ -1804,6 +1855,7 @@ export const openUserProfileModal = () => {
       const shelf = document.getElementById('avatarPickerShelf');
       const isClosed = !shelf || shelf.style.display === 'none';
       if (isClosed) {
+        setUsernameViewMode();
         expandAvatarPicker();
       } else {
         collapseAvatarPicker();
@@ -1827,42 +1879,13 @@ export const openUserProfileModal = () => {
       const formChangePwd = document.getElementById('formChangePassword');
       const isClosed = !formChangePwd || formChangePwd.style.display === 'none';
       if (isClosed) {
+        setUsernameViewMode();
         expandPasswordSection();
       } else {
         collapsePasswordSection();
       }
     };
   }
-
-  document.getElementById('profileUsername').textContent = `@${username}`;
-
-  const viewWrap = document.getElementById('profileUsernameView');
-  const editWrap = document.getElementById('profileUsernameEdit');
-  const inputEl = document.getElementById('inputEditUsername');
-  const btnEditUsername = document.getElementById('btnEditUsername');
-  const btnSaveUsername = document.getElementById('btnSaveUsername');
-  const btnCancelUsername = document.getElementById('btnCancelUsername');
-
-  const setUsernameViewMode = () => {
-    if (viewWrap) viewWrap.style.display = 'inline-flex';
-    if (editWrap) editWrap.style.display = 'none';
-  };
-
-  const setUsernameEditMode = () => {
-    if (viewWrap) viewWrap.style.display = 'none';
-    if (editWrap) {
-      editWrap.style.display = 'inline-flex';
-      if (inputEl) {
-        inputEl.value = state.currentUser?.username || '';
-        requestAnimationFrame(() => {
-          inputEl.focus();
-          inputEl.select();
-        });
-      }
-    }
-  };
-
-  setUsernameViewMode();
 
   const handleSaveUsername = async () => {
     if (!inputEl) return;
@@ -1971,6 +1994,7 @@ export const openUserProfileModal = () => {
         saveSettings();
         triggerAppRender();
       } else {
+        setUsernameViewMode();
         expandProfileWorkplacesEdit();
       }
     };
@@ -2106,6 +2130,8 @@ export const closeModal = (modalId) => {
   const modal = document.getElementById(modalId);
   if (modal) modal.style.display = 'none';
   if (modalId === 'userProfileModal') {
+    collapseAvatarPicker();
+    collapsePasswordSection();
     if (isProfileWpEditMode) {
       collapseProfileWorkplacesEdit();
       saveSettings();
