@@ -1706,6 +1706,280 @@ body.dark-mode .btn-profile-edit-name:hover {
   background: var(--primary-subtle);
 }
 
+.btn-profile-wp-manage.is-active {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
+.btn-profile-wp-manage.is-active:hover {
+  background: var(--primary-hover);
+  color: #ffffff;
+}
+
+body.dark-mode .btn-profile-wp-manage.is-active {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
+.profile-wp-view-mode {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-wp-edit-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.profile-wp-add-box {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.profile-wp-add-name {
+  flex: 1;
+  min-width: 0;
+  height: 32px;
+  min-height: 32px;
+  padding: 0.25rem 0.55rem;
+  font-size: 0.8rem;
+  border-radius: var(--radius-xs);
+}
+
+.profile-wp-add-rate-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 104px;
+  flex-shrink: 0;
+}
+
+.profile-wp-add-rate {
+  width: 100%;
+  height: 32px;
+  min-height: 32px;
+  padding: 0.25rem 1.65rem 0.25rem 0.55rem;
+  font-size: 0.8rem;
+  border-radius: var(--radius-xs);
+}
+
+.profile-wp-add-unit {
+  position: absolute;
+  right: 0.45rem;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.profile-wp-add-btn {
+  height: 32px;
+  padding: 0 0.65rem;
+  gap: 0.25rem;
+  font-size: 0.775rem;
+  font-weight: 500;
+  border-radius: var(--radius-xs);
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.profile-wp-edit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.profile-wp-edit-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.5rem 0.65rem;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.15s ease;
+}
+
+body.dark-mode .profile-wp-edit-item {
+  background: #181924;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.profile-wp-edit-item.is-default-item {
+  border-color: rgba(37, 99, 235, 0.35);
+  background: linear-gradient(to right, rgba(37, 99, 235, 0.04), transparent);
+}
+
+body.dark-mode .profile-wp-edit-item.is-default-item {
+  border-color: rgba(96, 165, 250, 0.3);
+  background: linear-gradient(to right, rgba(37, 99, 235, 0.1), transparent);
+}
+
+.profile-wp-edit-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+
+.profile-wp-edit-info {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.profile-wp-edit-name {
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+.profile-wp-edit-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  flex-shrink: 0;
+}
+
+.profile-wp-icon-btn {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  min-height: 26px;
+  padding: 0;
+  border-radius: var(--radius-xs);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.profile-wp-icon-btn:hover {
+  background: var(--bg-surface);
+  border-color: var(--border-subtle);
+  color: var(--text-main);
+}
+
+.profile-wp-icon-btn.is-danger:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+.profile-wp-icon-btn.is-disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.profile-wp-edit-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  padding-top: 0.3rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.profile-wp-edit-bottom .profile-wp-rate-label {
+  font-size: 0.725rem;
+  color: var(--text-muted);
+}
+
+.profile-wp-rate-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 105px;
+}
+
+.profile-wp-rate-input {
+  width: 100%;
+  height: 28px;
+  min-height: 28px;
+  padding: 0.2rem 1.7rem 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xs);
+  background: var(--bg-surface);
+  color: var(--text-main);
+  text-align: left;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+body.dark-mode .profile-wp-rate-input {
+  background: #0d0e15;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.profile-wp-rate-tag {
+  position: absolute;
+  right: 0.45rem;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.profile-wp-rename-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+}
+
+.profile-wp-rename-input {
+  flex: 1;
+  min-width: 0;
+  height: 28px;
+  min-height: 28px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-xs);
+  background: var(--bg-surface);
+  color: var(--text-main);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  outline: none;
+}
+
+body.dark-mode .profile-wp-rename-input {
+  background: #0d0e15;
+  color: #ffffff;
+}
+
+.profile-wp-rename-btn {
+  height: 28px;
+  padding: 0 0.5rem;
+  gap: 0.2rem;
+  font-size: 0.725rem;
+  font-weight: 600;
+  border-radius: var(--radius-xs);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
 .profile-workplaces-chip-list {
   display: flex;
   flex-direction: column;

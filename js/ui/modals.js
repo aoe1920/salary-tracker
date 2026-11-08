@@ -1389,6 +1389,57 @@ export const expandPasswordSection = () => {
   if (pwdInput) setTimeout(() => pwdInput.focus(), 60);
 };
 
+let isProfileWpEditMode = false;
+
+export const collapseProfileWorkplacesEdit = () => {
+  isProfileWpEditMode = false;
+  const viewMode = document.getElementById('profileWpViewMode');
+  const editMode = document.getElementById('profileWpEditMode');
+  if (viewMode) viewMode.style.display = 'block';
+  if (editMode) editMode.style.display = 'none';
+
+  const btnManage = document.getElementById('btnProfileManageWorkplaces');
+  if (btnManage) {
+    btnManage.classList.remove('is-active');
+    btnManage.innerHTML = `
+      <svg id="profileWpManageIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="13" height="13">
+        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+      </svg>
+      <span id="profileWpManageText">${t('btn_edit', 'Chỉnh sửa')}</span>
+    `;
+  }
+};
+
+export const expandProfileWorkplacesEdit = () => {
+  isProfileWpEditMode = true;
+  const viewMode = document.getElementById('profileWpViewMode');
+  const editMode = document.getElementById('profileWpEditMode');
+  if (viewMode) viewMode.style.display = 'none';
+  if (editMode) editMode.style.display = 'flex';
+
+  const btnManage = document.getElementById('btnProfileManageWorkplaces');
+  if (btnManage) {
+    btnManage.classList.add('is-active');
+    btnManage.innerHTML = `
+      <svg id="profileWpManageIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      <span id="profileWpManageText">${t('btn_done', 'Xong')}</span>
+    `;
+  }
+
+  const nameInput = document.getElementById('profileNewWpName');
+  const rateInput = document.getElementById('profileNewWpRate');
+  if (nameInput) nameInput.value = '';
+  if (rateInput) rateInput.value = '';
+
+  renderProfileWorkplacesEditList();
+
+  if (nameInput) {
+    setTimeout(() => nameInput.focus(), 80);
+  }
+};
+
 export const renderProfileWorkplaces = () => {
   const container = document.getElementById('profileWorkplacesChipList');
   if (!container) return;
@@ -1406,13 +1457,13 @@ export const renderProfileWorkplaces = () => {
   }
 
   container.innerHTML = workplaces.map(wp => {
-    const color = getWorkplaceColor(wp);
+    const wpCol = getWorkplaceColor(wp);
     const rate = getShiftRate({ workplace: wp });
     const isDefault = wp === defWp;
     return `
       <div class="profile-wp-item" data-wp-name="${escapeHtml(wp)}" title="${t('btn_edit', 'Chỉnh sửa')}">
         <div class="profile-wp-left">
-          <span class="profile-wp-dot" style="background-color: ${color};"></span>
+          <span class="profile-wp-dot" style="background-color: ${wpCol.fill};"></span>
           <span class="profile-wp-name font-sans">${escapeHtml(wp)}</span>
           ${isDefault ? `<span class="profile-wp-tag-default font-mono">${t('tag_default_workplace', 'Mặc định')}</span>` : ''}
         </div>
@@ -1425,9 +1476,297 @@ export const renderProfileWorkplaces = () => {
     item.addEventListener('click', (e) => {
       e.preventDefault();
       triggerHaptic('light');
-      openWorkplaceModal({ returnToProfile: true });
+      expandProfileWorkplacesEdit();
     });
   });
+};
+
+export const renderProfileWorkplacesEditList = () => {
+  const container = document.getElementById('profileWpEditList');
+  if (!container) return;
+  container.innerHTML = '';
+  normalizeWorkplacesAndRates();
+
+  const workplaces = state.settings.workplaces || [];
+  const defWp = getDefaultWorkplace();
+  const hasMultiple = workplaces.length > 1;
+
+  if (workplaces.length === 0) {
+    container.innerHTML = `
+      <div class="swq-empty-card font-sans">
+        ${t('empty_workplaces_hint', 'Chưa có nơi làm việc nào')}
+      </div>
+    `;
+    return;
+  }
+
+  workplaces.forEach((wp, idx) => {
+    const wpCol = getWorkplaceColor(wp);
+    const rate = (state.settings.workplaceRates && state.settings.workplaceRates[wp] !== undefined)
+      ? state.settings.workplaceRates[wp]
+      : '';
+    const isDefault = (wp === defWp);
+
+    const card = document.createElement('div');
+    card.className = `profile-wp-edit-item ${isDefault ? 'is-default-item' : ''}`;
+    card.dataset.wp = wp;
+    card.innerHTML = `
+      <div class="profile-wp-edit-top">
+        <div class="profile-wp-edit-info">
+          <span class="profile-wp-dot" style="background-color: ${wpCol.fill};"></span>
+          <span class="profile-wp-edit-name" title="${escapeHtml(wp)}">${escapeHtml(wp)}</span>
+          ${isDefault ? `
+            <span class="wp-default-tag font-mono" title="${t('tag_default_workplace', 'Mặc định')}">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="9" height="9">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              <span>${t('tag_default_workplace', 'Mặc định')}</span>
+            </span>
+          ` : (hasMultiple ? `
+            <button type="button" class="btn-set-default-wp" data-p-set-default="${escapeHtml(wp)}" title="${t('btn_set_default_wp', 'Đặt làm nơi làm việc mặc định')}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="10" height="10">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              <span>Đặt mặc định</span>
+            </button>
+          ` : '')}
+        </div>
+        <div class="profile-wp-edit-actions">
+          <button type="button" class="profile-wp-icon-btn btn-p-rename-wp" data-p-rename="${idx}" title="${t('btn_rename_wp', 'Đổi tên')}" aria-label="Đổi tên">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12">
+              <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+              <path d="m15 5 4 4"></path>
+            </svg>
+          </button>
+          <button type="button" class="profile-wp-icon-btn is-danger ${hasMultiple ? 'btn-p-del-wp' : 'is-disabled'}" ${hasMultiple ? `data-p-del="${idx}"` : 'disabled aria-disabled="true"'} title="${hasMultiple ? t('btn_delete_wp', 'Xóa nơi làm') : 'Cần có ít nhất một nơi làm việc'}" aria-label="Xóa">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12">
+              <path d="M3 6h18"></path>
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="profile-wp-edit-bottom">
+        <span class="profile-wp-rate-label">Đơn giá theo giờ:</span>
+        <div class="profile-wp-rate-input-wrap">
+          <input type="text" inputmode="numeric" class="form-input profile-wp-rate-input" data-p-rate="${escapeHtml(wp)}" value="${formatWpRateDisplay(rate)}" placeholder="0" autocomplete="off">
+          <span class="profile-wp-rate-tag">đ/h</span>
+        </div>
+      </div>
+    `;
+
+    const renameBtn = card.querySelector('[data-p-rename]');
+    if (renameBtn) {
+      renameBtn.addEventListener('click', () => {
+        triggerHaptic('light');
+        card.innerHTML = `
+          <div class="profile-wp-rename-row">
+            <input type="text" class="form-input profile-wp-rename-input font-sans" value="${escapeHtml(wp)}" placeholder="${t('ph_workplace_name', 'Tên nơi làm')}" autocomplete="off">
+            <button type="button" class="btn-action-primary profile-wp-rename-btn btn-save-p-rename" title="${t('btn_save', 'Lưu')}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="12" height="12">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </button>
+            <button type="button" class="btn-morphic profile-wp-rename-btn btn-cancel-p-rename" title="${t('btn_cancel', 'Hủy')}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+        `;
+
+        const renameInput = card.querySelector('.profile-wp-rename-input');
+        if (renameInput) {
+          renameInput.focus();
+          renameInput.select();
+        }
+
+        const handleSaveRename = () => {
+          const newName = (renameInput?.value || '').trim();
+          if (!newName) {
+            showToast(t('warn_wp_name_empty', 'Vui lòng nhập tên nơi làm việc.'));
+            renameInput?.focus();
+            return;
+          }
+          if (newName === wp) {
+            renderProfileWorkplacesEditList();
+            return;
+          }
+          if (state.settings.workplaces.some(w => w.toLowerCase() === newName.toLowerCase() && w !== wp)) {
+            showToast(t('warn_wp_exists', 'Tên nơi làm việc này đã tồn tại.'));
+            renameInput?.focus();
+            return;
+          }
+
+          state.settings.workplaces[idx] = newName;
+          const currentRate = state.settings.workplaceRates?.[wp] ?? 0;
+          if (!state.settings.workplaceRates) state.settings.workplaceRates = {};
+          state.settings.workplaceRates[newName] = currentRate;
+          delete state.settings.workplaceRates[wp];
+
+          if (state.settings.defaultWorkplace === wp) {
+            state.settings.defaultWorkplace = newName;
+          }
+
+          state.weeks.forEach(w => {
+            if (Array.isArray(w.shifts)) {
+              w.shifts.forEach(s => {
+                if (s.workplace === wp) {
+                  s.workplace = newName;
+                }
+              });
+            }
+          });
+
+          saveSettings();
+          saveWeeks();
+          renderProfileWorkplacesEditList();
+          updateWorkplaceInputOptions(newName);
+          updateModalComputedPreview();
+          triggerAppRender();
+          triggerHaptic('medium');
+          showToast(`Đã đổi tên thành "${newName}"`);
+        };
+
+        card.querySelector('.btn-save-p-rename')?.addEventListener('click', handleSaveRename);
+        card.querySelector('.btn-cancel-p-rename')?.addEventListener('click', () => {
+          triggerHaptic('light');
+          renderProfileWorkplacesEditList();
+        });
+
+        renameInput?.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            handleSaveRename();
+          } else if (e.key === 'Escape') {
+            e.preventDefault();
+            triggerHaptic('light');
+            renderProfileWorkplacesEditList();
+          }
+        });
+      });
+    }
+
+    const setDefaultBtn = card.querySelector('[data-p-set-default]');
+    if (setDefaultBtn) {
+      setDefaultBtn.addEventListener('click', () => {
+        triggerHaptic('medium');
+        state.settings.defaultWorkplace = wp;
+        saveSettings();
+        renderProfileWorkplacesEditList();
+        updateWorkplaceInputOptions(wp);
+        updateModalComputedPreview();
+        triggerAppRender();
+        showToast(`Đã đặt "${wp}" làm nơi làm việc mặc định`);
+      });
+    }
+
+    const delBtn = card.querySelector('[data-p-del]');
+    if (delBtn) {
+      delBtn.addEventListener('click', async () => {
+        triggerHaptic('light');
+        const confirmed = await showConfirmDialog({
+          title: t('btn_delete_wp', 'Xóa nơi làm'),
+          message: `Bạn có chắc chắn muốn xóa nơi làm việc "${wp}" không?`,
+          confirmText: t('btn_delete', 'Xóa'),
+          cancelText: t('btn_cancel', 'Hủy'),
+          isDanger: true,
+          iconType: 'delete'
+        });
+        if (!confirmed) return;
+        const removed = state.settings.workplaces.splice(idx, 1)[0];
+        if (state.settings.workplaceRates && state.settings.workplaceRates[removed] !== undefined) {
+          delete state.settings.workplaceRates[removed];
+        }
+        if (state.settings.defaultWorkplace === removed) {
+          state.settings.defaultWorkplace = state.settings.workplaces[0] || '';
+        }
+        saveSettings();
+        renderProfileWorkplacesEditList();
+        updateWorkplaceInputOptions();
+        updateModalComputedPreview();
+        triggerAppRender();
+        triggerHaptic('medium');
+        showToast(`Đã xóa nơi làm: ${removed}`);
+      });
+    }
+
+    const rateInput = card.querySelector('.profile-wp-rate-input');
+    if (rateInput) {
+      rateInput.addEventListener('input', (e) => {
+        const val = parseWpRate(e.target.value);
+        if (!state.settings.workplaceRates) state.settings.workplaceRates = {};
+        state.settings.workplaceRates[wp] = val;
+        saveSettings();
+        updateModalComputedPreview();
+        triggerAppRender();
+      });
+
+      rateInput.addEventListener('focus', (e) => {
+        e.target.select();
+      });
+
+      rateInput.addEventListener('blur', (e) => {
+        const val = parseWpRate(e.target.value);
+        if (!state.settings.workplaceRates) state.settings.workplaceRates = {};
+        state.settings.workplaceRates[wp] = val;
+        e.target.value = formatWpRateDisplay(val);
+        saveSettings();
+        updateModalComputedPreview();
+        triggerAppRender();
+      });
+
+      rateInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          rateInput.blur();
+        }
+      });
+    }
+
+    container.appendChild(card);
+  });
+};
+
+export const addWorkplaceFromProfile = () => {
+  const nameInput = document.getElementById('profileNewWpName');
+  const rateInput = document.getElementById('profileNewWpRate');
+  if (!nameInput) return;
+  const val = nameInput.value.trim();
+  if (!val) {
+    showToast(t('warn_wp_name_empty', 'Vui lòng nhập tên nơi làm việc mới.'));
+    nameInput.focus();
+    return;
+  }
+  normalizeWorkplacesAndRates();
+  if (state.settings.workplaces.some(w => w.toLowerCase() === val.toLowerCase())) {
+    showToast(t('warn_wp_exists', 'Tên nơi làm việc này đã tồn tại.'));
+    nameInput.focus();
+    return;
+  }
+
+  const isFirst = state.settings.workplaces.length === 0;
+  state.settings.workplaces.push(val);
+  if (isFirst || !state.settings.defaultWorkplace) {
+    state.settings.defaultWorkplace = val;
+  }
+
+  const customRate = rateInput ? parseWpRate(rateInput.value) : 0;
+  if (!state.settings.workplaceRates) state.settings.workplaceRates = {};
+  state.settings.workplaceRates[val] = customRate;
+
+  saveSettings();
+  nameInput.value = '';
+  if (rateInput) rateInput.value = '';
+
+  renderProfileWorkplacesEditList();
+  updateWorkplaceInputOptions(val);
+  updateModalComputedPreview();
+  triggerAppRender();
+  triggerHaptic('medium');
+  showToast(`Đã thêm nơi làm việc: ${val}`);
 };
 
 export const openUserProfileModal = () => {
@@ -1455,6 +1794,7 @@ export const openUserProfileModal = () => {
 
   collapseAvatarPicker();
   collapsePasswordSection();
+  collapseProfileWorkplacesEdit();
 
   renderAvatarPickerGrid();
 
@@ -1627,7 +1967,48 @@ export const openUserProfileModal = () => {
     btnManageWp.onclick = (e) => {
       e.preventDefault();
       triggerHaptic('light');
-      openWorkplaceModal({ returnToProfile: true });
+      if (isProfileWpEditMode) {
+        collapseProfileWorkplacesEdit();
+        renderProfileWorkplaces();
+        saveSettings();
+        triggerAppRender();
+      } else {
+        expandProfileWorkplacesEdit();
+      }
+    };
+  }
+
+  const btnAddProfileWp = document.getElementById('btnProfileAddWp');
+  if (btnAddProfileWp) {
+    btnAddProfileWp.onclick = (e) => {
+      e.preventDefault();
+      addWorkplaceFromProfile();
+    };
+  }
+
+  const pNewWpName = document.getElementById('profileNewWpName');
+  if (pNewWpName) {
+    pNewWpName.onkeydown = (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addWorkplaceFromProfile();
+      }
+    };
+  }
+
+  const pNewWpRate = document.getElementById('profileNewWpRate');
+  if (pNewWpRate) {
+    pNewWpRate.onkeydown = (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addWorkplaceFromProfile();
+      }
+    };
+    pNewWpRate.onblur = (e) => {
+      const num = parseWpRate(e.target.value);
+      if (num > 0) {
+        pNewWpRate.value = formatWpRateDisplay(num);
+      }
     };
   }
 
@@ -1719,6 +2100,13 @@ export const setupPasswordToggles = () => {
 export const closeModal = (modalId) => {
   const modal = document.getElementById(modalId);
   if (modal) modal.style.display = 'none';
+  if (modalId === 'userProfileModal') {
+    if (isProfileWpEditMode) {
+      collapseProfileWorkplacesEdit();
+      saveSettings();
+      triggerAppRender();
+    }
+  }
   if (modalId === 'workplaceModal') {
     updateWorkplaceInputOptions();
     updateModalComputedPreview();

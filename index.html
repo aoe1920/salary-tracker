@@ -1049,13 +1049,34 @@
             </div>
             <button type="button" class="btn-profile-wp-manage" id="btnProfileManageWorkplaces"
               title="Chỉnh sửa nơi làm việc" aria-label="Chỉnh sửa nơi làm việc">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="13" height="13">
+              <svg id="profileWpManageIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="13" height="13">
                 <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
               </svg>
-              <span data-i18n="btn_edit">Chỉnh sửa</span>
+              <span id="profileWpManageText" data-i18n="btn_edit">Chỉnh sửa</span>
             </button>
           </div>
-          <div class="profile-workplaces-chip-list" id="profileWorkplacesChipList"></div>
+
+          <div class="profile-wp-view-mode" id="profileWpViewMode">
+            <div class="profile-workplaces-chip-list" id="profileWorkplacesChipList"></div>
+          </div>
+
+          <div class="profile-wp-edit-mode" id="profileWpEditMode" style="display: none;">
+            <div class="profile-wp-add-box">
+              <input type="text" id="profileNewWpName" class="form-input profile-wp-add-name" placeholder="Tên nơi làm" autocomplete="off">
+              <div class="profile-wp-add-rate-wrap">
+                <input type="text" inputmode="numeric" id="profileNewWpRate" class="form-input profile-wp-add-rate" placeholder="Đơn giá" autocomplete="off">
+                <span class="profile-wp-add-unit">đ/h</span>
+              </div>
+              <button type="button" id="btnProfileAddWp" class="btn-action-primary profile-wp-add-btn" title="Thêm nơi làm việc" aria-label="Thêm nơi làm việc">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>Thêm</span>
+              </button>
+            </div>
+            <div class="profile-wp-edit-list" id="profileWpEditList"></div>
+          </div>
         </div>
 
         <div class="profile-linking-box" id="profileLinkingBox">
