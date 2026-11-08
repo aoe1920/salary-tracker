@@ -60,9 +60,7 @@ salary-tracker/
 │   └── modals.css      # Modal dialogs, toast notifications & forms
 ├── docs/
 │   ├── screenshots/    # Application preview illustrations
-│   ├── templates/      # Password recovery email HTML template
-│   ├── DESIGN.md       # Visual design specification
-│   └── PRODUCT.md      # Product requirement document
+│   └── templates/      # Password recovery email HTML template
 ├── js/
 │   ├── services/
 │   │   └── supabase.js # Supabase client, auth state & cloud sync
