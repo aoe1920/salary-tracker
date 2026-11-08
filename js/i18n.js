@@ -257,7 +257,7 @@ const I18N_VI = {
     btn_back: 'Quay lại',
     btn_back_to_login: 'Quay lại đăng nhập',
     auth_manual_linking_hint: 'Vui lòng bật "Allow manual linking" trong cấu hình Supabase Auth Settings.',
-    profile_link_google: 'Liên kết tài khoản Google',
+    profile_link_google: 'Liên kết Google',
     profile_google_linked: 'Đã liên kết Google',
     toast_google_linked: 'Đã liên kết Google',
     auth_prompt_new_password: 'Vui lòng đặt mật khẩu mới cho tài khoản của bạn.',

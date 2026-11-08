@@ -1,7 +1,7 @@
 import { state, getCurrentWeek, hasWorkplaces, getDefaultWorkplace, getWorkplaceColor, normalizeWorkplacesAndRates } from '../state.js';
 import { fmtCurrency, fmtHours, parseTimeToMinutes, parseSmartTime, calculateHoursDiff, getShiftRate, getShiftEarnings, calculateSmartShiftDefaults, detectShiftType, getVietnameseDayOfWeek, getMondayDate, getShiftDateObj, getShiftDateShort, getWeekDateRangeDisplay, ensureWeekStartDate, getDayClass, escapeHtml, calculateWeekTotalSalary } from '../calculator.js';
 import { t, getLocalizedWeekName, getLocalizedShiftType, getLocalizedDayName, formatShiftType } from '../i18n.js';
-import { saveWeeks, saveSettings, updateSyncStatusUI, updateHeaderAuthUI, supabaseClient } from '../services/supabase.js';
+import { saveWeeks, saveSettings, updateSyncStatusUI, updateHeaderAuthUI, supabaseClient, handleLinkGoogleAccount } from '../services/supabase.js';
 import { showToast, showToastWithAction } from './toast.js';
 import { showConfirmDialog, showAlertDialog } from './dialog.js';
 import { triggerHaptic } from './haptic.js';
@@ -2038,7 +2038,14 @@ export const openUserProfileModal = () => {
   const badgeGoogle = document.getElementById('badgeGoogleLinked');
   const isGoogle = Boolean(state.currentUser?.email && !state.currentUser.email.endsWith('@salary.app'));
   const isGoogleLinked = isGoogle || (Array.isArray(state.currentUser?.identities) && state.currentUser.identities.some(i => i.provider === 'google'));
-  if (btnLinkGoogle) btnLinkGoogle.style.display = isGoogleLinked ? 'none' : 'flex';
+  if (btnLinkGoogle) {
+    btnLinkGoogle.style.display = isGoogleLinked ? 'none' : 'inline-flex';
+    btnLinkGoogle.onclick = (e) => {
+      e.preventDefault();
+      triggerHaptic('medium');
+      handleLinkGoogleAccount();
+    };
+  }
   if (badgeGoogle) badgeGoogle.style.display = isGoogleLinked ? 'inline-flex' : 'none';
 
   modal.style.display = 'flex';
