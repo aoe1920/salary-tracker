@@ -9,7 +9,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>404 - Không tìm thấy trang | Salary Tracker</title>
-  <meta name="description" content="Salary Tracker - Trang không tồn tại hoặc đã được di chuyển.">
+  <meta name="description" content="Salary Tracker - Ca làm việc không tồn tại hoặc đã được di chuyển.">
 
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" type="image/svg+xml" href="./assets/icons/icon.svg">
@@ -62,11 +62,11 @@
 
     .notfound-card {
       width: 100%;
-      max-width: 480px;
+      max-width: 460px;
       box-sizing: border-box;
       text-align: center;
       align-items: center;
-      padding: 2.25rem 1.5rem;
+      padding: 2.25rem 1.75rem;
       gap: 1.25rem;
     }
 
@@ -97,30 +97,164 @@
       border-color: rgba(239, 68, 68, 0.35);
     }
 
-    .notfound-icon-badge {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      background: var(--bg-subtle);
-      border: 1px solid var(--border-subtle);
-      color: var(--primary);
+    .notfound-scene {
+      position: relative;
+      width: 104px;
+      height: 104px;
+      margin: 0.15rem auto 0.25rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0.25rem auto 0.25rem;
     }
 
-    html.dark-mode .notfound-icon-badge,
-    body.dark-mode .notfound-icon-badge {
-      background: #171821;
-      border-color: rgba(255, 255, 255, 0.09);
-      color: var(--primary);
+    .notfound-halo {
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.22) 0%, rgba(37, 99, 235, 0) 70%);
+      filter: blur(10px);
+      animation: haloPulse 3.8s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    html.dark-mode .notfound-halo,
+    body.dark-mode .notfound-halo {
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.28) 0%, rgba(59, 130, 246, 0) 70%);
+    }
+
+    @keyframes haloPulse {
+      0%, 100% {
+        transform: scale(0.92);
+        opacity: 0.5;
+      }
+      50% {
+        transform: scale(1.18);
+        opacity: 0.9;
+      }
+    }
+
+    .notfound-radar-ring {
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      border: 1.5px solid var(--primary);
+      opacity: 0;
+      animation: radarRing 3.2s cubic-bezier(0.1, 0.4, 0.2, 1) infinite;
+      pointer-events: none;
+    }
+
+    @keyframes radarRing {
+      0% {
+        transform: scale(0.75);
+        opacity: 0.7;
+      }
+      65% {
+        transform: scale(1.3);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1.3);
+        opacity: 0;
+      }
+    }
+
+    .notfound-clock-card {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      border-radius: 22px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 10px 25px -4px rgba(15, 23, 42, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+      animation: floatBob 3.6s ease-in-out infinite;
+      z-index: 1;
+    }
+
+    html.dark-mode .notfound-clock-card,
+    body.dark-mode .notfound-clock-card {
+      background: #14161f;
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 14px 30px -6px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    @keyframes floatBob {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+
+    .notfound-clock-sweeper {
+      transform-origin: 32px 32px;
+      animation: sweepHand 7s linear infinite;
+    }
+
+    @keyframes sweepHand {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .notfound-coin-badge {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1.5px solid var(--color-money);
+      color: var(--color-money);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 8px rgba(4, 120, 87, 0.22);
+      animation: coinBob 3.6s ease-in-out infinite 0.35s;
+      z-index: 2;
+    }
+
+    html.dark-mode .notfound-coin-badge,
+    body.dark-mode .notfound-coin-badge {
+      background: #121319;
+      border-color: #34d399;
+      color: #34d399;
+      box-shadow: 0 3px 10px rgba(52, 211, 153, 0.28);
+    }
+
+    @keyframes coinBob {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-4px) rotate(8deg);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .notfound-halo,
+      .notfound-radar-ring,
+      .notfound-clock-card,
+      .notfound-clock-sweeper,
+      .notfound-coin-badge {
+        animation: none !important;
+      }
     }
 
     .notfound-content {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.45rem;
       width: 100%;
       box-sizing: border-box;
     }
@@ -136,8 +270,8 @@
     .notfound-desc {
       font-size: 0.875rem;
       color: var(--text-muted);
-      line-height: 1.6;
-      max-width: 380px;
+      line-height: 1.55;
+      max-width: 360px;
       margin: 0 auto;
       width: 100%;
       box-sizing: border-box;
@@ -149,7 +283,7 @@
       justify-content: center;
       width: 100%;
       max-width: 340px;
-      margin-top: 0.5rem;
+      margin-top: 0.35rem;
       box-sizing: border-box;
     }
 
@@ -238,21 +372,32 @@
     <main class="notfound-main">
       <div class="dashboard-stats-card notfound-card">
         <div class="notfound-badge-wrap">
-          <span class="notfound-tag font-mono">404 • KHÔNG TÌM THẤY TRANG</span>
+          <span class="notfound-tag font-mono">404 • KHÔNG TÌM THẤY CA</span>
         </div>
 
-        <div class="notfound-icon-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"
-            stroke-linejoin="round" width="36" height="36">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-          </svg>
+        <div class="notfound-scene" aria-hidden="true">
+          <div class="notfound-halo"></div>
+          <div class="notfound-radar-ring"></div>
+          <div class="notfound-clock-card">
+            <svg viewBox="0 0 64 64" width="46" height="46" fill="none">
+              <circle cx="32" cy="32" r="26" stroke="currentColor" stroke-width="2.2" stroke-opacity="0.3"></circle>
+              <line x1="32" y1="10" x2="32" y2="14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"></line>
+              <line x1="54" y1="32" x2="50" y2="32" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"></line>
+              <line x1="32" y1="54" x2="32" y2="50" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"></line>
+              <line x1="10" y1="32" x2="14" y2="32" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"></line>
+              <line x1="32" y1="32" x2="43" y2="41" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"></line>
+              <g class="notfound-clock-sweeper">
+                <line x1="32" y1="32" x2="32" y2="15" stroke="var(--primary)" stroke-width="2" stroke-linecap="round"></line>
+              </g>
+              <circle cx="32" cy="32" r="3" fill="var(--primary)"></circle>
+            </svg>
+            <div class="notfound-coin-badge font-mono">₫</div>
+          </div>
         </div>
 
         <div class="notfound-content">
-          <h2 class="notfound-title">Trang không tồn tại</h2>
-          <p class="notfound-desc">Đường dẫn bạn vừa truy cập có thể đã bị thay đổi, gỡ bỏ hoặc bạn đã nhập sai địa chỉ. Hãy quay về trang chủ để tiếp tục theo dõi ca làm việc.</p>
+          <h2 class="notfound-title">Ca làm không tồn tại</h2>
+          <p class="notfound-desc">Đường dẫn không có trong lịch làm việc. Hãy về trang chủ để tiếp tục tính lương.</p>
         </div>
 
         <div class="notfound-actions">
