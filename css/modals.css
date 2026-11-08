@@ -1747,10 +1747,12 @@ body.dark-mode .btn-profile-edit-name:hover {
 .btn-profile-wp-manage {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.25rem 0.55rem;
-  font-size: 0.75rem;
-  font-weight: 600;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0;
   color: var(--primary);
   border-radius: var(--radius-xs);
   cursor: pointer;
@@ -1833,9 +1835,11 @@ body.dark-mode .btn-profile-wp-manage.is-active {
 }
 
 .profile-wp-add-btn {
+  width: 32px;
   height: 32px;
-  padding: 0 0.65rem;
-  gap: 0.25rem;
+  min-width: 32px;
+  min-height: 32px;
+  padding: 0;
   font-size: 0.775rem;
   font-weight: 500;
   border-radius: var(--radius-xs);
@@ -2926,11 +2930,13 @@ body.dark-mode .swq-item-card.is-default-card {
 .wp-default-tag {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  font-size: 0.675rem;
-  font-weight: 700;
-  padding: 0.12rem 0.45rem;
-  border-radius: var(--radius-pill);
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+  padding: 0;
+  border-radius: var(--radius-xs);
   background: rgba(37, 99, 235, 0.12);
   color: #2563eb;
   border: 1px solid rgba(37, 99, 235, 0.3);
@@ -2947,11 +2953,13 @@ body.dark-mode .wp-default-tag {
 .btn-set-default-wp {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  font-size: 0.675rem;
-  font-weight: 600;
-  padding: 0.12rem 0.45rem;
-  border-radius: var(--radius-pill);
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+  padding: 0;
+  border-radius: var(--radius-xs);
   border: 1px solid var(--border-default);
   background: var(--bg-surface);
   color: var(--text-muted);

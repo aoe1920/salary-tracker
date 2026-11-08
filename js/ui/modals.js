@@ -926,14 +926,12 @@ export const renderShiftWorkplacesList = () => {
               <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10">
                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
               </svg>
-              <span>${t('tag_default_workplace', 'Mặc định')}</span>
             </span>
           ` : (hasMultiple ? `
-            <button type="button" class="btn-set-default-wp" data-set-default="${escapeHtml(wp)}" title="${t('btn_set_default_wp', 'Đặt làm nơi làm việc mặc định')}">
+            <button type="button" class="btn-set-default-wp" data-set-default="${escapeHtml(wp)}" title="${t('btn_set_default_wp', 'Đặt làm nơi làm việc mặc định')}" aria-label="${t('btn_set_default_wp', 'Đặt làm nơi làm việc mặc định')}">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="11" height="11">
                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
               </svg>
-              <span>Đặt mặc định</span>
             </button>
           ` : '')}
         </div>
@@ -1401,11 +1399,12 @@ export const collapseProfileWorkplacesEdit = () => {
   const btnManage = document.getElementById('btnProfileManageWorkplaces');
   if (btnManage) {
     btnManage.classList.remove('is-active');
+    btnManage.title = t('btn_edit', 'Chỉnh sửa');
+    btnManage.setAttribute('aria-label', t('btn_edit', 'Chỉnh sửa'));
     btnManage.innerHTML = `
       <svg id="profileWpManageIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="13" height="13">
         <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
       </svg>
-      <span id="profileWpManageText">${t('btn_edit', 'Chỉnh sửa')}</span>
     `;
   }
 };
@@ -1420,11 +1419,12 @@ export const expandProfileWorkplacesEdit = () => {
   const btnManage = document.getElementById('btnProfileManageWorkplaces');
   if (btnManage) {
     btnManage.classList.add('is-active');
+    btnManage.title = t('btn_done', 'Xong');
+    btnManage.setAttribute('aria-label', t('btn_done', 'Xong'));
     btnManage.innerHTML = `
-      <svg id="profileWpManageIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13">
+      <svg id="profileWpManageIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="13" height="13">
         <polyline points="20 6 9 17 4 12"></polyline>
       </svg>
-      <span id="profileWpManageText">${t('btn_done', 'Xong')}</span>
     `;
   }
 
@@ -1516,18 +1516,16 @@ export const renderProfileWorkplacesEditList = () => {
           <span class="profile-wp-dot" style="background-color: ${wpCol.fill};"></span>
           <span class="profile-wp-edit-name" title="${escapeHtml(wp)}">${escapeHtml(wp)}</span>
           ${isDefault ? `
-            <span class="wp-default-tag font-mono" title="${t('tag_default_workplace', 'Mặc định')}">
-              <svg viewBox="0 0 24 24" fill="currentColor" width="9" height="9">
+            <span class="wp-default-tag" title="${t('tag_default_workplace', 'Mặc định')}">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10">
                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
               </svg>
-              <span>${t('tag_default_workplace', 'Mặc định')}</span>
             </span>
           ` : (hasMultiple ? `
-            <button type="button" class="btn-set-default-wp" data-p-set-default="${escapeHtml(wp)}" title="${t('btn_set_default_wp', 'Đặt làm nơi làm việc mặc định')}">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="10" height="10">
+            <button type="button" class="btn-set-default-wp" data-p-set-default="${escapeHtml(wp)}" title="${t('btn_set_default_wp', 'Đặt làm nơi làm việc mặc định')}" aria-label="${t('btn_set_default_wp', 'Đặt làm nơi làm việc mặc định')}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="11" height="11">
                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
               </svg>
-              <span>Đặt mặc định</span>
             </button>
           ` : '')}
         </div>

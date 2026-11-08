@@ -410,7 +410,6 @@
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
-              <span>Thêm</span>
             </button>
           </div>
         </div>
@@ -428,7 +427,6 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
-          <span>Xong</span>
         </button>
       </div>
     </div>
@@ -1059,27 +1057,17 @@
         <div class="profile-workplaces-card" id="profileWorkplacesCard">
           <div class="profile-card-header-row">
             <div class="profile-card-header-left">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="16" height="16">
-                <rect width="16" height="20" x="4" y="2" rx="2" ry="2"></rect>
-                <path d="M9 22v-4h6v4"></path>
-                <path d="M8 6h.01"></path>
-                <path d="M16 6h.01"></path>
-                <path d="M12 6h.01"></path>
-                <path d="M12 10h.01"></path>
-                <path d="M12 14h.01"></path>
-                <path d="M16 10h.01"></path>
-                <path d="M16 14h.01"></path>
-                <path d="M8 10h.01"></path>
-                <path d="M8 14h.01"></path>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0Z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
               </svg>
               <span class="profile-card-title font-sans" data-i18n="modal_workplaces_title">Cơ sở làm việc</span>
             </div>
             <button type="button" class="btn-profile-wp-manage" id="btnProfileManageWorkplaces"
-              title="Chỉnh sửa nơi làm việc" aria-label="Chỉnh sửa nơi làm việc">
+              data-i18n-title="btn_edit" title="Chỉnh sửa" aria-label="Chỉnh sửa">
               <svg id="profileWpManageIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="13" height="13">
                 <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
               </svg>
-              <span id="profileWpManageText" data-i18n="btn_edit">Chỉnh sửa</span>
             </button>
           </div>
 
@@ -1095,11 +1083,10 @@
                 <span class="profile-wp-add-unit">đ/h</span>
               </div>
               <button type="button" id="btnProfileAddWp" class="btn-action-primary profile-wp-add-btn" title="Thêm nơi làm việc" aria-label="Thêm nơi làm việc">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13">
                   <line x1="12" y1="5" x2="12" y2="19"></line>
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                 </svg>
-                <span>Thêm</span>
               </button>
             </div>
             <div class="profile-wp-edit-list" id="profileWpEditList"></div>
