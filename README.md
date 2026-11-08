@@ -6,20 +6,44 @@
 [![Architecture: Vanilla ESM](https://img.shields.io/badge/Architecture-Vanilla_ESM-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](https://developer.mozilla.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 
-An offline-first, zero-build Progressive Web App (PWA) for shift scheduling and personal earnings tracking, backed by Supabase PostgreSQL with strict Row Level Security (RLS).
+An offline-first, zero-build Progressive Web App (PWA) for shift scheduling, wage calculations, and personal financial tracking, backed by Supabase PostgreSQL with strict Row Level Security (RLS).
 
 [**Live Demo →**](https://aoe1920.github.io/salary-tracker/)
 
 ---
 
+## Preview
+
+<p align="center">
+  <img src="docs/screenshots/preview-desktop.png" alt="Salary Tracker Desktop Interface" width="85%" style="border-radius: 12px; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);" />
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/preview-mobile.png" alt="Salary Tracker Mobile Interface" width="38%" style="border-radius: 16px; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);" />
+</p>
+
+---
+
 ## Highlights
 
-- **Shift & Wage Calculation:** Automated hours diff, overnight shifts crossing midnight, custom overtime rates, allowances, and deductions.
-- **Multi-Workplace:** Per-workplace hourly rates, visual color-coding, and custom presets.
-- **Authentication:** Dual login (Username or Email), 1-click Google OAuth 2.0 PKCE, account identity linking, and email password recovery.
-- **Security by Design:** Database-enforced Row Level Security (RLS) ensuring strict personal data isolation (`auth.uid() = user_id`).
-- **Offline PWA:** Service Worker Cache API with optimistic local persistence and automatic cloud sync.
-- **Refined UX:** SVG Morphicons, iOS frosted glass dockbar, haptic feedback, Canvas payslip exports, and CSV summaries.
+- **Smart Shift Detection & Overlap Calculation:** Automatic determination of morning, noon, and evening shifts based on working time overlap ratios, with tie-breaking logic.
+- **Precision Wage Engine:** Accurate computation of base hourly rates, overnight shifts crossing midnight, overtime multipliers, fixed allowances, and deductions.
+- **Multi-Workplace Management:** Individual workplace rate configs, custom color coding, and quick workplace switching.
+- **Enterprise-Grade Authentication:** Dual sign-in with clean usernames or email, Google OAuth 2.0 PKCE, account identity linking, and self-service password recovery.
+- **Security by Design:** Database-level Row Level Security (RLS) policies guaranteeing complete tenant data isolation (`auth.uid() = user_id`).
+- **Offline-First PWA:** Service Worker Cache API with optimistic local persistence and seamless automatic cloud synchronization on reconnection.
+- **Export & Share:** High-resolution HTML5 Canvas payslip generator with 1-click clipboard image copy, and multi-week CSV data export.
+- **Refined UX & Micro-Interactions:** Smooth hardware-accelerated animations, iOS frosted-glass bottom dock, SVG avatar system, and non-intrusive toast notifications.
+
+---
+
+## Tech Stack
+
+- **Frontend Core:** Vanilla ES2022 JavaScript (ES Modules), zero build tools required.
+- **Styling:** Modular CSS3 with custom properties, responsive grid/flexbox, and light/dark theme variables.
+- **Backend & Auth:** Supabase Cloud (PostgreSQL 15, Auth GoTrue, Realtime PostgreSQL Changes).
+- **Offline PWA:** Service Worker Cache Storage API, Web App Manifest.
+- **Icons & Avatars:** Handcrafted SVG icons and curated vector illustrations from [alohe/avatars](https://github.com/alohe/avatars).
 
 ---
 
@@ -27,16 +51,40 @@ An offline-first, zero-build Progressive Web App (PWA) for shift scheduling and 
 
 ```text
 salary-tracker/
-├── assets/icons/       # PWA icons & branding
-├── css/                # Base tokens, component styling, and modal views
+├── assets/
+│   ├── avatars/        # Curated avatar illustrations (alohe/avatars)
+│   └── icons/          # PWA app icons & favicon
+├── css/
+│   ├── base.css        # Design tokens, reset & typography
+│   ├── components.css  # Buttons, cards, header & navigation pills
+│   └── modals.css      # Modal dialogs, toast notifications & forms
+├── docs/
+│   ├── screenshots/    # Application preview illustrations
+│   ├── templates/      # Password recovery email HTML template
+│   ├── DESIGN.md       # Visual design specification
+│   └── PRODUCT.md      # Product requirement document
 ├── js/
-│   ├── services/       # Supabase client, auth & realtime sync
-│   ├── ui/             # Modals, charts, canvas payslip, export & haptics
-│   ├── vendor/         # Isolated Morphicons runtime
-│   ├── calculator.js   # Pure wage & hours business logic
-│   ├── state.js        # Reactive central state store
-│   └── app.js          # App orchestrator & event bindings
-├── index.html          # Semantic application shell
+│   ├── services/
+│   │   └── supabase.js # Supabase client, auth state & cloud sync
+│   ├── ui/
+│   │   ├── avatars.js  # Avatar selection & randomizer
+│   │   ├── canvas-slip.js # HTML5 Canvas payslip generator
+│   │   ├── chart.js    # Interactive financial analytics
+│   │   ├── dialog.js   # Accessible dialog boxes
+│   │   ├── export.js   # CSV & JSON backup exporter
+│   │   ├── haptic.js   # Mobile vibration feedback
+│   │   ├── modals.js   # Modal orchestrator & forms
+│   │   ├── select.js   # Accessible custom dropdowns
+│   │   └── toast.js    # Adaptive toast notification engine
+│   ├── vendor/         # Isolated third-party helper runtimes
+│   ├── app.js          # Main application bootstrapper
+│   ├── calculator.js   # Pure wage calculation & time diff engine
+│   ├── config.js       # App constants & palette presets
+│   ├── i18n.js         # Localization dictionary
+│   ├── state.js        # Reactive central application store
+│   └── theme.js        # Theme state & system preference listener
+├── index.html          # Semantic HTML5 application shell
+├── manifest.json       # Progressive Web App manifest
 └── sw.js               # Offline-first Service Worker
 ```
 
@@ -44,18 +92,26 @@ salary-tracker/
 
 ## Quick Start
 
+Run locally without any bundler or build step:
+
 ```bash
+# 1. Clone the repository
 git clone https://github.com/aoe1920/salary-tracker.git
 cd salary-tracker
+
+# 2. Serve static files with any local HTTP server
 npx serve .
-# Or: python -m http.server 8080
+# Or using Python 3:
+# python -m http.server 8080
 ```
+
+Open `http://localhost:8080` in your browser.
 
 ---
 
 ## Database Setup
 
-Run this in your **Supabase SQL Editor**:
+Execute the following script in your **Supabase SQL Editor**:
 
 ```sql
 create table if not exists public.user_salary_data (
@@ -108,24 +164,8 @@ $$;
 grant execute on function public.get_login_email(text) to anon, authenticated;
 ```
 
-### Auth & Email Configuration
-
-1. **Supabase Auth Settings:**
-   - Enable **"Allow manual linking"** in **Authentication > Providers > Email / Google**.
-   - Add your domain and redirect URLs in **Authentication > URL Configuration > Redirect URLs** (ví dụ: `https://aoe1920.github.io/salary-tracker/` và `http://localhost:3000/`).
-
-2. **Reset Password Email Template:**
-   - Truy cập **Supabase Dashboard > Authentication > Email Templates > Reset Password**.
-   - **Subject:** `[Salary Tracker] Đặt lại mật khẩu tài khoản của bạn`
-   - **Body:** Copy và dán toàn bộ mã HTML từ file [`docs/templates/email-reset-password.html`](docs/templates/email-reset-password.html).
-
-### Documentation
-
-- [Đặc tả thiết kế giao diện (DESIGN.md)](docs/DESIGN.md)
-- [Đặc tả sản phẩm & tính năng (PRODUCT.md)](docs/PRODUCT.md)
-
 ---
 
 ## License
 
-[MIT](LICENSE)
+This project is licensed under the [MIT License](LICENSE).

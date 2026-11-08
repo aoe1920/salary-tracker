@@ -1127,16 +1127,17 @@ body.dark-mode .badge-count {
 
 .shifts-list-fade {
   animation: shiftsListFade 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
 
 @keyframes shiftsListFade {
   from {
     opacity: 0.45;
-    transform: translateY(2px);
+    transform: translate3d(0, 2px, 0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -1396,6 +1397,10 @@ body.dark-mode .sl-note-item {
 }
 
 .sl-earnings-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.55rem;
   text-align: right;
   flex-shrink: 0;
 }
@@ -1405,7 +1410,7 @@ body.dark-mode .sl-note-item {
   font-weight: 700;
   color: var(--color-money);
   letter-spacing: -0.02em;
-  display: block;
+  display: inline-block;
   line-height: 1.15;
 }
 
@@ -1416,8 +1421,9 @@ body.dark-mode .sl-earnings-val {
 .sl-rate-sub {
   font-size: 0.75rem;
   color: var(--text-dim);
-  display: block;
-  margin-top: 1px;
+  display: inline-block;
+  margin-top: 0;
+  white-space: nowrap;
 }
 
 body.dark-mode .sl-rate-sub {

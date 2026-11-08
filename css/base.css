@@ -232,6 +232,7 @@ body,
 *::after {
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
+  -webkit-tap-highlight-color: transparent;
 }
 
 ::-webkit-scrollbar,

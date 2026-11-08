@@ -727,7 +727,7 @@ export const VERIFIED_USER_SETTINGS = {
   workplaceRates: { 'Cơm Chin Chin': 40000 },
   workplaceColors: { 'Cơm Chin Chin': '#6366f1' },
   defaultRate: 40000,
-  avatar: 'default'
+  avatar: 'vibrent_1'
 };
 
 export const reconcileWeeksWithVerified = (weeks) => {
@@ -946,14 +946,16 @@ export const loadState = async () => {
 
     normalizeWorkplacesAndRates();
     if (state.currentUser) {
-      if (!state.settings?.avatar) {
+      if (!state.settings?.avatar || state.settings.avatar === 'default') {
         if (!state.settings) state.settings = {};
-        state.settings.avatar = state.currentUser.avatar || 'default';
+        state.settings.avatar = (state.currentUser.avatar && state.currentUser.avatar !== 'default') ? state.currentUser.avatar : getRandomAvatar().id;
         saveSettings();
       }
     } else {
       if (!state.settings) state.settings = {};
-      state.settings.avatar = 'default';
+      if (!state.settings.avatar || state.settings.avatar === 'default') {
+        state.settings.avatar = getRandomAvatar().id;
+      }
     }
 
     state.weeks.forEach((w, idx) => {
@@ -1424,7 +1426,7 @@ export const handleRegisterSubmit = async (e) => {
   try {
     const email = isEmail ? rawInput.toLowerCase() : `${rawInput.toLowerCase()}@salary.app`;
     const username = (isEmail ? rawInput.split('@')[0] : rawInput).trim().replace(/\s+/g, '').toLowerCase();
-    const avatarId = 'default';
+    const avatarId = getRandomAvatar().id;
     const { data, error } = await supabaseClient.auth.signUp({
       email,
       password,
@@ -1532,7 +1534,7 @@ export const handleLogout = async () => {
     state.weeks = JSON.parse(JSON.stringify(GUEST_DEFAULT_DATA));
     if (!state.settings) state.settings = {};
     state.settings.workplaces = [];
-    state.settings.avatar = 'default';
+    state.settings.avatar = getRandomAvatar().id;
     state.currentWeekId = state.weeks[0].id;
     saveWeeks();
     saveSettings();
@@ -1597,7 +1599,7 @@ export const handleDeleteAccount = async () => {
     state.weeks = JSON.parse(JSON.stringify(GUEST_DEFAULT_DATA));
     if (!state.settings) state.settings = {};
     state.settings.workplaces = [];
-    state.settings.avatar = 'default';
+    state.settings.avatar = getRandomAvatar().id;
     state.currentWeekId = state.weeks[0].id;
     saveSettings();
     updateHeaderAuthUI();
