@@ -11,8 +11,8 @@ export const formatShiftType = (type) => {
 
 const I18N_VI = {
   app_title: 'Salary Tracker',
-    nav_account: 'Tài khoản & Đăng nhập',
-    nav_settings: 'Cài đặt & Dữ liệu',
+    nav_account: 'Tài khoản',
+    nav_settings: 'Cài đặt và dữ liệu',
     btn_edit_week_meta: 'Chỉnh sửa thông tin tuần',
     btn_add_week: 'Thêm tuần',
     btn_delete_week: 'Xóa tuần',
@@ -110,8 +110,8 @@ const I18N_VI = {
     modal_break: 'Nghỉ giữa ca (phút)',
     modal_ot: 'Hệ số ca',
     modal_workplaces_title: 'Cơ sở làm việc',
-    modal_workplaces_desc: 'Quản lý cơ sở & mức lương cơ bản (đ/h)',
-    profile_manage_workplaces: 'Cơ sở làm việc & Đơn giá',
+    modal_workplaces_desc: 'Địa điểm và lương cơ bản',
+    profile_manage_workplaces: 'Cơ sở làm việc',
     modal_allowance: 'Phụ cấp / Thưởng (đ)',
     modal_deduction: 'Khấu trừ (đ)',
     ph_deduction: '0',
@@ -185,7 +185,7 @@ const I18N_VI = {
     time_unknown: 'Không rõ thời gian',
 
     settings_title: 'Cài đặt',
-    setting_workplaces: 'Nơi làm việc & Đơn giá (đ/h)',
+    setting_workplaces: 'Nơi làm việc và đơn giá (đ/h)',
     ph_new_workplace: 'Nơi làm mới',
     btn_add_workplace: 'Thêm nơi làm',
     setting_data: 'Dữ liệu',
@@ -252,7 +252,7 @@ const I18N_VI = {
     btn_google_signin: 'Đăng nhập bằng Google',
     auth_google_continue: 'Tiếp tục với Google',
     btn_login: 'Đăng nhập',
-    btn_register: 'Tạo tài khoản & Đăng nhập',
+    btn_register: 'Tạo tài khoản',
     btn_send_recovery: 'Gửi liên kết khôi phục',
     btn_back: 'Quay lại',
     btn_back_to_login: 'Quay lại đăng nhập',
@@ -264,7 +264,7 @@ const I18N_VI = {
 
     reset_pw_title: 'Đặt lại mật khẩu',
     reset_pw_subtitle: 'Nhập mật khẩu mới cho tài khoản của bạn',
-    btn_save_new_password: 'Lưu mật khẩu mới & Đăng nhập',
+    btn_save_new_password: 'Lưu mật khẩu mới',
     auth_reset_success: 'Đặt lại mật khẩu thành công.',
     profile_title: 'Hồ sơ người dùng',
     profile_change_avatar: 'Đổi ảnh đại diện',

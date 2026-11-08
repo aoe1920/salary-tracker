@@ -939,10 +939,6 @@ const bindEvents = () => {
   setupCustomSelect('shiftWorkplace');
   setupCustomSelect('filterWorkplaceSelect');
 
-  const btnToggleWp = document.getElementById('btnToggleWorkplacePanel');
-  if (btnToggleWp) {
-    btnToggleWp.addEventListener('click', openWorkplaceModal);
-  }
   const btnShiftAddWp = document.getElementById('btnShiftAddWp');
   if (btnShiftAddWp) {
     btnShiftAddWp.addEventListener('click', addWorkplaceFromShiftModal);
@@ -970,20 +966,6 @@ const bindEvents = () => {
       if (!isNaN(num) && num > 0) {
         shiftNewWpRate.value = new Intl.NumberFormat('vi-VN').format(num);
       }
-    });
-  }
-
-  const btnCloseWp = document.getElementById('btnCloseWorkplacePanel');
-  if (btnCloseWp) {
-    btnCloseWp.addEventListener('click', () => {
-      closeWorkplaceModal();
-    });
-  }
-
-  const btnProfileOpenWp = document.getElementById('btnProfileOpenWorkplaces');
-  if (btnProfileOpenWp) {
-    btnProfileOpenWp.addEventListener('click', () => {
-      openWorkplaceModal();
     });
   }
 

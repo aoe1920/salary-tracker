@@ -85,9 +85,9 @@ export const openAddShiftModal = (prefill = null) => {
   const form = document.getElementById('shiftForm');
   form.reset();
 
-  document.getElementById('shiftModalTitle').textContent = t('modal_add_shift', 'Thêm ca làm việc');
+  document.getElementById('shiftModalTitle').textContent = t('modal_add_shift', 'Thêm ca');
   const shiftSubAdd = document.getElementById('shiftModalSubtitle');
-  if (shiftSubAdd) shiftSubAdd.textContent = 'Thông tin thời gian & địa điểm làm việc';
+  if (shiftSubAdd) shiftSubAdd.textContent = 'Thời gian và nơi làm';
   document.getElementById('editShiftId').value = '';
 
   const btnDel = document.getElementById('btnDeleteShiftModal');
@@ -133,9 +133,9 @@ export const openAddShiftModal = (prefill = null) => {
 
 export const openEditShiftModal = (shift) => {
   const modal = document.getElementById('shiftModal');
-  document.getElementById('shiftModalTitle').textContent = t('modal_edit_shift', 'Chỉnh sửa ca làm việc');
+  document.getElementById('shiftModalTitle').textContent = t('modal_edit_shift', 'Sửa ca');
   const shiftSubEdit = document.getElementById('shiftModalSubtitle');
-  if (shiftSubEdit) shiftSubEdit.textContent = 'Cập nhật thời gian & phụ cấp';
+  if (shiftSubEdit) shiftSubEdit.textContent = 'Thời gian và nơi làm';
   document.getElementById('editShiftId').value = shift.id;
 
   const btnDel = document.getElementById('btnDeleteShiftModal');
@@ -924,8 +924,8 @@ export const renderShiftWorkplacesList = () => {
       <div class="swq-card-bottom">
         <span class="swq-rate-label">Đơn giá theo giờ:</span>
         <div class="swq-rate-input-wrap">
-          <input type="text" inputmode="numeric" class="swq-rate-input font-mono" data-wp="${escapeHtml(wp)}" value="${formatWpRateDisplay(rate)}" placeholder="0" autocomplete="off">
-          <span class="swq-rate-tag font-mono">đ/h</span>
+          <input type="text" inputmode="numeric" class="swq-rate-input" data-wp="${escapeHtml(wp)}" value="${formatWpRateDisplay(rate)}" placeholder="0" autocomplete="off">
+          <span class="swq-rate-tag">đ/h</span>
         </div>
       </div>
     `;
