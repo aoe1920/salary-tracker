@@ -898,6 +898,14 @@ export const renderShiftWorkplacesList = () => {
   const currentDefaultWp = getDefaultWorkplace();
   const hasMultiple = state.settings.workplaces.length > 1;
 
+  if (!state.settings.workplaces || state.settings.workplaces.length === 0) {
+    const emptyState = document.createElement('div');
+    emptyState.className = 'swq-empty-card';
+    emptyState.textContent = 'Chưa có nơi làm việc nào';
+    container.appendChild(emptyState);
+    return;
+  }
+
   state.settings.workplaces.forEach((wp, idx) => {
     const wpCol = getWorkplaceColor(wp);
     const rate = (state.settings.workplaceRates && state.settings.workplaceRates[wp] !== undefined)
