@@ -1,7 +1,7 @@
 import { SUPABASE_URL, SUPABASE_ANON_KEY, GUEST_DEFAULT_DATA, GUEST_WEEKS_KEY, GUEST_SETTINGS_KEY, LOCAL_CACHE_WEEKS_KEY, LOCAL_CACHE_SETTINGS_KEY, PENDING_SYNC_KEY } from '../config.js';
 import { state, getWeeksStorageKey, getSettingsStorageKey, normalizeWorkplacesAndRates } from '../state.js';
 import { t } from '../i18n.js';
-import { ensureWeekStartDate } from '../calculator.js';
+import { ensureWeekStartDate, syncShiftsTypeConsistency } from '../calculator.js';
 import { showToast } from '../ui/toast.js';
 import { showConfirmDialog } from '../ui/dialog.js';
 import { applyTheme } from '../theme.js';
@@ -707,7 +707,7 @@ export const VERIFIED_USER_WEEKS = [
       {
         "id": "s-w10-2",
         "day": "T6",
-        "type": "Tối",
+        "type": "Trưa",
         "start": "14:15",
         "end": "17:15",
         "breakMinutes": 0,
@@ -959,6 +959,10 @@ export const loadState = async () => {
     state.weeks.forEach((w, idx) => {
       ensureWeekStartDate(w, idx);
     });
+    const shiftsSynced = syncShiftsTypeConsistency(state.weeks);
+    if (shiftsSynced) {
+      saveWeeks();
+    }
     const savedCurrentWeek = localStorage.getItem('salary_tracker_current_week');
     if (savedCurrentWeek && state.weeks.some(w => w.id === savedCurrentWeek)) {
       state.currentWeekId = savedCurrentWeek;
@@ -1132,6 +1136,8 @@ export const restoreCachedStateSync = () => {
 
     if (loadedWeeks && loadedWeeks.length > 0) {
       state.weeks = loadedWeeks;
+      state.weeks.forEach((w, idx) => ensureWeekStartDate(w, idx));
+      syncShiftsTypeConsistency(state.weeks);
       const savedCurrentWeek = localStorage.getItem('salary_tracker_current_week');
       if (savedCurrentWeek && state.weeks.some(w => w.id === savedCurrentWeek)) {
         state.currentWeekId = savedCurrentWeek;
@@ -1834,6 +1840,7 @@ export const setupRealtimeSync = () => {
               normalizeWorkplacesAndRates();
               if (state.weeks.length > 0) {
                 state.weeks.forEach((w, idx) => ensureWeekStartDate(w, idx));
+                syncShiftsTypeConsistency(state.weeks);
                 if (!state.weeks.some(w => w.id === state.currentWeekId)) {
                   state.currentWeekId = state.weeks[state.weeks.length - 1].id;
                 }
@@ -1896,6 +1903,7 @@ export const setupAutoSync = () => {
             normalizeWorkplacesAndRates();
             if (state.weeks.length > 0) {
               state.weeks.forEach((w, idx) => ensureWeekStartDate(w, idx));
+              syncShiftsTypeConsistency(state.weeks);
               if (!state.weeks.some(w => w.id === state.currentWeekId)) {
                 state.currentWeekId = state.weeks[state.weeks.length - 1].id;
               }

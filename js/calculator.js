@@ -249,18 +249,90 @@ export const escapeHtml = (str) => {
     .replace(/'/g, '&#39;');
 };
 
-export const detectShiftType = (startTimeStr) => {
-  if (!startTimeStr) return 'Tối';
-  const smart = parseSmartTime(startTimeStr);
-  const timeStr = smart || startTimeStr;
-  const parts = timeStr.split(':');
-  const h = parseInt(parts[0], 10);
-  const m = parseInt(parts[1], 10) || 0;
-  if (isNaN(h)) return 'Tối';
-  const totalMins = h * 60 + m;
-  if (totalMins >= 5 * 60 && totalMins <= 11 * 60 + 59) return 'Sáng';
-  if (totalMins >= 12 * 60 && totalMins <= 16 * 60 + 59) return 'Trưa';
-  return 'Tối';
+export const detectShiftType = (startTimeStr, endTimeStr = null) => {
+  if (!startTimeStr && !endTimeStr) return 'Tối';
+
+  const parseMins = (str) => {
+    if (!str) return null;
+    const smart = parseSmartTime(str);
+    const timeStr = smart || str;
+    const parts = String(timeStr).trim().split(':');
+    const h = parseInt(parts[0], 10);
+    const m = parseInt(parts[1], 10) || 0;
+    if (isNaN(h)) return null;
+    return h * 60 + m;
+  };
+
+  const getTypeForMinute = (mins) => {
+    const m = ((mins % 1440) + 1440) % 1440;
+    if (m >= 300 && m < 660) return 'Sáng';
+    if (m >= 660 && m < 1020) return 'Trưa';
+    return 'Tối';
+  };
+
+  const sMins = parseMins(startTimeStr);
+  const eMins = parseMins(endTimeStr);
+
+  if (sMins === null && eMins !== null) {
+    return getTypeForMinute(eMins - 1);
+  }
+  if (sMins !== null && eMins === null) {
+    return getTypeForMinute(sMins);
+  }
+  if (sMins === null && eMins === null) return 'Tối';
+
+  let totalEnd = eMins;
+  if (totalEnd <= sMins) {
+    totalEnd += 1440;
+  }
+
+  let sang = 0;
+  let trua = 0;
+  let toi = 0;
+
+  const addInterval = (a, b) => {
+    if (a >= b) return;
+    sang += Math.max(0, Math.min(b, 660) - Math.max(a, 300));
+    trua += Math.max(0, Math.min(b, 1020) - Math.max(a, 660));
+    toi += Math.max(0, Math.min(b, 300) - Math.max(a, 0));
+    toi += Math.max(0, Math.min(b, 1440) - Math.max(a, 1020));
+  };
+
+  if (totalEnd <= 1440) {
+    addInterval(sMins, totalEnd);
+  } else {
+    addInterval(sMins, 1440);
+    addInterval(0, totalEnd - 1440);
+  }
+
+  if (sang > trua && sang > toi) return 'Sáng';
+  if (trua > sang && trua > toi) return 'Trưa';
+  if (toi > sang && toi > trua) return 'Tối';
+
+  return getTypeForMinute(eMins - 1);
+};
+
+export const syncShiftsTypeConsistency = (weeks = state.weeks) => {
+  if (!Array.isArray(weeks)) return false;
+  const standardTypes = ['Sáng', 'Trưa', 'Tối'];
+  let changed = false;
+  weeks.forEach(w => {
+    if (Array.isArray(w?.shifts)) {
+      w.shifts.forEach(s => {
+        if (s && s.start && s.end) {
+          const currentType = formatShiftType(s.type);
+          if (!currentType || standardTypes.includes(currentType)) {
+            const detected = detectShiftType(s.start, s.end);
+            if (s.type !== detected) {
+              s.type = detected;
+              changed = true;
+            }
+          }
+        }
+      });
+    }
+  });
+  return changed;
 };
 
 export const calculateSmartShiftDefaults = (prefill = null, now = new Date()) => {
@@ -271,7 +343,7 @@ export const calculateSmartShiftDefaults = (prefill = null, now = new Date()) =>
     endMin = 0;
   }
   const endTotalMins = endHour * 60 + endMin;
-  const defaultEnd = `${String(endHour).padStart(2, '0')}:${String(endMin).padStart(2, '0')}`;
+  let defaultEnd = `${String(endHour).padStart(2, '0')}:${String(endMin).padStart(2, '0')}`;
 
   const allPastShifts = [];
   if (Array.isArray(state.weeks)) {
@@ -335,10 +407,6 @@ export const calculateSmartShiftDefaults = (prefill = null, now = new Date()) =>
   let startMin = startTotalMins % 60;
   let defaultStart = `${String(startHour).padStart(2, '0')}:${String(startMin).padStart(2, '0')}`;
 
-  if (!detectedType) {
-    detectedType = detectShiftType(defaultStart);
-  }
-
   const defaultDay = prefill?.day || getVietnameseDayOfWeek(now);
 
   if (prefill) {
@@ -346,9 +414,13 @@ export const calculateSmartShiftDefaults = (prefill = null, now = new Date()) =>
     if (prefill.end) defaultEnd = prefill.end;
     if (prefill.type) {
       detectedType = prefill.type;
-    } else if (prefill.start) {
-      detectedType = detectShiftType(prefill.start);
+    } else if (prefill.start || prefill.end) {
+      detectedType = detectShiftType(prefill.start, prefill.end);
     }
+  }
+
+  if (!detectedType) {
+    detectedType = detectShiftType(defaultStart, defaultEnd);
   }
 
   return {

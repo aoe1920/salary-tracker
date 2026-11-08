@@ -594,17 +594,23 @@ const bindEvents = () => {
   if (btnEditWeekMeta) btnEditWeekMeta.addEventListener('click', openEditWeekModal);
 
   document.getElementById('shiftForm').addEventListener('submit', saveShiftFromModal);
-  const onShiftStartInput = () => {
-    const raw = document.getElementById('shiftStart')?.value || '';
-    const parsed = parseSmartTime(raw);
-    if (parsed) {
-      const detected = detectShiftType(parsed);
+  const updateAutoShiftType = () => {
+    const rawStart = document.getElementById('shiftStart')?.value || '';
+    const rawEnd = document.getElementById('shiftEnd')?.value || '';
+    const start = parseSmartTime(rawStart) || rawStart;
+    const end = parseSmartTime(rawEnd) || rawEnd;
+    if (start || end) {
+      const detected = detectShiftType(start, end);
       const sel = document.getElementById('shiftType');
-      if (sel) {
+      if (sel && detected) {
         sel.value = detected;
         syncCustomSelect('shiftType');
       }
     }
+  };
+
+  const onShiftStartInput = () => {
+    updateAutoShiftType();
     updateModalComputedPreview();
   };
 
@@ -614,17 +620,13 @@ const bindEvents = () => {
     const parsed = parseSmartTime(input.value);
     if (parsed) {
       input.value = parsed;
-      const detected = detectShiftType(parsed);
-      const sel = document.getElementById('shiftType');
-      if (sel) {
-        sel.value = detected;
-        syncCustomSelect('shiftType');
-      }
     }
+    updateAutoShiftType();
     updateModalComputedPreview();
   };
 
   const onShiftEndInput = () => {
+    updateAutoShiftType();
     updateModalComputedPreview();
   };
 
@@ -635,6 +637,7 @@ const bindEvents = () => {
     if (parsed) {
       input.value = parsed;
     }
+    updateAutoShiftType();
     updateModalComputedPreview();
   };
 
