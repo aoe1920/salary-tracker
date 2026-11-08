@@ -3,369 +3,364 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#2563eb">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#f8fafc">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>404 - Không tìm thấy trang | Salary Tracker</title>
-  <link rel="icon" type="image/svg+xml"
-    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect width='16' height='20' x='4' y='2' rx='2'/><line x1='8' x2='16' y1='6' y2='6'/><line x1='16' x2='16' y1='14' y2='18'/><path d='M16 10h.01'/><path d='M12 10h.01'/><path d='M8 10h.01'/><path d='M12 14h.01'/><path d='M8 14h.01'/><path d='M12 18h.01'/><path d='M8 18h.01'/></svg>">
+  <meta name="description" content="Salary Tracker - Trang không tồn tại hoặc đã được di chuyển.">
+
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/svg+xml" href="./assets/icons/icon.svg">
+  <link rel="alternate icon" type="image/png" href="./assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
     rel="stylesheet">
+
+  <script>
+    (function () {
+      const saved = localStorage.getItem('salary_tracker_theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved && prefersDark)) {
+        document.documentElement.classList.add('dark-mode');
+        document.addEventListener('DOMContentLoaded', () => {
+          document.body.classList.add('dark-mode');
+        });
+      }
+    })();
+  </script>
+
+  <link rel="stylesheet" href="./css/base.css?v=20261108d">
+  <link rel="stylesheet" href="./css/components.css?v=20261108d">
+  <link rel="stylesheet" href="./css/modals.css?v=20261108d">
+
   <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --font-sans: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --primary-subtle: rgba(37, 99, 235, 0.08);
-      --bg-app: #f4f6fb;
-      --bg-card: #ffffff;
-      --bg-hover: #f1f5f9;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --border-subtle: rgba(148, 163, 184, 0.2);
-      --border-default: rgba(148, 163, 184, 0.35);
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 18px;
-      --radius-pill: 9999px;
-      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
-      --shadow-lg: 0 16px 36px -8px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(15, 23, 42, 0.04);
-    }
-
-    body.dark-mode {
-      --bg-app: #0b0c10;
-      --bg-card: #15161e;
-      --bg-hover: #1e202b;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --border-subtle: rgba(255, 255, 255, 0.08);
-      --border-default: rgba(255, 255, 255, 0.14);
-      --shadow-lg: 0 20px 40px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
-    }
-
     body {
-      font-family: var(--font-sans);
-      background-color: var(--bg-app);
-      color: var(--text-main);
-      min-height: 100vh;
-      min-height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.25rem 1rem;
-      transition: background-color 0.2s ease, color 0.2s ease;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
       overflow-x: hidden;
     }
 
-    .notfound-header {
+    .app-layout {
       width: 100%;
-      max-width: 680px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.5rem 0.25rem;
-    }
-
-    .brand-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.65rem;
-      text-decoration: none;
-      color: var(--text-main);
-    }
-
-    .brand-logo-badge {
-      width: 36px;
-      height: 36px;
-      border-radius: var(--radius-md);
-      background: linear-gradient(135deg, #2563eb, #1e3a8a);
-      color: #ffffff;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
-    }
-
-    .brand-name {
-      font-size: 1.05rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-
-    .btn-theme-toggle {
-      width: 36px;
-      height: 36px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-subtle);
-      background: var(--bg-card);
-      color: var(--text-main);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: var(--shadow-sm);
-      transition: all 0.14s ease;
-    }
-
-    .btn-theme-toggle:hover {
-      background: var(--bg-hover);
-      border-color: var(--border-default);
-      transform: scale(1.05);
-    }
-
-    .btn-theme-toggle:active {
-      transform: scale(0.95);
+      box-sizing: border-box;
     }
 
     .notfound-main {
-      width: 100%;
-      max-width: 480px;
+      flex: 1;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      margin: auto 0;
-      padding: 1rem 0;
+      justify-content: center;
+      padding: 2rem 0;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .notfound-card {
       width: 100%;
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: 2.25rem 1.75rem;
-      box-shadow: var(--shadow-lg);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      max-width: 480px;
+      box-sizing: border-box;
       text-align: center;
-      position: relative;
+      align-items: center;
+      padding: 2.25rem 1.5rem;
+      gap: 1.25rem;
+    }
+
+    .notfound-badge-wrap {
+      display: flex;
+      justify-content: center;
+      width: 100%;
     }
 
     .notfound-tag {
       font-family: var(--font-mono);
-      font-size: 0.725rem;
+      font-size: 0.75rem;
       font-weight: 600;
-      padding: 0.3rem 0.75rem;
+      letter-spacing: 0.04em;
+      padding: 0.35rem 0.85rem;
       border-radius: var(--radius-pill);
-      background: rgba(239, 68, 68, 0.1);
+      background: rgba(239, 68, 68, 0.08);
       color: #ef4444;
-      border: 1px solid rgba(239, 68, 68, 0.2);
-      letter-spacing: 0.05em;
-      margin-bottom: 1.25rem;
+      border: 1px solid rgba(239, 68, 68, 0.22);
+      display: inline-flex;
+      align-items: center;
     }
 
-    .notfound-visual {
-      width: 96px;
-      height: 96px;
+    html.dark-mode .notfound-tag,
+    body.dark-mode .notfound-tag {
+      background: rgba(239, 68, 68, 0.16);
+      color: #f87171;
+      border-color: rgba(239, 68, 68, 0.35);
+    }
+
+    .notfound-icon-badge {
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
-      background: linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(99, 102, 241, 0.06));
-      border: 1px solid rgba(37, 99, 235, 0.2);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-subtle);
+      color: var(--primary);
       display: flex;
       align-items: center;
       justify-content: center;
+      margin: 0.25rem auto 0.25rem;
+    }
+
+    html.dark-mode .notfound-icon-badge,
+    body.dark-mode .notfound-icon-badge {
+      background: #171821;
+      border-color: rgba(255, 255, 255, 0.09);
       color: var(--primary);
-      margin-bottom: 1.5rem;
-      position: relative;
+    }
+
+    .notfound-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .notfound-title {
       font-size: 1.35rem;
       font-weight: 700;
       letter-spacing: -0.02em;
-      line-height: 1.3;
-      margin-bottom: 0.65rem;
+      color: var(--text-main);
+      margin: 0;
     }
 
     .notfound-desc {
       font-size: 0.875rem;
       color: var(--text-muted);
-      line-height: 1.55;
-      margin-bottom: 1.75rem;
+      line-height: 1.6;
       max-width: 380px;
+      margin: 0 auto;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .notfound-actions {
       display: flex;
-      flex-direction: column;
+      gap: 0.75rem;
+      justify-content: center;
       width: 100%;
-      gap: 0.65rem;
+      max-width: 340px;
+      margin-top: 0.5rem;
+      box-sizing: border-box;
     }
 
-    @media (min-width: 420px) {
-      .notfound-actions {
-        flex-direction: row;
-      }
+    html.dark-mode .btn-action-secondary,
+    body.dark-mode .btn-action-secondary {
+      background: #15161e;
+      border-color: rgba(255, 255, 255, 0.1);
+      color: #f1f5f9;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 1px 2px rgba(0, 0, 0, 0.3);
     }
 
-    .btn-action-primary {
-      flex: 1;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.15rem;
-      border-radius: var(--radius-md);
-      background: var(--primary);
+    html.dark-mode .btn-action-secondary:hover,
+    body.dark-mode .btn-action-secondary:hover {
+      background: #1c1e28;
+      border-color: rgba(255, 255, 255, 0.18);
       color: #ffffff;
-      text-decoration: none;
-      font-size: 0.875rem;
-      font-weight: 600;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-      transition: all 0.14s ease;
     }
 
-    .btn-action-primary:hover {
-      background: var(--primary-hover);
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
-    }
+    @media (max-width: 480px) {
+      .app-layout {
+        padding: 0.85rem 0.85rem 0.5rem;
+      }
 
-    .btn-action-secondary {
-      flex: 1;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.15rem;
-      border-radius: var(--radius-md);
-      background: var(--bg-hover);
-      color: var(--text-main);
-      border: 1px solid var(--border-subtle);
-      text-decoration: none;
-      font-size: 0.875rem;
-      font-weight: 600;
-      transition: all 0.14s ease;
-    }
+      .brand-title {
+        font-size: 1.05rem;
+      }
 
-    .btn-action-secondary:hover {
-      background: var(--bg-card);
-      border-color: var(--border-default);
-      transform: translateY(-1px);
-    }
+      .brand-date {
+        font-size: 0.7rem;
+      }
 
-    .notfound-footer {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-align: center;
-      padding: 0.75rem;
+      .notfound-card {
+        padding: 1.75rem 1rem;
+        gap: 1rem;
+      }
+
+      .notfound-title {
+        font-size: 1.2rem;
+      }
+
+      .notfound-desc {
+        font-size: 0.8125rem;
+      }
+
+      .notfound-actions {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .notfound-actions .btn-action-primary,
+      .notfound-actions .btn-action-secondary {
+        width: 100%;
+      }
     }
   </style>
 </head>
 
 <body>
-  <header class="notfound-header">
-    <a href="./" class="brand-link">
-      <div class="brand-logo-badge">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round" width="20" height="20">
-          <rect width="16" height="20" x="4" y="2" rx="2"></rect>
-          <line x1="8" x2="16" y1="6" y2="6"></line>
-          <line x1="16" x2="16" y1="14" y2="18"></line>
-          <path d="M16 10h.01"></path>
-          <path d="M12 10h.01"></path>
-          <path d="M8 10h.01"></path>
-          <path d="M12 14h.01"></path>
-          <path d="M8 14h.01"></path>
-          <path d="M12 18h.01"></path>
-          <path d="M8 18h.01"></path>
-        </svg>
-      </div>
-      <span class="brand-name font-mono">Salary Tracker</span>
-    </a>
-
-    <button type="button" class="btn-theme-toggle" id="btnToggleTheme" aria-label="Đổi giao diện">
-      <svg id="iconTheme" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"
-        stroke-linejoin="round" width="18" height="18">
-        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
-      </svg>
-    </button>
-  </header>
-
-  <main class="notfound-main">
-    <div class="notfound-card">
-      <span class="notfound-tag">404 • KHÔNG TÌM THẤY TRANG</span>
-
-      <div class="notfound-visual">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"
-          stroke-linejoin="round" width="46" height="46">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="12" y1="8" x2="12" y2="12"></line>
-          <line x1="12" y1="16" x2="12.01" y2="16"></line>
-        </svg>
+  <div class="app-layout" style="min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; justify-content: space-between;">
+    <header class="app-header">
+      <div class="header-left">
+        <a href="./" class="brand-identity" style="text-decoration: none;">
+          <img src="./assets/icons/icon.svg" alt="Salary Tracker" class="brand-logo-img" width="32" height="32">
+          <div class="brand-text-wrap">
+            <h1 class="brand-title">Salary Tracker</h1>
+            <span class="brand-date font-mono" id="currentDateDisplay"></span>
+          </div>
+        </a>
       </div>
 
-      <h1 class="notfound-title font-sans">Trang bạn tìm kiếm không tồn tại</h1>
-      <p class="notfound-desc font-sans">Đường dẫn bạn vừa truy cập có thể đã bị thay đổi, gỡ bỏ hoặc bạn đã nhập sai địa chỉ. Hãy quay về trang chủ để tiếp tục theo dõi ca làm việc nhé.</p>
-
-      <div class="notfound-actions">
-        <a href="./" class="btn-action-primary font-sans">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      <nav class="header-nav">
+        <button id="btnToggleTheme" class="btn-morphic" title="Đổi giao diện Sáng / Tối" aria-label="Đổi giao diện Sáng / Tối">
+          <morph-icon id="themeMorphIcon" size="16" color="currentColor" stroke-width="1.75" spring="smooth"
+            icon="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></morph-icon>
+        </button>
+        <a href="./" class="btn-morphic" title="Về trang chủ" aria-label="Về trang chủ">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"
             stroke-linejoin="round" width="16" height="16">
             <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
             <polyline points="9 22 9 12 15 12 15 22"></polyline>
           </svg>
-          <span>Về trang chủ</span>
         </a>
+      </nav>
+    </header>
 
-        <a href="./#shifts" class="btn-action-secondary font-sans">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round" width="16" height="16">
-            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
-            <line x1="16" x2="16" y1="2" y2="6"></line>
-            <line x1="8" x2="8" y1="2" y2="6"></line>
-            <line x1="3" x2="21" y1="10" y2="10"></line>
+    <main class="notfound-main">
+      <div class="dashboard-stats-card notfound-card">
+        <div class="notfound-badge-wrap">
+          <span class="notfound-tag font-mono">404 • KHÔNG TÌM THẤY TRANG</span>
+        </div>
+
+        <div class="notfound-icon-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"
+            stroke-linejoin="round" width="36" height="36">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
           </svg>
-          <span>Xem ca làm</span>
+        </div>
+
+        <div class="notfound-content">
+          <h2 class="notfound-title">Trang không tồn tại</h2>
+          <p class="notfound-desc">Đường dẫn bạn vừa truy cập có thể đã bị thay đổi, gỡ bỏ hoặc bạn đã nhập sai địa chỉ. Hãy quay về trang chủ để tiếp tục theo dõi ca làm việc.</p>
+        </div>
+
+        <div class="notfound-actions">
+          <a href="./" class="btn-action-primary" style="text-decoration: none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"
+              stroke-linejoin="round" width="16" height="16">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span>Về trang chủ</span>
+          </a>
+          <button type="button" class="btn-action-secondary" id="btnReload">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"
+              stroke-linejoin="round" width="16" height="16">
+              <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"></path>
+            </svg>
+            <span>Tải lại</span>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <div class="app-footer-content">
+        <span class="app-footer-copy">© 2026 Salary Tracker</span>
+        <span class="app-footer-dot">•</span>
+        <a href="https://github.com/aoe1920" target="_blank" rel="noopener noreferrer" class="app-footer-link"
+          title="GitHub @aoe1920" aria-label="GitHub @aoe1920">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" width="13" height="13">
+            <path
+              d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+          </svg>
+          <span>aoe1920</span>
         </a>
       </div>
-    </div>
-  </main>
+    </footer>
+  </div>
 
-  <footer class="notfound-footer font-mono">
-    Salary Tracker • Quản lý ca làm và tính lương thông minh
-  </footer>
+  <script type="module">
+    import { defineMorphIcon } from './js/vendor/morphicons/element.js';
 
-  <script>
-    (function () {
-      const savedTheme = localStorage.getItem('salary_tracker_theme');
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
-      if (isDark) {
-        document.body.classList.add('dark-mode');
+    defineMorphIcon();
+
+    const SUN_PATH = 'M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z';
+    const MOON_PATH = 'M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z';
+
+    const daysVi = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+    const now = new Date();
+    const dateStr = `${daysVi[now.getDay()]}, ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
+    const dateEl = document.getElementById('currentDateDisplay');
+    if (dateEl) dateEl.textContent = dateStr;
+
+    const savedTheme = localStorage.getItem('salary_tracker_theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+
+    const morphIcon = document.getElementById('themeMorphIcon');
+
+    const applyThemeState = (dark) => {
+      document.documentElement.classList.toggle('dark-mode', dark);
+      document.body.classList.toggle('dark-mode', dark);
+      if (morphIcon) {
+        morphIcon.setAttribute('icon', dark ? MOON_PATH : SUN_PATH);
       }
+    };
 
-      const updateIcon = () => {
-        const icon = document.getElementById('iconTheme');
-        if (!icon) return;
-        const currentDark = document.body.classList.contains('dark-mode');
-        icon.innerHTML = currentDark
-          ? '<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path>'
-          : '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>';
-      };
-      updateIcon();
+    applyThemeState(isDark);
 
-      const btn = document.getElementById('btnToggleTheme');
-      if (btn) {
-        btn.addEventListener('click', () => {
-          document.body.classList.toggle('dark-mode');
-          const nextDark = document.body.classList.contains('dark-mode');
-          localStorage.setItem('salary_tracker_theme', nextDark ? 'dark' : 'light');
-          updateIcon();
-        });
-      }
-    })();
+    const toggleBtn = document.getElementById('btnToggleTheme');
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        const nextDark = !document.body.classList.contains('dark-mode');
+        localStorage.setItem('salary_tracker_theme', nextDark ? 'dark' : 'light');
+
+        const rect = toggleBtn.getBoundingClientRect();
+        const x = Math.round(rect.left + rect.width / 2);
+        const y = Math.round(rect.top + rect.height / 2);
+        const maxDist = Math.hypot(
+          Math.max(x, window.innerWidth - x),
+          Math.max(y, window.innerHeight - y)
+        );
+        const endRadius = Math.ceil(maxDist * 1.15) + 60;
+
+        if (typeof document.startViewTransition === 'function' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          document.documentElement.style.setProperty('--vt-x', `${x}px`);
+          document.documentElement.style.setProperty('--vt-y', `${y}px`);
+          document.documentElement.style.setProperty('--vt-r', `${endRadius}px`);
+          document.documentElement.classList.add('theme-vt-active', nextDark ? 'theme-vt-to-dark' : 'theme-vt-to-light');
+          const vt = document.startViewTransition(() => {
+            applyThemeState(nextDark);
+          });
+          vt.finished.finally(() => {
+            document.documentElement.classList.remove('theme-vt-active', 'theme-vt-to-dark', 'theme-vt-to-light');
+          });
+        } else {
+          applyThemeState(nextDark);
+        }
+      });
+    }
+
+    const reloadBtn = document.getElementById('btnReload');
+    if (reloadBtn) {
+      reloadBtn.addEventListener('click', () => {
+        window.location.reload();
+      });
+    }
   </script>
 </body>
 
 </html>
-
