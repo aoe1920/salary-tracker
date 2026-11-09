@@ -121,7 +121,7 @@ let userWheelEndTimer = null;
 let wheelScrollEndTimer = null;
 
 const onWheelTrackScroll = () => {
-  if (isProgrammaticWheelScroll) return;
+  if (isProgrammaticWheelScroll || !isUserInteractingWithWheel) return;
   const container = document.getElementById('weekPillsList');
   if (!container || !state.weeks || !state.weeks.length) return;
 
@@ -171,6 +171,7 @@ const scrollWheelToActive = (behavior = 'smooth') => {
   if (!activeItem) return;
 
   isProgrammaticWheelScroll = true;
+  container.classList.add('is-programmatic-scroll');
   clearTimeout(programmaticScrollTimer);
 
   const containerWidth = container.clientWidth;
@@ -180,13 +181,14 @@ const scrollWheelToActive = (behavior = 'smooth') => {
   container.style.paddingRight = `${sidePad}px`;
 
   const itemOffset = activeItem.offsetLeft;
-  const targetLeft = itemOffset - sidePad;
-  container.scrollTo({ left: Math.max(0, targetLeft), behavior });
+  const targetLeft = Math.max(0, itemOffset - sidePad);
+  container.scrollTo({ left: targetLeft, behavior });
   updateWeekNavButtons();
 
   programmaticScrollTimer = setTimeout(() => {
     isProgrammaticWheelScroll = false;
-  }, behavior === 'smooth' ? 400 : 80);
+    container.classList.remove('is-programmatic-scroll');
+  }, behavior === 'smooth' ? 400 : 150);
 };
 
 const renderWeekPills = () => {
@@ -233,6 +235,9 @@ const renderWeekPills = () => {
     setTimeout(() => {
       scrollWheelToActive('auto');
     }, 120);
+    setTimeout(() => {
+      scrollWheelToActive('auto');
+    }, 300);
   });
   updateWeekNavButtons();
 };
@@ -1094,24 +1099,28 @@ const bindEvents = () => {
 
   const weekWheelTrack = document.getElementById('weekPillsList');
   if (weekWheelTrack) {
-    weekWheelTrack.addEventListener('pointerdown', () => {
+    const startInteraction = () => {
       isUserInteractingWithWheel = true;
       clearTimeout(userWheelEndTimer);
-    });
-    window.addEventListener('pointerup', () => {
+    };
+    const endInteraction = () => {
       clearTimeout(userWheelEndTimer);
       userWheelEndTimer = setTimeout(() => {
         isUserInteractingWithWheel = false;
-      }, 120);
-    });
-    window.addEventListener('pointercancel', () => {
-      isUserInteractingWithWheel = false;
-    });
+      }, 150);
+    };
+
+    weekWheelTrack.addEventListener('pointerdown', startInteraction);
+    weekWheelTrack.addEventListener('touchstart', startInteraction, { passive: true });
+    window.addEventListener('pointerup', endInteraction);
+    window.addEventListener('pointercancel', endInteraction);
+    window.addEventListener('touchend', endInteraction);
+    window.addEventListener('touchcancel', endInteraction);
 
     weekWheelTrack.addEventListener('scroll', onWheelTrackScroll, { passive: true });
     if ('onscrollend' in window) {
       weekWheelTrack.addEventListener('scrollend', () => {
-        if (!isProgrammaticWheelScroll) {
+        if (!isProgrammaticWheelScroll && isUserInteractingWithWheel) {
           scrollWheelToActive('smooth');
         }
       }, { passive: true });
@@ -1197,4 +1206,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderApp();
   setupRealtimeSync();
   setupAutoSync();
+
+  window.addEventListener('load', () => {
+    if (state.weeks && state.weeks.length > 0) {
+      const latest = getLatestWeek() || state.weeks[state.weeks.length - 1];
+      if (latest && state.currentWeekId !== latest.id) {
+        state.currentWeekId = latest.id;
+        localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
+        renderApp();
+      } else {
+        scrollWheelToActive('auto');
+      }
+    }
+  });
 });

@@ -74,16 +74,21 @@ export const getLatestWeek = () => {
   if (!state.weeks || !Array.isArray(state.weeks) || state.weeks.length === 0) {
     return null;
   }
-  let latest = state.weeks[state.weeks.length - 1];
+  let latest = state.weeks[0];
+  let latestDate = latest.startDate || '';
   for (let i = 0; i < state.weeks.length; i++) {
     const w = state.weeks[i];
-    if (w && w.startDate && latest && latest.startDate) {
-      if (w.startDate > latest.startDate) {
-        latest = w;
-      }
+    if (!w) continue;
+    const wDate = w.startDate || '';
+    if (wDate && (!latestDate || wDate >= latestDate)) {
+      latest = w;
+      latestDate = wDate;
     }
   }
-  return latest;
+  if (!latestDate) {
+    latest = state.weeks[state.weeks.length - 1];
+  }
+  return latest || state.weeks[state.weeks.length - 1];
 };
 
 export const getCurrentWeek = () => {

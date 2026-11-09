@@ -587,6 +587,11 @@ body.dark-mode .hero-period-title .hero-period-year {
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12px, black calc(100% - 12px), transparent 100%);
 }
 
+.week-wheel-track.is-programmatic-scroll {
+  scroll-snap-type: none !important;
+  scroll-behavior: auto !important;
+}
+
 .week-wheel-track::-webkit-scrollbar {
   display: none !important;
   width: 0 !important;
