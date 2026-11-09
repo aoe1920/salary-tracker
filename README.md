@@ -44,27 +44,6 @@
 
 ---
 
-## 📸 Giao diện ứng dụng
-
-<div align="center">
-  <table border="0">
-    <tr>
-      <td align="center" width="65%">
-        <img src="assets/screenshots/dashboard-desktop.png" alt="Desktop Dashboard Dark Mode" style="border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.3);">
-        <br>
-        <em>Bảng điều khiển máy tính (Desktop Dark Theme)</em>
-      </td>
-      <td align="center" width="35%">
-        <img src="assets/screenshots/mobile-view.png" alt="Mobile View Dark Mode" style="border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.3);">
-        <br>
-        <em>Giao diện điện thoại di động (Mobile Dark Mode)</em>
-      </td>
-    </tr>
-  </table>
-</div>
-
----
-
 ## ✨ Tính năng nổi bật
 
 ### 🎯 1. Tự động nhận diện ca làm thông minh (Smart Shift Engine)
@@ -126,7 +105,6 @@ salary-tracker/
 ├── assets/
 │   ├── avatars/             # Bộ sưu tập ảnh đại diện vector
 │   ├── icons/               # Bộ biểu tượng ứng dụng PWA và favicon
-│   ├── screenshots/         # Hình ảnh chụp màn hình minh họa giao diện
 │   └── poster.png           # Áp phích phát hành chính thức của ứng dụng
 ├── css/
 │   ├── base.css             # Thiết lập biến hệ thống, reset và kiểu chữ
