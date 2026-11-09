@@ -3,7 +3,7 @@ import { fmtCurrency, fmtHours, getShiftRate, getShiftEarnings, calculateWeekTot
 import { t, getLocalizedWeekName, getLocalizedShiftType, getLocalizedDayName } from './i18n.js';
 import { applyTheme, toggleTheme } from './theme.js';
 import { supabaseClient, loadState, saveWeeks, syncWithSupabase, saveSettings, initAuth, restoreCachedUserSync, restoreCachedStateSync, updateHeaderAuthUI, updateSyncStatusUI, syncPendingToCloud, handleLoginSubmit, handleRegisterSubmit, handleLogout, handleDeleteAccount, handleGoogleSignIn, handleForgotPasswordSubmit, handleResetPasswordSubmit, handleLinkGoogleAccount, handleChangePasswordSubmit, setupRealtimeSync, setupAutoSync, setSupabaseAppRenderer } from './services/supabase.js';
-import { triggerHaptic } from './ui/haptic.js';
+import { triggerHaptic, initGlobalHaptics } from './ui/haptic.js';
 import { showToast, showToastWithAction } from './ui/toast.js';
 import { setupCustomSelect, syncCustomSelect, closeAllCustomSelects } from './ui/select.js';
 import { drawDashboardWeekChart, setAllWeeksModalOpener, renderAnalyticsDashboard, analyticsState } from './ui/chart.js';
@@ -557,6 +557,7 @@ const renderShiftsList = () => {
 };
 
 const bindEvents = () => {
+  initGlobalHaptics();
   initDialogHandlers();
 
   document.querySelectorAll('[data-close-modal]').forEach(btn => {
