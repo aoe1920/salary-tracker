@@ -18,7 +18,7 @@ export const exportCurrentWeekCSV = () => {
   if (!week) return;
 
   let csvContent = '\uFEFF';
-  const unit = t('rate_unit', 'vnd/h');
+  const unit = t('rate_unit', 'đ/h');
   csvContent += `${t('csv_slip_title', 'BẢNG CHẤM CÔNG VÀ LƯƠNG')} — ${getLocalizedWeekName(week.name)}\r\n\r\n`;
   csvContent += `"${t('csv_col_day', 'Thứ')}","${t('csv_col_type', 'Ca')}","${t('csv_col_workplace', 'Nơi làm việc')}","${t('csv_col_rate', 'Đơn giá')} (${unit})","${t('csv_col_start', 'Giờ bắt đầu')}","${t('csv_col_end', 'Giờ kết thúc')}","${t('csv_col_break', 'Nghỉ (phút)')}","${t('csv_col_hours', 'Số giờ')}","${t('csv_col_ot', 'Hệ số OT')}","${t('csv_col_allowance', 'Thưởng/Phụ cấp')}","${t('csv_col_deduction', 'Khấu trừ')}","${t('csv_col_total', 'Thành tiền')}","${t('csv_col_note', 'Ghi chú')}"\r\n`;
 
@@ -50,7 +50,7 @@ export const exportCurrentWeekCSV = () => {
 
 export const exportAllWeeksCSV = () => {
   let csvContent = '\uFEFF';
-  const unit = t('rate_unit', 'vnd/h');
+  const unit = t('rate_unit', 'đ/h');
   csvContent += `${t('csv_all_weeks_title', 'TỔNG HỢP CA LÀM VIỆC VÀ LƯƠNG TẤT CẢ CÁC TUẦN')}\r\n\r\n`;
   csvContent += `"${t('csv_col_week', 'Tuần')}","${t('csv_col_date_range', 'Khoảng ngày')}","${t('csv_col_rate', 'Đơn giá')} (${unit})","${t('csv_col_work_date', 'Ngày làm')}","${t('csv_col_day', 'Thứ')}","${t('csv_col_type', 'Ca')}","${t('csv_col_workplace', 'Nơi làm việc')}","${t('csv_col_start', 'Bắt đầu')}","${t('csv_col_end', 'Kết thúc')}","${t('csv_col_break', 'Nghỉ (phút)')}","${t('csv_col_hours', 'Số giờ')}","${t('csv_col_ot', 'Hệ số OT')}","${t('csv_col_allowance', 'Thưởng/Phụ cấp')}","${t('csv_col_deduction', 'Khấu trừ')}","${t('csv_col_total', 'Thành tiền')}","${t('csv_col_note', 'Ghi chú')}"\r\n`;
 

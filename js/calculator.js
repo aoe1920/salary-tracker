@@ -5,7 +5,7 @@ export { formatShiftType };
 
 export const fmtCurrency = (num) => {
   const val = Math.round(num || 0);
-  return new Intl.NumberFormat('vi-VN').format(val) + ' vnd';
+  return new Intl.NumberFormat('vi-VN').format(val) + ' đ';
 };
 
 export const fmtHours = (hours) => {

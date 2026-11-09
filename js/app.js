@@ -312,7 +312,7 @@ const renderWeekDetails = () => {
   }
 
   const rateBadge = document.getElementById('currentWeekRateBadge');
-  if (rateBadge) rateBadge.textContent = `${new Intl.NumberFormat('vi-VN').format(getShiftRate())} vnd/h`;
+  if (rateBadge) rateBadge.textContent = `${new Intl.NumberFormat('vi-VN').format(getShiftRate())} đ/h`;
 
   const totalHours = week.shifts.reduce((acc, s) => acc + Number(s.hours || 0), 0);
   const totalSalary = calculateWeekTotalSalary(week);

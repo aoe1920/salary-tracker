@@ -72,7 +72,7 @@
 - Tự động tính toán số giờ làm việc thực tế sau khi trừ đi số phút nghỉ giải lao.
 
 ### 💰 2. Động cơ tính lương chuẩn xác tuyệt đối (Precision Wage Engine)
-- Tính toán tiền lương theo đơn vị tiền tệ chuẩn `vnd` và đơn giá theo giờ `vnd/h`.
+- Tính toán tiền lương theo đơn vị tiền tệ chuẩn `đ` và đơn giá theo giờ `đ/h`.
 - Xử lý chuẩn xác các ca làm việc xuyên đêm vượt qua mốc nửa đêm `00:00` (ví dụ: `22:00` đến `04:00` sáng hôm sau).
 - Hỗ trợ linh hoạt hệ số tăng ca OT (`1.0x`, `1.5x`, `2.0x`, `3.0x`).
 - Ghi nhận chi tiết tiền phụ cấp/thưởng và các khoản khấu trừ cho từng ca.
