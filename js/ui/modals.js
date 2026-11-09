@@ -1381,30 +1381,34 @@ export const collapsePasswordSection = () => {
 
 let isProfileWpEditMode = false;
 
+export const updateProfileWorkplacesBadge = () => {
+  const badge = document.getElementById('profileWpCountBadge');
+  if (!badge) return;
+  const count = (state.settings.workplaces || []).length;
+  badge.textContent = `${count} ${t('unit_workplaces', 'nơi')}`;
+};
+
 export const collapseProfileWorkplacesEdit = () => {
   isProfileWpEditMode = false;
-  const viewMode = document.getElementById('profileWpViewMode');
-  const editMode = document.getElementById('profileWpEditMode');
-  if (viewMode) viewMode.style.display = 'block';
-  if (editMode) editMode.style.display = 'none';
-
-  const btnManage = document.getElementById('btnProfileManageWorkplaces');
-  if (btnManage) {
-    btnManage.classList.remove('is-active');
-    btnManage.title = t('btn_edit', 'Chỉnh sửa');
-    btnManage.setAttribute('aria-label', t('btn_edit', 'Chỉnh sửa'));
-    btnManage.innerHTML = `
-      <svg id="profileWpManageIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="13" height="13">
-        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
-      </svg>
-    `;
+  const content = document.getElementById('profileWpContent');
+  const chevron = document.getElementById('iconProfileWpChevron');
+  if (content) {
+    content.classList.remove('is-expanded');
+    setTimeout(() => {
+      if (!content.classList.contains('is-expanded')) {
+        content.style.display = 'none';
+      }
+    }, 280);
   }
+  if (chevron) {
+    chevron.style.transform = 'rotate(0deg)';
+  }
+  updateProfileWorkplacesBadge();
 };
 
 export const closeProfileWorkplacesEditIfOpen = () => {
   if (isProfileWpEditMode) {
     collapseProfileWorkplacesEdit();
-    renderProfileWorkplaces();
     saveSettings();
     triggerAppRender();
   }
@@ -1457,21 +1461,15 @@ export const expandProfileWorkplacesEdit = () => {
   if (editWrap) editWrap.style.display = 'none';
 
   isProfileWpEditMode = true;
-  const viewMode = document.getElementById('profileWpViewMode');
-  const editMode = document.getElementById('profileWpEditMode');
-  if (viewMode) viewMode.style.display = 'none';
-  if (editMode) editMode.style.display = 'flex';
-
-  const btnManage = document.getElementById('btnProfileManageWorkplaces');
-  if (btnManage) {
-    btnManage.classList.add('is-active');
-    btnManage.title = t('btn_done', 'Xong');
-    btnManage.setAttribute('aria-label', t('btn_done', 'Xong'));
-    btnManage.innerHTML = `
-      <svg id="profileWpManageIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="13" height="13">
-        <polyline points="20 6 9 17 4 12"></polyline>
-      </svg>
-    `;
+  const content = document.getElementById('profileWpContent');
+  const chevron = document.getElementById('iconProfileWpChevron');
+  if (content) {
+    content.style.display = 'flex';
+    void content.offsetHeight;
+    content.classList.add('is-expanded');
+  }
+  if (chevron) {
+    chevron.style.transform = 'rotate(180deg)';
   }
 
   const nameInput = document.getElementById('profileNewWpName');
@@ -1480,51 +1478,15 @@ export const expandProfileWorkplacesEdit = () => {
   if (rateInput) rateInput.value = '';
 
   renderProfileWorkplacesEditList();
+  updateProfileWorkplacesBadge();
 
   if (nameInput) {
-    setTimeout(() => nameInput.focus(), 80);
+    setTimeout(() => nameInput.focus(), 120);
   }
 };
 
 export const renderProfileWorkplaces = () => {
-  const container = document.getElementById('profileWorkplacesChipList');
-  if (!container) return;
-  normalizeWorkplacesAndRates();
-  const workplaces = state.settings.workplaces || [];
-  const defWp = state.settings.defaultWorkplace || '';
-
-  if (workplaces.length === 0) {
-    container.innerHTML = `
-      <div class="profile-wp-empty font-mono" style="font-size:0.8rem; color:var(--text-muted); padding:0.4rem 0;">
-        ${t('empty_workplaces_hint', 'Chưa có nơi làm việc. Bấm Chỉnh sửa để thêm.')}
-      </div>
-    `;
-    return;
-  }
-
-  container.innerHTML = workplaces.map(wp => {
-    const wpCol = getWorkplaceColor(wp);
-    const rate = getShiftRate({ workplace: wp });
-    const isDefault = wp === defWp;
-    return `
-      <div class="profile-wp-item" data-wp-name="${escapeHtml(wp)}" title="${t('btn_edit', 'Chỉnh sửa')}">
-        <div class="profile-wp-left">
-          <span class="profile-wp-dot" style="background-color: ${wpCol.fill};"></span>
-          <span class="profile-wp-name font-sans">${escapeHtml(wp)}</span>
-          ${isDefault ? `<span class="profile-wp-tag-default font-mono">${t('tag_default_workplace', 'Mặc định')}</span>` : ''}
-        </div>
-        <span class="profile-wp-rate font-mono">${fmtCurrency(rate)}/h</span>
-      </div>
-    `;
-  }).join('');
-
-  container.querySelectorAll('.profile-wp-item').forEach(item => {
-    item.addEventListener('click', (e) => {
-      e.preventDefault();
-      triggerHaptic('light');
-      expandProfileWorkplacesEdit();
-    });
-  });
+  updateProfileWorkplacesBadge();
 };
 
 export const renderProfileWorkplacesEditList = () => {
@@ -1724,6 +1686,7 @@ export const renderProfileWorkplacesEditList = () => {
         }
         saveSettings();
         renderProfileWorkplacesEditList();
+        updateProfileWorkplacesBadge();
         updateWorkplaceInputOptions();
         updateModalComputedPreview();
         triggerAppRender();
@@ -1803,6 +1766,7 @@ export const addWorkplaceFromProfile = () => {
   if (rateInput) rateInput.blur();
 
   renderProfileWorkplacesEditList();
+  updateProfileWorkplacesBadge();
   const editList = document.getElementById('profileWpEditList');
   if (editList) {
     editList.scrollTop = editList.scrollHeight;
@@ -2010,16 +1974,15 @@ export const openUserProfileModal = () => {
   document.getElementById('profileTotalShifts').textContent = totalShifts;
   document.getElementById('profileTotalHours').textContent = `${Math.round(totalHours)}h`;
 
-  renderProfileWorkplaces();
+  updateProfileWorkplacesBadge();
 
-  const btnManageWp = document.getElementById('btnProfileManageWorkplaces');
-  if (btnManageWp) {
-    btnManageWp.onclick = (e) => {
+  const btnToggleWp = document.getElementById('btnToggleProfileWorkplaces');
+  if (btnToggleWp) {
+    btnToggleWp.onclick = (e) => {
       e.preventDefault();
       triggerHaptic('light');
       if (isProfileWpEditMode) {
         collapseProfileWorkplacesEdit();
-        renderProfileWorkplaces();
         saveSettings();
         triggerAppRender();
       } else {

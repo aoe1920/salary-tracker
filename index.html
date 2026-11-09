@@ -39,7 +39,7 @@
 
   <link rel="stylesheet" href="./css/base.css?v=20261110b">
   <link rel="stylesheet" href="./css/components.css?v=20261110b">
-  <link rel="stylesheet" href="./css/modals.css?v=20261110a">
+  <link rel="stylesheet" href="./css/modals.css?v=20261110b">
 </head>
 
 <body>
@@ -1055,27 +1055,22 @@
         </div>
 
         <div class="profile-workplaces-card" id="profileWorkplacesCard">
-          <div class="profile-card-header-row">
-            <div class="profile-card-header-left">
+          <button type="button" class="btn-toggle-change-pwd" id="btnToggleProfileWorkplaces">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
                 <rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect>
                 <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
               </svg>
               <span class="profile-card-title font-sans" data-i18n="modal_workplaces_title">Cơ sở làm việc</span>
+              <span class="profile-wp-badge font-mono" id="profileWpCountBadge">0 nơi</span>
             </div>
-            <button type="button" class="btn-profile-wp-manage" id="btnProfileManageWorkplaces"
-              data-i18n-title="btn_edit" title="Chỉnh sửa" aria-label="Chỉnh sửa">
-              <svg id="profileWpManageIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="13" height="13">
-                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
-              </svg>
-            </button>
-          </div>
+            <svg id="iconProfileWpChevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+              stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+              <path d="m6 9 6 6 6-6"></path>
+            </svg>
+          </button>
 
-          <div class="profile-wp-view-mode" id="profileWpViewMode">
-            <div class="profile-workplaces-chip-list" id="profileWorkplacesChipList"></div>
-          </div>
-
-          <div class="profile-wp-edit-mode" id="profileWpEditMode" style="display: none;">
+          <div id="profileWpContent" class="profile-wp-panel" style="display: none; margin-top: 0.75rem;">
             <form id="formProfileAddWp" class="profile-wp-add-box" action="javascript:void(0);">
               <input type="text" id="profileNewWpName" class="form-input profile-wp-add-name" placeholder="Tên nơi làm" autocomplete="off">
               <div class="profile-wp-add-rate-wrap">
