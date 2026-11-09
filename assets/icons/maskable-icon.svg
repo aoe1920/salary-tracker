@@ -7,8 +7,9 @@
     </linearGradient>
 
     <linearGradient id="maskableSpecular" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
-      <stop offset="40%" stop-color="#ffffff" stop-opacity="0.08"/>
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.38"/>
+      <stop offset="35%" stop-color="#ffffff" stop-opacity="0.12"/>
+      <stop offset="70%" stop-color="#ffffff" stop-opacity="0.04"/>
       <stop offset="100%" stop-color="#000000" stop-opacity="0.25"/>
     </linearGradient>
 
@@ -19,6 +20,7 @@
 
   <rect width="512" height="512" fill="url(#maskableBase)"/>
   <rect width="512" height="512" fill="none" stroke="url(#maskableSpecular)" stroke-width="3"/>
+  <rect x="12" y="12" width="488" height="488" fill="none" stroke="#ffffff" stroke-opacity="0.1" stroke-width="1.5"/>
 
   <g transform="translate(256, 256) scale(11) translate(-12.5, -12)" filter="url(#walletShadow)">
     <path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4" 
