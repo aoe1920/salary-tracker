@@ -215,13 +215,13 @@ export const updateModalComputedPreview = () => {
     const fullFormatted = fmtCurrency(wage);
     prevSal.title = fullFormatted;
     if (wage >= 1_000_000_000_000_000) {
-      prevSal.textContent = '> 999 nghìn tỷ đ';
+      prevSal.textContent = '> 999 nghìn tỷ vnd';
     } else if (wage >= 1_000_000_000_000) {
       const val = (wage / 1_000_000_000_000).toLocaleString('vi-VN', { maximumFractionDigits: 2 });
-      prevSal.textContent = `${val} nghìn tỷ đ`;
+      prevSal.textContent = `${val} nghìn tỷ vnd`;
     } else if (wage >= 1_000_000_000) {
       const val = (wage / 1_000_000_000).toLocaleString('vi-VN', { maximumFractionDigits: 2 });
-      prevSal.textContent = `${val} tỷ đ`;
+      prevSal.textContent = `${val} tỷ vnd`;
     } else {
       prevSal.textContent = fullFormatted;
     }
@@ -955,7 +955,7 @@ export const renderShiftWorkplacesList = () => {
         <span class="swq-rate-label">Đơn giá theo giờ:</span>
         <div class="swq-rate-input-wrap">
           <input type="text" inputmode="numeric" class="swq-rate-input" data-wp="${escapeHtml(wp)}" value="${formatWpRateDisplay(rate)}" placeholder="0" autocomplete="off">
-          <span class="swq-rate-tag">đ/h</span>
+          <span class="swq-rate-tag">vnd/h</span>
         </div>
       </div>
     `;
@@ -1562,7 +1562,7 @@ export const renderProfileWorkplacesEditList = () => {
         <span class="profile-wp-rate-label font-sans">Đơn giá theo giờ:</span>
         <div class="profile-wp-rate-input-wrap">
           <input type="text" inputmode="numeric" class="form-input profile-wp-rate-input font-mono" data-p-rate="${escapeHtml(wp)}" value="${formatWpRateDisplay(rate)}" placeholder="0" autocomplete="off">
-          <span class="profile-wp-rate-tag font-mono">đ/h</span>
+          <span class="profile-wp-rate-tag font-mono">vnd/h</span>
         </div>
       </div>
     `;
@@ -1771,8 +1771,14 @@ export const addWorkplaceFromProfile = () => {
   saveSettings();
   nameInput.value = '';
   if (rateInput) rateInput.value = '';
+  nameInput.blur();
+  if (rateInput) rateInput.blur();
 
   renderProfileWorkplacesEditList();
+  const editList = document.getElementById('profileWpEditList');
+  if (editList) {
+    editList.scrollTop = editList.scrollHeight;
+  }
   updateWorkplaceInputOptions(val);
   updateModalComputedPreview();
   triggerAppRender();
@@ -1995,8 +2001,20 @@ export const openUserProfileModal = () => {
     };
   }
 
+  const formProfileAddWp = document.getElementById('formProfileAddWp');
+  if (formProfileAddWp) {
+    formProfileAddWp.onsubmit = (e) => {
+      e.preventDefault();
+      addWorkplaceFromProfile();
+      return false;
+    };
+  }
+
   const btnAddProfileWp = document.getElementById('btnProfileAddWp');
   if (btnAddProfileWp) {
+    btnAddProfileWp.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+    });
     btnAddProfileWp.onclick = (e) => {
       e.preventDefault();
       addWorkplaceFromProfile();

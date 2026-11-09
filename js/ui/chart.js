@@ -560,7 +560,7 @@ export const renderAnalyticsDashboard = () => {
 
   const subtitle = document.getElementById('timelineChartSubtitle');
   if (subtitle) {
-    subtitle.textContent = analyticsState.timeFilter === 'current' ? t('chart_sub_daily', 'Theo ngày (đ)') : t('chart_sub_weekly', 'Theo tuần (đ)');
+    subtitle.textContent = analyticsState.timeFilter === 'current' ? t('chart_sub_daily', 'Theo ngày (vnd)') : t('chart_sub_weekly', 'Theo tuần (vnd)');
   }
   const title = document.getElementById('timelineChartTitle');
   if (title) {

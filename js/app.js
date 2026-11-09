@@ -118,7 +118,7 @@ let userWheelEndTimer = null;
 let wheelScrollEndTimer = null;
 
 const onWheelTrackScroll = () => {
-  if (isProgrammaticWheelScroll || !isUserInteractingWithWheel) return;
+  if (isProgrammaticWheelScroll) return;
   const container = document.getElementById('weekPillsList');
   if (!container || !state.weeks || !state.weeks.length) return;
 
@@ -152,7 +152,7 @@ const onWheelTrackScroll = () => {
 
   clearTimeout(wheelScrollEndTimer);
   wheelScrollEndTimer = setTimeout(() => {
-    if (!isProgrammaticWheelScroll && isUserInteractingWithWheel) {
+    if (!isProgrammaticWheelScroll) {
       scrollWheelToActive('smooth');
     }
   }, 160);
@@ -312,7 +312,7 @@ const renderWeekDetails = () => {
   }
 
   const rateBadge = document.getElementById('currentWeekRateBadge');
-  if (rateBadge) rateBadge.textContent = `${new Intl.NumberFormat('vi-VN').format(getShiftRate())} đ/h`;
+  if (rateBadge) rateBadge.textContent = `${new Intl.NumberFormat('vi-VN').format(getShiftRate())} vnd/h`;
 
   const totalHours = week.shifts.reduce((acc, s) => acc + Number(s.hours || 0), 0);
   const totalSalary = calculateWeekTotalSalary(week);

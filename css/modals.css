@@ -1813,7 +1813,7 @@ body.dark-mode .btn-profile-wp-manage.is-active {
   position: relative;
   display: flex;
   align-items: center;
-  width: 104px;
+  width: 120px;
   flex-shrink: 0;
 }
 
@@ -1821,15 +1821,17 @@ body.dark-mode .btn-profile-wp-manage.is-active {
   width: 100%;
   height: 28px;
   min-height: 28px;
-  padding: 0.2rem 1.65rem 0.2rem 0.55rem;
+  padding: 0.2rem 2.85rem 0.2rem 0.55rem;
   font-size: 0.8rem;
+  font-family: var(--font-mono);
   border-radius: var(--radius-xs);
 }
 
 .profile-wp-add-unit {
   position: absolute;
-  right: 0.45rem;
-  font-size: 0.7rem;
+  right: 0.55rem;
+  font-size: 0.725rem;
+  font-family: var(--font-mono);
   color: var(--text-muted);
   pointer-events: none;
 }
@@ -1848,6 +1850,13 @@ body.dark-mode .btn-profile-wp-manage.is-active {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  position: relative;
+}
+
+.profile-wp-add-btn::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
 }
 
 .profile-wp-edit-list {
@@ -1921,20 +1930,25 @@ body.dark-mode .profile-wp-edit-item.is-default-item {
 }
 
 .profile-wp-icon-btn {
-  width: 26px;
-  height: 26px;
-  min-width: 26px;
-  min-height: 26px;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
   padding: 0;
   border-radius: var(--radius-xs);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  border: 1px solid transparent;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
   color: var(--text-muted);
   cursor: pointer;
   transition: all 0.15s ease;
+}
+
+.profile-wp-icon-btn svg {
+  width: 13px;
+  height: 13px;
 }
 
 .profile-wp-icon-btn:hover {
@@ -1943,19 +1957,37 @@ body.dark-mode .profile-wp-edit-item.is-default-item {
   color: var(--text-main);
 }
 
+body.dark-mode .profile-wp-icon-btn {
+  background: #181924;
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+}
+
+body.dark-mode .profile-wp-icon-btn:hover {
+  background: #232534;
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #f1f5f9;
+}
+
 .profile-wp-edit-actions .btn-set-default-wp {
-  width: 26px;
-  height: 26px;
-  min-width: 26px;
-  min-height: 26px;
-  border-color: transparent;
-  background: transparent;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface);
 }
 
 .profile-wp-edit-actions .btn-set-default-wp:hover {
   background: rgba(245, 158, 11, 0.1);
   border-color: rgba(245, 158, 11, 0.3);
   color: #d97706;
+}
+
+body.dark-mode .profile-wp-edit-actions .btn-set-default-wp {
+  background: #181924;
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
 }
 
 body.dark-mode .profile-wp-edit-actions .btn-set-default-wp:hover {
@@ -1995,15 +2027,15 @@ body.dark-mode .profile-wp-edit-actions .btn-set-default-wp:hover {
   position: relative;
   display: flex;
   align-items: center;
-  width: 110px;
+  width: 125px;
 }
 
 .profile-wp-rate-input {
   width: 100%;
   height: 28px;
   min-height: 28px;
-  padding: 0.2rem 2.2rem 0.2rem 0.55rem;
-  font-size: 0.825rem;
+  padding: 0.2rem 2.85rem 0.2rem 0.55rem;
+  font-size: 0.85rem;
   font-weight: 700;
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
@@ -2022,8 +2054,8 @@ body.dark-mode .profile-wp-rate-input {
 
 .profile-wp-rate-tag {
   position: absolute;
-  right: 0.5rem;
-  font-size: 0.825rem;
+  right: 0.55rem;
+  font-size: 0.85rem;
   font-weight: 700;
   font-family: var(--font-mono);
   color: var(--text-main);
@@ -2060,11 +2092,11 @@ body.dark-mode .profile-wp-rename-input {
 }
 
 .profile-wp-rename-btn {
+  width: 28px;
   height: 28px;
-  padding: 0 0.5rem;
-  gap: 0.2rem;
-  font-size: 0.725rem;
-  font-weight: 600;
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0;
   border-radius: var(--radius-xs);
   display: inline-flex;
   align-items: center;
@@ -2168,9 +2200,11 @@ body.dark-mode .profile-wp-edit-list {
 }
 
 .profile-wp-rate {
-  font-size: 0.825rem;
+  font-size: 0.85rem;
   font-weight: 700;
+  font-family: var(--font-mono);
   color: var(--text-main);
+  font-variant-numeric: tabular-nums;
   flex-shrink: 0;
   margin-left: 0.5rem;
 }
@@ -2570,6 +2604,7 @@ body.dark-mode .btn-logout-action {
     padding: 0 10px;
     height: 100%;
     gap: 20px;
+    touch-action: pan-x;
     border-radius: var(--radius-pill);
     mask-image: linear-gradient(to right, transparent 0%, black 12px, black calc(100% - 12px), transparent 100%);
     -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12px, black calc(100% - 12px), transparent 100%);
@@ -4059,25 +4094,27 @@ body.dark-mode .shift-earnings {
 }
 
 body.dark-mode .floating-dock {
-  background: rgba(18, 20, 28, 0.78);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 16px 40px -6px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(24px) saturate(190%);
-  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  background: linear-gradient(135deg, rgba(38, 32, 22, 0.85) 0%, rgba(20, 22, 17, 0.90) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 20px 48px -6px rgba(0, 0, 0, 0.65), 0 6px 16px -2px rgba(0, 0, 0, 0.45), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.28), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(32px) saturate(210%) contrast(105%);
+  -webkit-backdrop-filter: blur(32px) saturate(210%) contrast(105%);
 }
 
 body.dark-mode .floating-dock .btn-morphic {
-  background: #181922;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  color: #cbd5e1;
-  box-shadow: none;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 body.dark-mode .floating-dock .btn-morphic:hover:not(:disabled):not(.is-disabled) {
-  background: #22242f;
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.28);
   color: #ffffff;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 body.dark-mode .floating-dock .btn-morphic:disabled,
@@ -4780,6 +4817,27 @@ body.dark-mode .app-dialog-detail-card {
   .avatar-picker-grid {
     grid-template-columns: repeat(6, 1fr);
     gap: 0.35rem;
+  }
+
+  .profile-header-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .profile-header-user {
+    width: 100%;
+  }
+
+  .profile-linking-box {
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .profile-linking-box .btn-profile-google,
+  .profile-linking-box .btn-profile-google-linked {
+    width: 100%;
+    justify-content: center;
   }
 }
 
