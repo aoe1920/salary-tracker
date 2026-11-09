@@ -1,4 +1,4 @@
-import { state, getCurrentWeek, hasWorkplaces, getDefaultWorkplace, getWorkplaceColor } from './state.js';
+import { state, getCurrentWeek, getLatestWeek, hasWorkplaces, getDefaultWorkplace, getWorkplaceColor } from './state.js';
 import { fmtCurrency, fmtHours, getShiftRate, getShiftEarnings, calculateWeekTotalSalary, hoursToColonFormat, hoursToHourMinutes, getVietnameseDayOfWeek, getMondayDate, getShiftDateObj, getShiftDateShort, getShiftDateFull, getWeekDateRangeDisplay, ensureWeekStartDate, getDayClass, formatShiftType, detectShiftType, parseSmartTime, escapeHtml, calculateSmartShiftDefaults, sortShiftsChronologically } from './calculator.js';
 import { t, getLocalizedWeekName, getLocalizedShiftType, getLocalizedDayName } from './i18n.js';
 import { applyTheme, toggleTheme } from './theme.js';
@@ -230,6 +230,9 @@ const renderWeekPills = () => {
 
   requestAnimationFrame(() => {
     scrollWheelToActive('auto');
+    setTimeout(() => {
+      scrollWheelToActive('auto');
+    }, 120);
   });
   updateWeekNavButtons();
 };
@@ -1173,6 +1176,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   restoreCachedUserSync();
   restoreCachedStateSync();
+  if (state.weeks && state.weeks.length > 0) {
+    const latest = getLatestWeek() || state.weeks[state.weeks.length - 1];
+    state.currentWeekId = latest.id;
+    localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
+  }
   bindEvents();
   renderApp();
 
@@ -1180,6 +1188,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadState();
   if (state.settings && state.settings.language) {
     delete state.settings.language;
+  }
+  if (state.weeks && state.weeks.length > 0) {
+    const latest = getLatestWeek() || state.weeks[state.weeks.length - 1];
+    state.currentWeekId = latest.id;
+    localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
   }
   renderApp();
   setupRealtimeSync();

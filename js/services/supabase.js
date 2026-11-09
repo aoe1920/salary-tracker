@@ -1,5 +1,5 @@
 import { SUPABASE_URL, SUPABASE_ANON_KEY, GUEST_DEFAULT_DATA, GUEST_WEEKS_KEY, GUEST_SETTINGS_KEY, LOCAL_CACHE_WEEKS_KEY, LOCAL_CACHE_SETTINGS_KEY, PENDING_SYNC_KEY } from '../config.js';
-import { state, getWeeksStorageKey, getSettingsStorageKey, normalizeWorkplacesAndRates } from '../state.js';
+import { state, getWeeksStorageKey, getSettingsStorageKey, normalizeWorkplacesAndRates, getLatestWeek } from '../state.js';
 import { t } from '../i18n.js';
 import { ensureWeekStartDate, syncShiftsTypeConsistency } from '../calculator.js';
 import { showToast } from '../ui/toast.js';
@@ -965,12 +965,9 @@ export const loadState = async () => {
     if (shiftsSynced) {
       saveWeeks();
     }
-    const savedCurrentWeek = localStorage.getItem('salary_tracker_current_week');
-    if (savedCurrentWeek && state.weeks.some(w => w.id === savedCurrentWeek)) {
-      state.currentWeekId = savedCurrentWeek;
-    } else {
-      state.currentWeekId = state.weeks[state.weeks.length - 1].id;
-    }
+    const latest = getLatestWeek() || state.weeks[state.weeks.length - 1];
+    state.currentWeekId = latest.id;
+    localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
 
     if (state.currentUser && supabaseClient && hasValidShifts(state.weeks)) {
       syncPendingToCloud(false);
@@ -1140,12 +1137,9 @@ export const restoreCachedStateSync = () => {
       state.weeks = loadedWeeks;
       state.weeks.forEach((w, idx) => ensureWeekStartDate(w, idx));
       syncShiftsTypeConsistency(state.weeks);
-      const savedCurrentWeek = localStorage.getItem('salary_tracker_current_week');
-      if (savedCurrentWeek && state.weeks.some(w => w.id === savedCurrentWeek)) {
-        state.currentWeekId = savedCurrentWeek;
-      } else {
-        state.currentWeekId = state.weeks[state.weeks.length - 1].id;
-      }
+      const latest = getLatestWeek() || state.weeks[state.weeks.length - 1];
+      state.currentWeekId = latest.id;
+      localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
     }
 
     if (loadedSettings) {
@@ -1535,7 +1529,8 @@ export const handleLogout = async () => {
     if (!state.settings) state.settings = {};
     state.settings.workplaces = [];
     state.settings.avatar = getRandomAvatar().id;
-    state.currentWeekId = state.weeks[0].id;
+    const latest = getLatestWeek() || state.weeks[state.weeks.length - 1];
+    state.currentWeekId = latest.id;
     saveWeeks();
     saveSettings();
     updateHeaderAuthUI();
@@ -1600,7 +1595,8 @@ export const handleDeleteAccount = async () => {
     if (!state.settings) state.settings = {};
     state.settings.workplaces = [];
     state.settings.avatar = getRandomAvatar().id;
-    state.currentWeekId = state.weeks[0].id;
+    const latest = getLatestWeek() || state.weeks[state.weeks.length - 1];
+    state.currentWeekId = latest.id;
     saveSettings();
     updateHeaderAuthUI();
     updateSyncStatusUI();

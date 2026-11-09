@@ -70,7 +70,26 @@ export const getSettingsStorageKey = () => {
   return GUEST_SETTINGS_KEY;
 };
 
+export const getLatestWeek = () => {
+  if (!state.weeks || !Array.isArray(state.weeks) || state.weeks.length === 0) {
+    return null;
+  }
+  let latest = state.weeks[state.weeks.length - 1];
+  for (let i = 0; i < state.weeks.length; i++) {
+    const w = state.weeks[i];
+    if (w && w.startDate && latest && latest.startDate) {
+      if (w.startDate > latest.startDate) {
+        latest = w;
+      }
+    }
+  }
+  return latest;
+};
+
 export const getCurrentWeek = () => {
-  return state.weeks.find(w => w.id === state.currentWeekId) || state.weeks[0];
+  if (!state.weeks || !Array.isArray(state.weeks) || state.weeks.length === 0) {
+    return null;
+  }
+  return state.weeks.find(w => w.id === state.currentWeekId) || getLatestWeek() || state.weeks[state.weeks.length - 1];
 };
 
