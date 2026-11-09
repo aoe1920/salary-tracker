@@ -1,5 +1,5 @@
 import { state, getCurrentWeek, hasWorkplaces, getDefaultWorkplace, getWorkplaceColor, normalizeWorkplacesAndRates } from '../state.js';
-import { fmtCurrency, fmtHours, parseTimeToMinutes, parseSmartTime, calculateHoursDiff, getShiftRate, getShiftEarnings, calculateSmartShiftDefaults, detectShiftType, getVietnameseDayOfWeek, getMondayDate, getShiftDateObj, getShiftDateShort, getWeekDateRangeDisplay, ensureWeekStartDate, getDayClass, escapeHtml, calculateWeekTotalSalary } from '../calculator.js';
+import { fmtCurrency, fmtHours, parseTimeToMinutes, parseSmartTime, calculateHoursDiff, getShiftRate, getShiftEarnings, calculateSmartShiftDefaults, detectShiftType, getVietnameseDayOfWeek, getMondayDate, getShiftDateObj, getShiftDateShort, getWeekDateRangeDisplay, ensureWeekStartDate, getDayClass, escapeHtml, calculateWeekTotalSalary, sortShiftsChronologically } from '../calculator.js';
 import { t, getLocalizedWeekName, getLocalizedShiftType, getLocalizedDayName, formatShiftType } from '../i18n.js';
 import { saveWeeks, saveSettings, updateSyncStatusUI, updateHeaderAuthUI, supabaseClient, handleLinkGoogleAccount } from '../services/supabase.js';
 import { showToast, showToastWithAction } from './toast.js';
@@ -111,12 +111,16 @@ export const openAddShiftModal = (prefill = null) => {
   syncCustomSelect('shiftType');
   syncCustomSelect('shiftWorkplace');
 
-  document.getElementById('shiftStart').value = smartDefaults.start;
-  document.getElementById('shiftEnd').value = smartDefaults.end;
+  const startEl = document.getElementById('shiftStart');
+  const endEl = document.getElementById('shiftEnd');
+  startEl.value = smartDefaults.start;
+  endEl.value = smartDefaults.end;
+  startEl.placeholder = smartDefaults.start;
+  endEl.placeholder = smartDefaults.end;
   const breakInput = document.getElementById('shiftBreak');
   if (breakInput) breakInput.value = String(smartDefaults.breakMinutes || 0);
   const otInput = document.getElementById('shiftOtRate');
-  if (otInput) otInput.value = '1.0';
+  if (otInput) otInput.value = '1';
   const allowanceInput = document.getElementById('shiftAllowance');
   if (allowanceInput) allowanceInput.value = '0';
   const deductionInput = document.getElementById('shiftDeduction');
@@ -161,7 +165,10 @@ export const openEditShiftModal = (shift) => {
   const breakInput = document.getElementById('shiftBreak');
   if (breakInput) breakInput.value = shift.breakMinutes || 0;
   const otInput = document.getElementById('shiftOtRate');
-  if (otInput) otInput.value = String(shift.otRate || '1.0');
+  if (otInput) {
+    const rawVal = Number(shift.otRate) || 1;
+    otInput.value = rawVal % 1 === 0 ? String(Math.round(rawVal)) : String(rawVal);
+  }
   const allowanceInput = document.getElementById('shiftAllowance');
   if (allowanceInput) allowanceInput.value = String(shift.allowance || '0');
   const deductionInput = document.getElementById('shiftDeduction');
@@ -177,7 +184,7 @@ export const updateModalComputedPreview = () => {
   const rawEnd = document.getElementById('shiftEnd')?.value;
   const breakMins = Number(document.getElementById('shiftBreak')?.value || 0);
   const rawOt = Number(document.getElementById('shiftOtRate')?.value);
-  const otRate = (!isNaN(rawOt) && rawOt > 0) ? rawOt : 1.0;
+  const otRate = (!isNaN(rawOt) && rawOt > 0) ? (rawOt % 1 === 0 ? Math.round(rawOt) : Number(rawOt.toFixed(2))) : 1;
   const allowance = Number(document.getElementById('shiftAllowance')?.value || 0);
   const deduction = Number(document.getElementById('shiftDeduction')?.value || 0);
   const workplace = (document.getElementById('shiftWorkplace')?.value || '').trim();
@@ -256,7 +263,7 @@ export const saveShiftFromModal = async (e) => {
 
   const breakMinutes = Math.max(0, Number(document.getElementById('shiftBreak')?.value || 0));
   const rawOt = Number(document.getElementById('shiftOtRate')?.value);
-  const otRate = (!isNaN(rawOt) && rawOt > 0) ? rawOt : 1.0;
+  const otRate = (!isNaN(rawOt) && rawOt > 0) ? (rawOt % 1 === 0 ? Math.round(rawOt) : Number(rawOt.toFixed(2))) : 1;
   const allowance = Math.max(0, Number(document.getElementById('shiftAllowance')?.value || 0));
   const deduction = Math.max(0, Number(document.getElementById('shiftDeduction')?.value || 0));
   const workplace = (document.getElementById('shiftWorkplace')?.value || '').trim();
@@ -326,6 +333,7 @@ export const saveShiftFromModal = async (e) => {
     showToast(t('toast_shift_added', 'Đã thêm ca làm việc mới'));
   }
 
+  week.shifts = sortShiftsChronologically(week.shifts);
   triggerHaptic('success');
   saveWeeks();
   closeModal('shiftModal');
@@ -1353,8 +1361,13 @@ export const collapsePasswordSection = () => {
   const formChangePwd = document.getElementById('formChangePassword');
   const iconChevron = document.getElementById('iconChangePwdChevron');
   if (formChangePwd) {
-    formChangePwd.style.display = 'none';
-    formChangePwd.reset();
+    formChangePwd.classList.remove('is-expanded');
+    setTimeout(() => {
+      if (!formChangePwd.classList.contains('is-expanded')) {
+        formChangePwd.style.display = 'none';
+        formChangePwd.reset();
+      }
+    }, 280);
   }
   if (iconChevron) {
     iconChevron.style.transform = 'rotate(0deg)';
@@ -1399,14 +1412,25 @@ export const closeProfileWorkplacesEditIfOpen = () => {
 
 export const collapseAvatarPicker = () => {
   const shelf = document.getElementById('avatarPickerShelf');
-  if (shelf) shelf.style.display = 'none';
+  if (shelf) {
+    shelf.classList.remove('is-expanded');
+    setTimeout(() => {
+      if (!shelf.classList.contains('is-expanded')) {
+        shelf.style.display = 'none';
+      }
+    }, 280);
+  }
 };
 
 export const expandAvatarPicker = () => {
   collapsePasswordSection();
   closeProfileWorkplacesEditIfOpen();
   const shelf = document.getElementById('avatarPickerShelf');
-  if (shelf) shelf.style.display = 'flex';
+  if (shelf) {
+    shelf.style.display = 'flex';
+    void shelf.offsetHeight;
+    shelf.classList.add('is-expanded');
+  }
 };
 
 export const expandPasswordSection = () => {
@@ -1414,10 +1438,14 @@ export const expandPasswordSection = () => {
   closeProfileWorkplacesEditIfOpen();
   const formChangePwd = document.getElementById('formChangePassword');
   const iconChevron = document.getElementById('iconChangePwdChevron');
-  if (formChangePwd) formChangePwd.style.display = 'flex';
+  if (formChangePwd) {
+    formChangePwd.style.display = 'flex';
+    void formChangePwd.offsetHeight;
+    formChangePwd.classList.add('is-expanded');
+  }
   if (iconChevron) iconChevron.style.transform = 'rotate(180deg)';
   const pwdInput = document.getElementById('changeNewPassword');
-  if (pwdInput) setTimeout(() => pwdInput.focus(), 60);
+  if (pwdInput) setTimeout(() => pwdInput.focus(), 120);
 };
 
 export const expandProfileWorkplacesEdit = () => {

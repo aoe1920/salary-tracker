@@ -23,7 +23,7 @@
   <rect x="65" y="65" width="382" height="382" rx="91" fill="none" stroke="url(#specularRim)" stroke-width="2.5"/>
   <rect x="78" y="78" width="356" height="356" rx="78" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.5"/>
 
-  <g transform="translate(256, 256) scale(9.5) translate(-13.5, -12)" style="filter: drop-shadow(0px 0.6px 1.2px rgba(15, 23, 42, 0.35));">
+  <g transform="translate(256, 256) scale(9.5) translate(-12.5, -12)" style="filter: drop-shadow(0px 0.6px 1.2px rgba(15, 23, 42, 0.35));">
     <path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4" 
           fill="#ffffff" 
           fill-opacity="0.22"

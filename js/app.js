@@ -1,5 +1,5 @@
 import { state, getCurrentWeek, hasWorkplaces, getDefaultWorkplace, getWorkplaceColor } from './state.js';
-import { fmtCurrency, fmtHours, getShiftRate, getShiftEarnings, calculateWeekTotalSalary, hoursToColonFormat, hoursToHourMinutes, getVietnameseDayOfWeek, getMondayDate, getShiftDateObj, getShiftDateShort, getShiftDateFull, getWeekDateRangeDisplay, ensureWeekStartDate, getDayClass, formatShiftType, detectShiftType, parseSmartTime, escapeHtml, calculateSmartShiftDefaults } from './calculator.js';
+import { fmtCurrency, fmtHours, getShiftRate, getShiftEarnings, calculateWeekTotalSalary, hoursToColonFormat, hoursToHourMinutes, getVietnameseDayOfWeek, getMondayDate, getShiftDateObj, getShiftDateShort, getShiftDateFull, getWeekDateRangeDisplay, ensureWeekStartDate, getDayClass, formatShiftType, detectShiftType, parseSmartTime, escapeHtml, calculateSmartShiftDefaults, sortShiftsChronologically } from './calculator.js';
 import { t, getLocalizedWeekName, getLocalizedShiftType, getLocalizedDayName } from './i18n.js';
 import { applyTheme, toggleTheme } from './theme.js';
 import { supabaseClient, loadState, saveWeeks, syncWithSupabase, saveSettings, initAuth, restoreCachedUserSync, restoreCachedStateSync, updateHeaderAuthUI, updateSyncStatusUI, syncPendingToCloud, handleLoginSubmit, handleRegisterSubmit, handleLogout, handleDeleteAccount, handleGoogleSignIn, handleForgotPasswordSubmit, handleResetPasswordSubmit, handleLinkGoogleAccount, handleChangePasswordSubmit, setupRealtimeSync, setupAutoSync, setSupabaseAppRenderer } from './services/supabase.js';
@@ -49,6 +49,8 @@ const renderDateDisplay = () => {
   if (headerDateEl) headerDateEl.textContent = `${dayName}, ${dateStr}`;
 };
 
+let currentSlideClass = 'shifts-list-fade';
+
 const goToAdjacentWeek = (direction) => {
   if (!state.weeks || !state.weeks.length) return false;
   const currentIndex = state.weeks.findIndex(w => w.id === state.currentWeekId);
@@ -56,6 +58,7 @@ const goToAdjacentWeek = (direction) => {
   const targetIndex = currentIndex + direction;
   if (targetIndex >= 0 && targetIndex < state.weeks.length) {
     triggerHaptic('light');
+    currentSlideClass = direction > 0 ? 'shifts-slide-next' : 'shifts-slide-prev';
     const targetWeek = state.weeks[targetIndex];
     state.currentWeekId = targetWeek.id;
     localStorage.setItem('salary_tracker_current_week', targetWeek.id);
@@ -140,6 +143,9 @@ const onWheelTrackScroll = () => {
   const targetWeekId = closestItem.getAttribute('data-week-id');
   if (targetWeekId && targetWeekId !== state.currentWeekId) {
     triggerHaptic('light');
+    const oldIdx = state.weeks.findIndex(w => w.id === state.currentWeekId);
+    const newIdx = state.weeks.findIndex(w => w.id === targetWeekId);
+    currentSlideClass = newIdx > oldIdx ? 'shifts-slide-next' : 'shifts-slide-prev';
     state.currentWeekId = targetWeekId;
     localStorage.setItem('salary_tracker_current_week', targetWeekId);
     items.forEach(it => {
@@ -204,6 +210,9 @@ const renderWeekPills = () => {
       e.preventDefault();
       if (state.currentWeekId !== week.id) {
         triggerHaptic('light');
+        const oldIdx = state.weeks.findIndex(w => w.id === state.currentWeekId);
+        const newIdx = state.weeks.findIndex(w => w.id === week.id);
+        currentSlideClass = newIdx > oldIdx ? 'shifts-slide-next' : 'shifts-slide-prev';
         state.currentWeekId = week.id;
         localStorage.setItem('salary_tracker_current_week', week.id);
         container.querySelectorAll('.week-wheel-item').forEach(it => {
@@ -349,9 +358,10 @@ const renderWeekDetails = () => {
 const renderShiftsList = () => {
   const listContainer = document.getElementById('shiftsList');
   if (listContainer) {
-    listContainer.classList.remove('shifts-list-fade');
+    listContainer.classList.remove('shifts-list-fade', 'shifts-slide-next', 'shifts-slide-prev');
     void listContainer.offsetWidth;
-    listContainer.classList.add('shifts-list-fade');
+    listContainer.classList.add(currentSlideClass);
+    currentSlideClass = 'shifts-list-fade';
     listContainer.innerHTML = '';
   }
 
@@ -441,6 +451,7 @@ const renderShiftsList = () => {
     listContainer.appendChild(banner);
   }
 
+  week.shifts = sortShiftsChronologically(week.shifts);
   const allShifts = week.shifts;
   const shiftsCountBadge = document.getElementById('shiftsCountBadge');
   if (shiftsCountBadge) shiftsCountBadge.textContent = `${allShifts.length} ${t('unit_shift', 'ca')}`;
@@ -457,8 +468,9 @@ const renderShiftsList = () => {
     const shiftDateStr = getShiftDateShort(week, shift.day);
     const breakTag = shift.breakMinutes ? ` • ${t('break_tag', 'nghỉ')} ${shift.breakMinutes}${t('unit_min', 'm')}` : '';
 
-    const otRateVal = Number(shift.otRate) || 1.0;
-    const otBadge = otRateVal > 1.0 ? `<span class="shift-ot-badge font-mono">OT x${otRateVal}</span>` : '';
+    const otRateVal = Number(shift.otRate) || 1;
+    const otDisplay = otRateVal % 1 === 0 ? otRateVal.toFixed(0) : otRateVal;
+    const otBadge = otRateVal > 1.0 ? `<span class="shift-ot-badge font-mono">OT x${otDisplay}</span>` : '';
     const allowanceVal = Number(shift.allowance) || 0;
     const allowanceBadge = allowanceVal > 0 ? `<span class="shift-allowance-badge font-mono">${fmtCurrency(allowanceVal)}</span>` : '';
     const wpCol = getWorkplaceColor(shift.workplace);

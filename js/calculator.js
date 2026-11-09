@@ -215,6 +215,22 @@ export const getWeekDateRangeDisplay = (week) => {
   return `${start.short} – ${end.short}`;
 };
 
+export const sortShiftsChronologically = (shifts) => {
+  if (!Array.isArray(shifts)) return [];
+  const dayOrder = { 'T2': 0, 'T3': 1, 'T4': 2, 'T5': 3, 'T6': 4, 'T7': 5, 'CN': 6 };
+  return [...shifts].sort((a, b) => {
+    const dayA = dayOrder[(a.day || '').toUpperCase().trim()] ?? 99;
+    const dayB = dayOrder[(b.day || '').toUpperCase().trim()] ?? 99;
+    if (dayA !== dayB) return dayA - dayB;
+    const startA = a.start || '';
+    const startB = b.start || '';
+    if (startA !== startB) return startA.localeCompare(startB);
+    const endA = a.end || '';
+    const endB = b.end || '';
+    return endA.localeCompare(endB);
+  });
+};
+
 export const ensureWeekStartDate = (week, index) => {
   if (week.startDate) return;
   const now = new Date();
@@ -336,14 +352,13 @@ export const syncShiftsTypeConsistency = (weeks = state.weeks) => {
 };
 
 export const calculateSmartShiftDefaults = (prefill = null, now = new Date()) => {
-  let endMin = Math.round(now.getMinutes() / 15) * 15;
   let endHour = now.getHours();
-  if (endMin === 60) {
+  if (now.getMinutes() >= 30) {
     endHour = (endHour + 1) % 24;
-    endMin = 0;
   }
-  const endTotalMins = endHour * 60 + endMin;
-  let defaultEnd = `${String(endHour).padStart(2, '0')}:${String(endMin).padStart(2, '0')}`;
+  let endMin = 0;
+  const endTotalMins = endHour * 60;
+  let defaultEnd = `${String(endHour).padStart(2, '0')}:00`;
 
   const allPastShifts = [];
   if (Array.isArray(state.weeks)) {
@@ -381,7 +396,8 @@ export const calculateSmartShiftDefaults = (prefill = null, now = new Date()) =>
 
     if (durations.length > 0) {
       durations.sort((a, b) => a - b);
-      durationMinutes = durations[Math.floor(durations.length / 2)];
+      const rawDur = durations[Math.floor(durations.length / 2)];
+      durationMinutes = Math.max(60, Math.round(rawDur / 60) * 60);
     }
 
     if (similarEndShifts.length > 0) {
@@ -404,8 +420,7 @@ export const calculateSmartShiftDefaults = (prefill = null, now = new Date()) =>
 
   let startTotalMins = (endTotalMins - durationMinutes + 24 * 60) % (24 * 60);
   let startHour = Math.floor(startTotalMins / 60);
-  let startMin = startTotalMins % 60;
-  let defaultStart = `${String(startHour).padStart(2, '0')}:${String(startMin).padStart(2, '0')}`;
+  let defaultStart = `${String(startHour).padStart(2, '0')}:00`;
 
   const defaultDay = prefill?.day || getVietnameseDayOfWeek(now);
 

@@ -324,24 +324,6 @@ const drawTimelineChart = (data) => {
   if (!canvas) return;
   const parent = canvas.parentElement;
   const dpr = window.devicePixelRatio || 1;
-  const width = parent.clientWidth || 560;
-  const height = 150;
-
-  canvas.width = Math.floor(width * dpr);
-  canvas.height = Math.floor(height * dpr);
-  canvas.style.width = `${width}px`;
-  canvas.style.height = `${height}px`;
-
-  const ctx = canvas.getContext('2d');
-  ctx.scale(dpr, dpr);
-  ctx.clearRect(0, 0, width, height);
-
-  const padLeft = 36;
-  const padRight = 14;
-  const padTop = 20;
-  const padBottom = 34;
-  const chartW = width - padLeft - padRight;
-  const chartH = height - padTop - padBottom;
 
   let points = [];
   if (analyticsState.timeFilter === 'current') {
@@ -379,14 +361,39 @@ const drawTimelineChart = (data) => {
         }
       });
       const range = getWeekDateRangeDisplay(w);
+      const rawName = getLocalizedWeekName(w.name);
+      const shortLabel = data.weeks.length > 6 ? rawName.replace(new RegExp('^Tuần\\s*', 'i'), 'T') : rawName;
       return {
-        label: getLocalizedWeekName(w.name),
+        label: shortLabel,
         subLabel: range ? range.split('–')[0].trim() : '',
         salary,
         hours
       };
     });
   }
+
+  const padLeft = 36;
+  const padRight = 14;
+  const padTop = 20;
+  const padBottom = 34;
+
+  const minColWidth = 52;
+  const containerW = parent.clientWidth || 320;
+  const neededW = padLeft + padRight + points.length * minColWidth;
+  const width = Math.max(containerW, neededW);
+  const height = 150;
+
+  canvas.width = Math.floor(width * dpr);
+  canvas.height = Math.floor(height * dpr);
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
+
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, width, height);
+
+  const chartW = width - padLeft - padRight;
+  const chartH = height - padTop - padBottom;
 
   const maxVal = Math.max(...points.map(p => p.salary), 100000);
   const roundedMax = Math.ceil(maxVal / 100000) * 100000;
@@ -463,6 +470,12 @@ const drawTimelineChart = (data) => {
       ctx.fillText(p.subLabel, cx, padTop + chartH + 25);
     }
   });
+
+  if (width > containerW && parent) {
+    requestAnimationFrame(() => {
+      parent.scrollLeft = parent.scrollWidth;
+    });
+  }
 };
 
 const drawDonutChart = (data) => {

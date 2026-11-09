@@ -20,7 +20,7 @@
   <rect width="512" height="512" fill="url(#maskableBase)"/>
   <rect width="512" height="512" fill="none" stroke="url(#maskableSpecular)" stroke-width="3"/>
 
-  <g transform="translate(256, 256) scale(11) translate(-13.5, -12)" filter="url(#walletShadow)">
+  <g transform="translate(256, 256) scale(11) translate(-12.5, -12)" filter="url(#walletShadow)">
     <path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4" 
           fill="#ffffff" 
           fill-opacity="0.22"
