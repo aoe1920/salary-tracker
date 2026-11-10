@@ -1837,7 +1837,7 @@ export const openUserProfileModal = () => {
     closeProfileWorkplacesEditIfOpen();
     if (viewWrap) viewWrap.style.display = 'none';
     if (editWrap) {
-      editWrap.style.display = 'inline-flex';
+      editWrap.style.display = 'flex';
       if (inputEl) {
         inputEl.value = state.currentUser?.username || '';
         requestAnimationFrame(() => {
