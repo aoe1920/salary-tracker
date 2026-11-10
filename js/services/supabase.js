@@ -1248,6 +1248,44 @@ export const updateHeaderAuthUI = () => {
   }
 };
 
+export const getLocalEmailForUsername = (username) => {
+  if (!username) return null;
+  const clean = username.trim().replace(/^@/, '').toLowerCase();
+  try {
+    const raw = localStorage.getItem('salary_username_map');
+    if (raw) {
+      const map = JSON.parse(raw);
+      if (map && map[clean]) return map[clean];
+    }
+  } catch (_) {}
+  try {
+    const cached = localStorage.getItem('salary_tracker_cached_user');
+    if (cached) {
+      const u = JSON.parse(cached);
+      if (u && u.email) {
+        const uName = (u.username || '').toLowerCase();
+        const emailPrefix = u.email.split('@')[0].toLowerCase();
+        if (clean === uName || clean === emailPrefix) return u.email;
+      }
+    }
+  } catch (_) {}
+  return null;
+};
+
+export const setLocalEmailForUsername = (username, email) => {
+  if (!username || !email) return;
+  const cleanU = username.trim().replace(/^@/, '').toLowerCase();
+  const cleanE = email.trim().toLowerCase();
+  if (!cleanU || !cleanE || !cleanE.includes('@')) return;
+  try {
+    const raw = localStorage.getItem('salary_username_map');
+    const map = raw ? JSON.parse(raw) : {};
+    map[cleanU] = cleanE;
+    map[cleanE.split('@')[0]] = cleanE;
+    localStorage.setItem('salary_username_map', JSON.stringify(map));
+  } catch (_) {}
+};
+
 export const translateAuthError = (err) => {
   if (!err) return 'Đã xảy ra lỗi. Vui lòng thử lại.';
   const msg = (typeof err === 'string' ? err : err.message || '').toLowerCase();
@@ -1257,8 +1295,14 @@ export const translateAuthError = (err) => {
   if (msg.includes('already registered') || msg.includes('already exists')) {
     return 'Tên tài khoản hoặc email đã tồn tại.';
   }
-  if (msg.includes('at least 6 characters') || msg.includes('password should be') || msg.includes('weak password')) {
+  if (msg.includes('at least 6 characters') || msg.includes('least 6') || msg.includes('min 6') || msg.includes('minimum 6')) {
     return 'Mật khẩu tối thiểu 6 ký tự.';
+  }
+  if (msg.includes('too common') || msg.includes('easy to guess') || msg.includes('pwned') || msg.includes('compromised')) {
+    return 'Mật khẩu quá phổ biến hoặc dễ đoán. Vui lòng chọn mật khẩu phức tạp hơn.';
+  }
+  if (msg.includes('weak password') || msg.includes('password should') || msg.includes('strength') || msg.includes('complex')) {
+    return 'Mật khẩu chưa đủ mạnh. Vui lòng kết hợp chữ hoa, chữ thường, số hoặc ký tự đặc biệt.';
   }
   if (msg.includes('different from the old password') || msg.includes('should be different')) {
     return 'Mật khẩu mới không được trùng mật khẩu cũ.';
@@ -1305,17 +1349,33 @@ export const handleLoginSubmit = async (e) => {
   if (submitBtn) submitBtn.disabled = true;
 
   try {
-    const isEmail = rawInput.includes('@');
-    let email = isEmail ? rawInput.toLowerCase() : `${rawInput.toLowerCase()}@salary.app`;
+    let cleanInput = rawInput.trim();
+    if (cleanInput.startsWith('@')) {
+      cleanInput = cleanInput.slice(1).trim();
+    }
+    const isEmail = cleanInput.includes('@') && cleanInput.includes('.');
+    const mappedEmail = !isEmail ? getLocalEmailForUsername(cleanInput) : null;
+    let emailToTry = isEmail ? cleanInput.toLowerCase() : (mappedEmail || `${cleanInput.toLowerCase()}@salary.app`);
+
     let res = await supabaseClient.auth.signInWithPassword({
-      email,
+      email: emailToTry,
       password
     });
+
+    if (res.error && !isEmail && mappedEmail && emailToTry !== `${cleanInput.toLowerCase()}@salary.app`) {
+      const fallbackAppRes = await supabaseClient.auth.signInWithPassword({
+        email: `${cleanInput.toLowerCase()}@salary.app`,
+        password
+      });
+      if (!fallbackAppRes.error) {
+        res = fallbackAppRes;
+      }
+    }
 
     if (res.error && !isEmail && typeof supabaseClient.rpc === 'function') {
       try {
         const { data: foundEmail, error: rpcErr } = await supabaseClient.rpc('get_login_email', {
-          p_username: rawInput
+          p_username: cleanInput
         });
         if (!rpcErr && foundEmail && typeof foundEmail === 'string' && foundEmail.includes('@')) {
           const retryRes = await supabaseClient.auth.signInWithPassword({
@@ -1343,6 +1403,10 @@ export const handleLoginSubmit = async (e) => {
     state.currentUser = { id: u.id, email: u.email, username, identities: u.identities, app_metadata: u.app_metadata, user_metadata: u.user_metadata, avatar: activeAvatar };
     if (!state.settings) state.settings = {};
     state.settings.avatar = activeAvatar;
+    if (u.email) {
+      setLocalEmailForUsername(username, u.email);
+      setLocalEmailForUsername(cleanInput, u.email);
+    }
     try {
       localStorage.setItem('salary_tracker_cached_user', JSON.stringify({
         id: u.id,
@@ -1467,6 +1531,10 @@ export const handleRegisterSubmit = async (e) => {
     state.currentWeekId = state.weeks[state.weeks.length - 1].id;
     saveWeeks();
     saveSettings();
+    if (u.email) {
+      setLocalEmailForUsername(username, u.email);
+      setLocalEmailForUsername(rawInput, u.email);
+    }
     try {
       localStorage.setItem('salary_tracker_cached_user', JSON.stringify({
         id: u.id,
@@ -1499,7 +1567,7 @@ export const handleRegisterSubmit = async (e) => {
 };
 
 export const handleLogout = async () => {
-  const currentName = state.currentUser ? (state.currentUser.email ? state.currentUser.email.split('@')[0] : 'user') : '';
+  const currentName = state.currentUser ? (state.currentUser.username || (state.currentUser.email ? state.currentUser.email.split('@')[0] : 'user')) : '';
   const confirmed = await showConfirmDialog({
     title: t('btn_logout', 'Đăng xuất'),
     message: t('confirm_logout', 'Bạn có chắc chắn muốn đăng xuất không?'),

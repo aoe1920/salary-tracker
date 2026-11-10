@@ -177,18 +177,20 @@ const scrollWheelToActive = (behavior = 'smooth') => {
   const containerWidth = container.clientWidth;
   const itemWidth = activeItem.offsetWidth || 150;
   const sidePad = Math.max(8, Math.round((containerWidth - itemWidth) / 2));
-  container.style.paddingLeft = `${sidePad}px`;
-  container.style.paddingRight = `${sidePad}px`;
+  const sidePadStr = `${sidePad}px`;
+  if (container.style.paddingLeft !== sidePadStr) {
+    container.style.paddingLeft = sidePadStr;
+    container.style.paddingRight = sidePadStr;
+  }
 
-  const itemOffset = activeItem.offsetLeft;
-  const targetLeft = Math.max(0, itemOffset - sidePad);
+  const targetLeft = Math.max(0, activeItem.offsetLeft - sidePad);
   container.scrollTo({ left: targetLeft, behavior });
   updateWeekNavButtons();
 
   programmaticScrollTimer = setTimeout(() => {
     isProgrammaticWheelScroll = false;
     container.classList.remove('is-programmatic-scroll');
-  }, behavior === 'smooth' ? 400 : 150);
+  }, behavior === 'smooth' ? 320 : 120);
 };
 
 const renderWeekPills = () => {
@@ -924,6 +926,7 @@ const bindEvents = () => {
   let touchStartY = 0;
   let touchStartTime = 0;
   let touchStartedInWheel = false;
+  let isEdgeSwipe = false;
 
   document.addEventListener('touchstart', (e) => {
     if (!e.touches || e.touches.length !== 1) return;
@@ -931,11 +934,12 @@ const bindEvents = () => {
     touchStartX = t.clientX;
     touchStartY = t.clientY;
     touchStartTime = performance.now();
+    isEdgeSwipe = t.clientX < 28 || t.clientX > (window.innerWidth - 28);
     touchStartedInWheel = Boolean(e.target.closest('#weekPillsList, .week-wheel-container, .modal-backdrop, .app-dialog-backdrop, button, input, select, textarea, .custom-select-menu'));
   }, { passive: true });
 
   document.addEventListener('touchend', (e) => {
-    if (touchStartedInWheel) return;
+    if (touchStartedInWheel || isEdgeSwipe) return;
     if (!e.changedTouches || e.changedTouches.length !== 1) return;
 
     const hasOpenModal = Array.from(document.querySelectorAll('.modal-backdrop, .app-dialog-backdrop'))
@@ -949,7 +953,7 @@ const bindEvents = () => {
 
     if (deltaTime > 600) return;
 
-    if (Math.abs(deltaX) >= 48 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+    if (Math.abs(deltaX) >= 44 && Math.abs(deltaX) > Math.abs(deltaY) * 1.4) {
       if (deltaX < 0) {
         goToAdjacentWeek(1);
       } else {

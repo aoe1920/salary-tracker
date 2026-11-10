@@ -54,8 +54,8 @@ body.dark-mode {
   --bg-input: #0c0d12;
   --bg-subtle: #15161f;
 
-  --border-subtle: rgba(255, 255, 255, 0.07);
-  --border-default: rgba(255, 255, 255, 0.12);
+  --border-subtle: rgba(255, 255, 255, 0.10);
+  --border-default: rgba(255, 255, 255, 0.16);
   --border-focus: #3b82f6;
 
   --text-main: #f8fafc;
@@ -116,6 +116,7 @@ html {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-x: none;
 }
 
 body {
@@ -128,6 +129,7 @@ body {
   background-attachment: fixed;
   color: var(--text-main);
   caret-color: var(--primary);
+  overscroll-behavior-x: none;
 }
 
 @media (max-width: 768px), (pointer: coarse) {
@@ -432,10 +434,10 @@ button[aria-disabled="true"],
 .week-nav-step-btn.is-disabled,
 .swq-btn-icon:disabled,
 .swq-btn-icon.is-disabled {
-  opacity: 0.3 !important;
+  opacity: 0.5 !important;
   cursor: not-allowed !important;
   pointer-events: none !important;
-  filter: grayscale(0.7) !important;
+  filter: grayscale(0.5) !important;
   box-shadow: none !important;
   transform: none !important;
 }
@@ -454,10 +456,10 @@ body.dark-mode .week-nav-step-btn:disabled,
 body.dark-mode .week-nav-step-btn.is-disabled,
 body.dark-mode .swq-btn-icon:disabled,
 body.dark-mode .swq-btn-icon.is-disabled {
-  opacity: 0.25 !important;
-  background: rgba(255, 255, 255, 0.03) !important;
-  border-color: rgba(255, 255, 255, 0.06) !important;
-  color: rgba(255, 255, 255, 0.25) !important;
+  opacity: 0.55 !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: #94a3b8 !important;
   box-shadow: none !important;
   transform: none !important;
 }

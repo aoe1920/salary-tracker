@@ -1,7 +1,7 @@
 import { state, getCurrentWeek, hasWorkplaces, getDefaultWorkplace, getWorkplaceColor, normalizeWorkplacesAndRates } from '../state.js';
 import { fmtCurrency, fmtHours, parseTimeToMinutes, parseSmartTime, calculateHoursDiff, getShiftRate, getShiftEarnings, calculateSmartShiftDefaults, detectShiftType, getVietnameseDayOfWeek, getMondayDate, getShiftDateObj, getShiftDateShort, getWeekDateRangeDisplay, ensureWeekStartDate, getDayClass, escapeHtml, calculateWeekTotalSalary, sortShiftsChronologically } from '../calculator.js';
 import { t, getLocalizedWeekName, getLocalizedShiftType, getLocalizedDayName, formatShiftType } from '../i18n.js';
-import { saveWeeks, saveSettings, updateSyncStatusUI, updateHeaderAuthUI, supabaseClient, handleLinkGoogleAccount } from '../services/supabase.js';
+import { saveWeeks, saveSettings, updateSyncStatusUI, updateHeaderAuthUI, supabaseClient, handleLinkGoogleAccount, setLocalEmailForUsername } from '../services/supabase.js';
 import { showToast, showToastWithAction } from './toast.js';
 import { showConfirmDialog, showAlertDialog } from './dialog.js';
 import { triggerHaptic } from './haptic.js';
@@ -1889,7 +1889,12 @@ export const openUserProfileModal = () => {
     }
     triggerHaptic('medium');
     try {
-      if (state.currentUser) state.currentUser.username = cleanName;
+      if (state.currentUser) {
+        state.currentUser.username = cleanName;
+        if (state.currentUser.email) {
+          setLocalEmailForUsername(cleanName, state.currentUser.email);
+        }
+      }
       document.getElementById('profileUsername').textContent = `@${cleanName}`;
       updateHeaderAuthUI();
       setUsernameViewMode();

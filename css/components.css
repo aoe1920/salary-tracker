@@ -682,8 +682,8 @@ body.dark-mode .hero-period-title .hero-period-year {
 
 body.dark-mode .dashboard-stats-card {
   background: #0e0f15;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 4px 16px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-subtle);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 .dashboard-kpi-grid {
@@ -717,7 +717,7 @@ body.dark-mode .kpi-card {
 }
 
 body.dark-mode .kpi-card:not(:last-child) {
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid var(--border-subtle);
 }
 
 @media (max-width: 640px) {
@@ -732,7 +732,7 @@ body.dark-mode .kpi-card:not(:last-child) {
     padding-bottom: 0.85rem;
   }
   body.dark-mode .kpi-card:not(:last-child) {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--border-subtle);
   }
 }
 
@@ -1138,13 +1138,17 @@ body.dark-mode .badge-count {
 }
 
 .shifts-slide-next {
-  animation: shiftsSlideNext 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: shiftsSlideNext 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
   will-change: opacity, transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .shifts-slide-prev {
-  animation: shiftsSlidePrev 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: shiftsSlidePrev 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
   will-change: opacity, transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 @keyframes shiftsListFade {
@@ -1213,15 +1217,15 @@ body.dark-mode .badge-count {
 body.dark-mode .shift-ledger-row,
 body.dark-mode .shift-card {
   background: #121319;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 2px 6px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-subtle);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 
 body.dark-mode .shift-ledger-row:hover,
 body.dark-mode .shift-card:hover {
   background: #161722;
-  border-color: rgba(255, 255, 255, 0.16);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 4px 12px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .sl-date-capsule {
@@ -1664,34 +1668,57 @@ body.dark-mode .no-workplaces-banner {
   align-items: center;
   gap: 0.35rem;
   padding: 0.35rem 0.5rem;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.82);
   border-radius: var(--radius-pill);
-  box-shadow: 0 2px 32px rgba(15, 23, 42, 0.07), 0 1px 6px rgba(15, 23, 42, 0.04), inset 0 1.5px 1px rgba(255, 255, 255, 0.9), inset 0 -0.5px 1px rgba(0, 0, 0, 0.03);
-  backdrop-filter: blur(48px) saturate(220%) brightness(108%);
-  -webkit-backdrop-filter: blur(48px) saturate(220%) brightness(108%);
+  box-shadow:
+    0 16px 38px -4px rgba(15, 23, 42, 0.16),
+    0 4px 12px rgba(15, 23, 42, 0.06),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.4),
+    inset 1.5px 0 3px rgba(255, 255, 255, 0.35),
+    inset -1.5px 0 3px rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(28px) saturate(210%) contrast(108%) brightness(108%);
+  -webkit-backdrop-filter: blur(28px) saturate(210%) contrast(108%) brightness(108%);
   transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
 }
 
 .floating-dock:hover {
-  box-shadow: 0 4px 40px rgba(15, 23, 42, 0.1), 0 2px 10px rgba(15, 23, 42, 0.05), inset 0 1.5px 1px rgba(255, 255, 255, 0.95);
+  box-shadow:
+    0 20px 44px -4px rgba(15, 23, 42, 0.2),
+    0 6px 16px rgba(15, 23, 42, 0.08),
+    inset 0 1.5px 2px rgba(255, 255, 255, 1),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.5),
+    inset 1.5px 0 3px rgba(255, 255, 255, 0.4),
+    inset -1.5px 0 3px rgba(255, 255, 255, 0.4);
 }
 
 .floating-dock .btn-morphic {
   border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   color: var(--text-main);
-  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.75);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.6);
   transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .floating-dock .btn-morphic:hover:not(:disabled):not(.is-disabled) {
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.28);
   border-color: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08), inset 0 1px 1px #ffffff;
-  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08), inset 0 1px 1.5px #ffffff;
+  transform: translateY(-1px) scale(1.04);
+}
+
+.floating-dock .btn-morphic:disabled,
+.floating-dock .btn-morphic.is-disabled {
+  opacity: 0.45 !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  color: rgba(15, 23, 42, 0.35) !important;
+  pointer-events: none !important;
+  box-shadow: none !important;
+  transform: none !important;
 }
 
 .floating-dock .btn-morphic-primary {
@@ -1704,7 +1731,7 @@ body.dark-mode .no-workplaces-banner {
 .floating-dock .btn-morphic-primary:hover:not(:disabled):not(.is-disabled) {
   background: linear-gradient(135deg, rgba(96, 165, 250, 0.95) 0%, rgba(37, 99, 235, 0.98) 100%) !important;
   box-shadow: 0 10px 28px -2px rgba(37, 99, 235, 0.6), inset 0 1px 1.5px rgba(255, 255, 255, 0.7) !important;
-  transform: translateY(-1px) scale(1.02);
+  transform: translateY(-1px) scale(1.04);
 }
 
 .slip-canvas-container {
@@ -1765,19 +1792,39 @@ body.dark-mode .no-workplaces-banner {
 
 
 body.dark-mode .floating-dock {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.14);
-  box-shadow: 0 2px 32px rgba(0, 0, 0, 0.35), 0 1px 6px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 20px 48px -6px rgba(0, 0, 0, 0.65),
+    0 6px 16px rgba(0, 0, 0, 0.45),
+    inset 0 1.75px 2px rgba(255, 255, 255, 0.45),
+    inset 0 -1px 1.5px rgba(255, 255, 255, 0.15),
+    inset 1.5px 0 3px rgba(255, 255, 255, 0.18),
+    inset -1.5px 0 3px rgba(255, 255, 255, 0.18);
 }
 
 body.dark-mode .floating-dock .btn-morphic {
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.04);
   border-color: rgba(255, 255, 255, 0.14);
-  color: var(--text-main);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.12);
 }
 
 body.dark-mode .floating-dock .btn-morphic:hover:not(:disabled):not(.is-disabled) {
   background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px) scale(1.04);
+}
+
+body.dark-mode .floating-dock .btn-morphic:disabled,
+body.dark-mode .floating-dock .btn-morphic.is-disabled {
+  opacity: 0.45 !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: #64748b !important;
+  pointer-events: none !important;
+  box-shadow: none !important;
+  transform: none !important;
 }
