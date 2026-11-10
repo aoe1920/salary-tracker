@@ -10,7 +10,7 @@ import { drawDashboardWeekChart, setAllWeeksModalOpener, renderAnalyticsDashboar
 import { renderSlipCanvas, openShareSlipModal, downloadSlipImage, copySlipImageToClipboard } from './ui/canvas-slip.js';
 import { exportCurrentWeekCSV, exportAllWeeksCSV, backupJSON, restoreJSON, setExportAppRenderer } from './ui/export.js';
 import { showConfirmDialog, showAlertDialog, initDialogHandlers } from './ui/dialog.js';
-import { closeModal, openAddShiftModal, openEditShiftModal, updateModalComputedPreview, saveShiftFromModal, deleteShift, undoLastDeleteShift, createNewWeek, openEditWeekModal, saveWeekMeta, deleteCurrentWeek, undoLastDeleteWeek, navigateWeek, renderMonthlyReport, switchSummaryTab, openAllWeeksModal, renderShiftWorkplacesList, addWorkplaceFromShiftModal, toggleWorkplacePanel, openWorkplaceModal, closeWorkplaceModal, openAuthModal, switchAuthTab, clearAuthErrors, openUserProfileModal, collapsePasswordSection, collapseAvatarPicker, setupPasswordToggles, setModalAppRenderer, openResetPasswordModal } from './ui/modals.js';
+import { closeModal, openAddShiftModal, openEditShiftModal, updateModalComputedPreview, saveShiftFromModal, deleteShift, undoLastDeleteShift, createNewWeek, openEditWeekModal, saveWeekMeta, deleteCurrentWeek, undoLastDeleteWeek, navigateWeek, renderMonthlyReport, switchSummaryTab, openAllWeeksModal, renderShiftWorkplacesList, addWorkplaceFromShiftModal, toggleWorkplacePanel, openWorkplaceModal, closeWorkplaceModal, openAuthModal, switchAuthTab, clearAuthErrors, openUserProfileModal, collapsePasswordSection, collapseAvatarPicker, setupPasswordToggles, setModalAppRenderer, openResetPasswordModal, initSlimeSegmentedBars, syncSlimeGlider } from './ui/modals.js';
 
 const updateWheelIndicator = () => {};
 
@@ -212,6 +212,9 @@ const renderWeekPills = () => {
 
     item.addEventListener('click', (e) => {
       e.preventDefault();
+      item.classList.remove('slime-pill-bounce');
+      void item.offsetWidth;
+      item.classList.add('slime-pill-bounce');
       if (state.currentWeekId !== week.id) {
         triggerHaptic('light');
         const oldIdx = state.weeks.findIndex(w => w.id === state.currentWeekId);
@@ -1011,6 +1014,12 @@ const bindEvents = () => {
       btn.classList.add('active');
       analyticsState.timeFilter = btn.getAttribute('data-time-filter');
       renderAnalyticsDashboard();
+      const bar = btn.closest('.stats-time-pills');
+      if (bar) {
+        requestAnimationFrame(() => {
+          syncSlimeGlider(bar, false);
+        });
+      }
     });
   });
 
@@ -1196,6 +1205,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   bindEvents();
   renderApp();
+  initSlimeSegmentedBars();
 
   await initAuth();
   await loadState();

@@ -753,6 +753,13 @@ export const switchSummaryTab = (tab) => {
     if (btnTable) btnTable.classList.add('active');
     if (paneTable) paneTable.style.display = 'flex';
   }
+
+  const navBar = document.querySelector('.summary-tab-nav');
+  if (navBar) {
+    requestAnimationFrame(() => {
+      syncSlimeGlider(navBar, false);
+    });
+  }
 };
 
 export const openAllWeeksModal = (initialTab = 'analytics') => {
@@ -871,6 +878,12 @@ export const openAllWeeksModal = (initialTab = 'analytics') => {
 
   document.getElementById('allWeeksModal').style.display = 'flex';
   switchSummaryTab(initialTab);
+  requestAnimationFrame(() => {
+    const navBar = document.querySelector('.summary-tab-nav');
+    if (navBar) syncSlimeGlider(navBar, true);
+    const timePills = document.querySelector('.stats-time-pills');
+    if (timePills) syncSlimeGlider(timePills, true);
+  });
 };
 
 const parseWpRate = (raw) => {
@@ -1240,6 +1253,10 @@ export const openAuthModal = (defaultTab = 'login') => {
   switchAuthTab(defaultTab);
   clearAuthErrors();
   modal.style.display = 'flex';
+  requestAnimationFrame(() => {
+    const tabsRowEl = document.querySelector('.auth-tabs-row');
+    if (tabsRowEl) syncSlimeGlider(tabsRowEl, true);
+  });
 };
 
 export const openResetPasswordModal = () => {
@@ -1302,6 +1319,12 @@ export const switchAuthTab = (tab) => {
     document.getElementById('forgotEmail')?.focus();
   }
   clearAuthErrors();
+  const tabsRowEl = document.querySelector('.auth-tabs-row');
+  if (tabsRowEl && tabsRowEl.style.display !== 'none') {
+    requestAnimationFrame(() => {
+      syncSlimeGlider(tabsRowEl, false);
+    });
+  }
 };
 
 export const clearAuthErrors = () => {
@@ -2175,4 +2198,76 @@ export const closeModal = (modalId) => {
       openUserProfileModal();
     }
   }
+};
+
+export const syncSlimeGlider = (barEl, immediate = false) => {
+  if (!barEl) return;
+  let glider = barEl.querySelector('.segmented-slime-glider');
+  if (!glider) {
+    glider = document.createElement('span');
+    glider.className = 'segmented-slime-glider';
+    glider.setAttribute('aria-hidden', 'true');
+    barEl.insertBefore(glider, barEl.firstChild);
+  }
+  const activeBtn = barEl.querySelector('.active');
+  if (!activeBtn) {
+    glider.style.opacity = '0';
+    return;
+  }
+  const left = activeBtn.offsetLeft;
+  const top = activeBtn.offsetTop;
+  const w = activeBtn.offsetWidth;
+  const h = activeBtn.offsetHeight;
+  if (w === 0 || h === 0) return;
+
+  if (immediate) {
+    glider.style.transition = 'none';
+  } else {
+    glider.style.transition = '';
+  }
+
+  glider.style.opacity = '1';
+  glider.style.transform = `translate3d(${left}px, ${top}px, 0)`;
+  glider.style.width = `${w}px`;
+  glider.style.height = `${h}px`;
+
+  if (immediate) {
+    void glider.offsetWidth;
+    glider.style.transition = '';
+  }
+
+  if (!immediate) {
+    activeBtn.classList.remove('slime-pill-bounce');
+    void activeBtn.offsetWidth;
+    activeBtn.classList.add('slime-pill-bounce');
+  }
+};
+
+export const initSlimeSegmentedBars = () => {
+  const syncAll = (immediate = false) => {
+    document.querySelectorAll('.summary-tab-nav, .auth-tabs-row, .stats-time-pills').forEach(bar => {
+      syncSlimeGlider(bar, immediate);
+    });
+  };
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.summary-tab-btn, .auth-tab-btn, .filter-pill-btn, .week-wheel-item');
+    if (!btn) return;
+    if (btn.classList.contains('week-wheel-item')) {
+      btn.classList.remove('slime-pill-bounce');
+      void btn.offsetWidth;
+      btn.classList.add('slime-pill-bounce');
+      return;
+    }
+    const bar = btn.closest('.summary-tab-nav, .auth-tabs-row, .stats-time-pills');
+    if (bar) {
+      requestAnimationFrame(() => {
+        syncSlimeGlider(bar, false);
+      });
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    syncAll(true);
+  });
 };
