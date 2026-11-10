@@ -1596,6 +1596,8 @@ body.dark-mode .btn-avatar-edit-badge {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 0;
+  line-height: 1.25;
 }
 
 .profile-username-wrap {
@@ -1603,9 +1605,8 @@ body.dark-mode .btn-avatar-edit-badge {
   align-items: center;
   width: 100%;
   max-width: 100%;
-  min-height: 28px;
+  min-height: 32px;
   min-width: 0;
-  overflow: hidden;
 }
 
 .profile-username-view {
@@ -1614,7 +1615,7 @@ body.dark-mode .btn-avatar-edit-badge {
   gap: 0.45rem;
   max-width: 100%;
   min-width: 0;
-  overflow: hidden;
+  padding: 2px 0;
 }
 
 .profile-username-edit {
