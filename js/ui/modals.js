@@ -288,10 +288,10 @@ export const saveShiftFromModal = async (e) => {
 
   if (overlappingShift) {
     const confirmSave = await showConfirmDialog({
-      title: t('confirm_overlap_title', 'Cảnh báo trùng giờ'),
-      message: `Ca làm (${start} – ${end}) bị đè thời gian lên ca khác của cùng ngày ${getLocalizedDayName(day)}. Bạn có chắc chắn vẫn muốn lưu không?`,
+      title: t('confirm_overlap_title', 'Trùng giờ làm'),
+      message: `Ca làm (${start} – ${end}) bị trùng giờ với ca khác trong ngày.`,
       details: `${getLocalizedShiftType(overlappingShift.type)}: ${overlappingShift.start} – ${overlappingShift.end}`,
-      confirmText: t('btn_continue_save', 'Vẫn lưu ca'),
+      confirmText: t('btn_continue_save', 'Vẫn lưu'),
       cancelText: t('btn_cancel', 'Hủy'),
       isDanger: false,
       isWarning: true,
@@ -479,7 +479,7 @@ export const deleteCurrentWeek = async () => {
 
   const confirmed = await showConfirmDialog({
     title: t('btn_delete_week', 'Xóa tuần'),
-    message: t('confirm_delete_week', 'Bạn có chắc chắn muốn xóa tuần làm việc này không?'),
+    message: t('confirm_delete_week', 'Xóa tuần làm này?'),
     details: `${getLocalizedWeekName(week.name)} • ${week.shifts.length} ${t('unit_shift', 'ca')}`,
     confirmText: t('btn_delete', 'Xóa'),
     cancelText: t('btn_cancel', 'Hủy'),
@@ -838,7 +838,7 @@ export const openAllWeeksModal = (initialTab = 'analytics') => {
       }
       const confirmed = await showConfirmDialog({
         title: t('btn_delete_week', 'Xóa tuần'),
-        message: t('confirm_delete_week', 'Bạn có chắc chắn muốn xóa tuần làm việc này không?'),
+        message: t('confirm_delete_week', 'Xóa tuần làm này?'),
         details: `${getLocalizedWeekName(week.name)} • ${week.shifts.length} ${t('unit_shift', 'ca')}`,
         confirmText: t('btn_delete', 'Xóa'),
         cancelText: t('btn_cancel', 'Hủy'),
@@ -1091,7 +1091,7 @@ export const renderShiftWorkplacesList = () => {
         triggerHaptic('light');
         const confirmed = await showConfirmDialog({
           title: t('btn_delete_wp', 'Xóa nơi làm'),
-          message: `Bạn có chắc chắn muốn xóa nơi làm việc "${wp}" không?`,
+          message: `Xóa nơi làm việc "${wp}"?`,
           confirmText: t('btn_delete', 'Xóa'),
           cancelText: t('btn_cancel', 'Hủy'),
           isDanger: true,
@@ -1676,7 +1676,7 @@ export const renderProfileWorkplacesEditList = () => {
         triggerHaptic('light');
         const confirmed = await showConfirmDialog({
           title: t('btn_delete_wp', 'Xóa nơi làm'),
-          message: `Bạn có chắc chắn muốn xóa nơi làm việc "${wp}" không?`,
+          message: `Xóa nơi làm việc "${wp}"?`,
           confirmText: t('btn_delete', 'Xóa'),
           cancelText: t('btn_cancel', 'Hủy'),
           isDanger: true,

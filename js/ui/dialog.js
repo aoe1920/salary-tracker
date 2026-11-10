@@ -16,7 +16,6 @@ const ICONS = {
 const BTN_ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"></polyline></svg>';
 const BTN_ICON_TRASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>';
 const BTN_ICON_LOGOUT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>';
-const BTN_ICON_CLOSE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>';
 
 const closeDialog = (result) => {
   triggerHaptic(result ? 'medium' : 'light');
@@ -104,18 +103,27 @@ export const showConfirmDialog = (options = {}) => {
     }
 
     if (cancelBtn) {
-      cancelBtn.style.display = 'inline-flex';
-      cancelBtn.className = 'btn-action-secondary btn-icon-only';
-      cancelBtn.innerHTML = BTN_ICON_CLOSE;
       const cancelLabel = opts.cancelText || t('btn_cancel', 'Hủy');
+      cancelBtn.className = 'btn-action-secondary';
+      cancelBtn.innerHTML = `<span>${cancelLabel}</span>`;
       cancelBtn.title = cancelLabel;
       cancelBtn.setAttribute('aria-label', cancelLabel);
+      cancelBtn.style.display = 'inline-flex';
     }
 
     if (confirmBtn) {
-      confirmBtn.className = (isDanger ? 'btn-action-danger' : 'btn-action-primary') + ' btn-icon-only';
-      confirmBtn.innerHTML = isDanger ? (iconKey === 'logout' ? BTN_ICON_LOGOUT : BTN_ICON_TRASH) : BTN_ICON_CHECK;
+      let confirmClass = 'btn-action-primary';
+      let confirmIcon = BTN_ICON_CHECK;
+      if (isDanger) {
+        confirmClass = 'btn-action-danger';
+        confirmIcon = iconKey === 'logout' ? BTN_ICON_LOGOUT : BTN_ICON_TRASH;
+      } else if (isWarning) {
+        confirmClass = 'btn-action-primary';
+        confirmIcon = BTN_ICON_CHECK;
+      }
       const confirmLabel = opts.confirmText || (isDanger ? t('btn_delete', 'Xóa') : t('dialog_btn_ok', 'Đồng ý'));
+      confirmBtn.className = confirmClass;
+      confirmBtn.innerHTML = `${confirmIcon}<span>${confirmLabel}</span>`;
       confirmBtn.title = confirmLabel;
       confirmBtn.setAttribute('aria-label', confirmLabel);
     }
@@ -204,9 +212,9 @@ export const showAlertDialog = (options = {}) => {
     }
 
     if (confirmBtn) {
-      confirmBtn.className = 'btn-action-primary btn-icon-only';
-      confirmBtn.innerHTML = BTN_ICON_CHECK;
       const okLabel = opts.okText || t('dialog_btn_understood', 'Đã hiểu');
+      confirmBtn.className = isError ? 'btn-action-danger' : 'btn-action-primary';
+      confirmBtn.innerHTML = `${BTN_ICON_CHECK}<span>${okLabel}</span>`;
       confirmBtn.title = okLabel;
       confirmBtn.setAttribute('aria-label', okLabel);
     }

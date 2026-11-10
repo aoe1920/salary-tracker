@@ -1634,7 +1634,7 @@ export const handleLogout = async () => {
   const currentName = state.currentUser ? (state.currentUser.username || (state.currentUser.email ? state.currentUser.email.split('@')[0] : 'user')) : '';
   const confirmed = await showConfirmDialog({
     title: t('btn_logout', 'Đăng xuất'),
-    message: t('confirm_logout', 'Bạn có chắc chắn muốn đăng xuất không?'),
+    message: t('confirm_logout', 'Bạn muốn đăng xuất?'),
     details: currentName ? `@${currentName}` : '',
     confirmText: t('btn_logout', 'Đăng xuất'),
     cancelText: t('btn_cancel', 'Hủy'),
@@ -1677,7 +1677,7 @@ export const handleDeleteAccount = async () => {
   const currentName = state.currentUser.username || (state.currentUser.email ? state.currentUser.email.split('@')[0] : 'user');
   const confirmed = await showConfirmDialog({
     title: t('btn_delete_account', 'Xóa tài khoản'),
-    message: t('confirm_delete_account', 'Bạn có chắc chắn muốn xóa tài khoản này không? Toàn bộ dữ liệu ca làm, lịch sử tuần và cài đặt sẽ bị xóa vĩnh viễn và không thể khôi phục.'),
+    message: t('confirm_delete_account', 'Toàn bộ dữ liệu sẽ bị xóa vĩnh viễn.'),
     details: `@${currentName}`,
     confirmText: t('btn_delete_account', 'Xóa tài khoản'),
     cancelText: t('btn_cancel', 'Hủy'),
