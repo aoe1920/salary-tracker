@@ -91,6 +91,24 @@ button, input, optgroup, select, textarea {
   font-family: inherit;
 }
 
+input::placeholder,
+textarea::placeholder,
+.form-input::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 400;
+  letter-spacing: normal;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder,
+body.dark-mode .form-input::placeholder {
+  color: #64748b;
+  opacity: 1;
+}
+
 html {
   font-size: 16px;
   background: var(--bg-app);

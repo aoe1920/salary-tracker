@@ -4670,22 +4670,32 @@ body.dark-mode .input-with-tag .tag {
   .custom-select-trigger,
   .custom-select-label,
   .time-input-styled,
-  .settings-wp-rate-input {
-    font-size: 16px !important;
-    font-weight: 500 !important;
-    font-family: var(--font-sans) !important;
-    letter-spacing: -0.01em !important;
-    line-height: 1.4 !important;
-  }
+  .settings-wp-rate-input,
+  .profile-inline-input,
+  .swq-name-input,
+  .swq-rate-input,
+  .profile-wp-rename-input,
+  .profile-wp-rate-input,
   .shift-modal-body .custom-select-trigger,
   .shift-modal-body .custom-select-label,
   .shift-modal-body .form-select,
   .shift-modal-body select,
   .shift-modal-body .form-input,
   .shift-modal-body input {
-    font-size: 15px !important;
-    font-weight: 400 !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    font-family: var(--font-sans) !important;
+    letter-spacing: -0.01em !important;
+    line-height: 1.4 !important;
     text-align: left !important;
+  }
+  input::placeholder,
+  textarea::placeholder,
+  .form-input::placeholder {
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    font-family: var(--font-sans) !important;
+    line-height: 1.4 !important;
   }
 }
 
