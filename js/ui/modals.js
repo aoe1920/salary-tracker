@@ -238,7 +238,7 @@ export const updateModalComputedPreview = () => {
 export const saveShiftFromModal = async (e) => {
   e.preventDefault();
   if (!hasWorkplaces()) {
-    showToast(t('warn_no_workplace', 'Vui lòng thêm nơi làm việc trước.'));
+    showToast(t('warn_no_workplace', 'Chưa có nơi làm việc.'));
     openWorkplaceModal();
     return;
   }
@@ -252,7 +252,7 @@ export const saveShiftFromModal = async (e) => {
   const end = parseSmartTime(rawEnd);
 
   if (!start || !end) {
-    showToast(t('warn_invalid_time', 'Giờ không hợp lệ (VD: 17:00, 17h, 1730)'));
+    showToast(t('warn_invalid_time', 'Giờ làm không hợp lệ.'));
     if (!start) document.getElementById('shiftStart')?.focus();
     else document.getElementById('shiftEnd')?.focus();
     return;
@@ -1008,7 +1008,7 @@ export const renderShiftWorkplacesList = () => {
         const handleSave = () => {
           const newName = (nameInput?.value || '').trim();
           if (!newName) {
-            showToast(t('warn_wp_name_empty', 'Vui lòng nhập tên nơi làm việc.'));
+            showToast(t('warn_wp_name_empty', 'Chưa nhập tên nơi làm việc.'));
             nameInput?.focus();
             return;
           }
@@ -1164,7 +1164,7 @@ export const addWorkplaceFromShiftModal = () => {
   if (!nameInput) return;
   const val = nameInput.value.trim();
   if (!val) {
-    showToast(t('warn_wp_name_empty', 'Vui lòng nhập tên nơi làm việc mới.'));
+    showToast(t('warn_wp_name_empty', 'Chưa nhập tên nơi làm việc.'));
     nameInput.focus();
     return;
   }
@@ -1593,7 +1593,7 @@ export const renderProfileWorkplacesEditList = () => {
         const handleSaveRename = () => {
           const newName = (renameInput?.value || '').trim();
           if (!newName) {
-            showToast(t('warn_wp_name_empty', 'Vui lòng nhập tên nơi làm việc.'));
+            showToast(t('warn_wp_name_empty', 'Chưa nhập tên nơi làm việc.'));
             renameInput?.focus();
             return;
           }
@@ -1750,7 +1750,7 @@ export const addWorkplaceFromProfile = () => {
   if (!nameInput) return;
   const val = nameInput.value.trim();
   if (!val) {
-    showToast(t('warn_wp_name_empty', 'Vui lòng nhập tên nơi làm việc mới.'));
+    showToast(t('warn_wp_name_empty', 'Chưa nhập tên nơi làm việc.'));
     nameInput.focus();
     return;
   }

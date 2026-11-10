@@ -1293,7 +1293,7 @@ export const setLocalEmailForUsername = (username, email) => {
 };
 
 export const translateAuthError = (err) => {
-  if (!err) return 'Đã xảy ra lỗi. Vui lòng thử lại.';
+  if (!err) return 'Đã xảy ra lỗi.';
   const msg = (typeof err === 'string' ? err : err.message || '').toLowerCase();
   if (msg.includes('invalid login credentials') || msg.includes('invalid credentials')) {
     return 'Sai tài khoản hoặc mật khẩu.';
@@ -1305,19 +1305,19 @@ export const translateAuthError = (err) => {
     return 'Mật khẩu tối thiểu 6 ký tự.';
   }
   if (msg.includes('too common') || msg.includes('easy to guess') || msg.includes('pwned') || msg.includes('compromised')) {
-    return 'Mật khẩu quá phổ biến hoặc dễ đoán. Vui lòng chọn mật khẩu phức tạp hơn.';
+    return 'Mật khẩu quá phổ biến hoặc dễ đoán.';
   }
   if (msg.includes('weak password') || msg.includes('password should') || msg.includes('strength') || msg.includes('complex')) {
-    return 'Mật khẩu chưa đủ mạnh. Vui lòng kết hợp chữ hoa, chữ thường, số hoặc ký tự đặc biệt.';
+    return 'Mật khẩu chưa đủ mạnh.';
   }
   if (msg.includes('different from the old password') || msg.includes('should be different')) {
     return 'Mật khẩu mới không được trùng mật khẩu cũ.';
   }
   if (msg.includes('rate limit') || msg.includes('too many requests') || msg.includes('once every')) {
-    return 'Vui lòng chờ giây lát trước khi thử lại.';
+    return 'Quá nhiều yêu cầu. Vui lòng thử lại sau.';
   }
   if (msg.includes('network') || msg.includes('fetch') || msg.includes('failed to fetch')) {
-    return 'Lỗi kết nối mạng. Vui lòng thử lại.';
+    return 'Lỗi kết nối mạng.';
   }
   if (msg.includes('not found') || msg.includes('user not found')) {
     return 'Không tìm thấy tài khoản.';
@@ -1328,7 +1328,7 @@ export const translateAuthError = (err) => {
   if (msg.includes('email not confirmed') || msg.includes('unconfirmed')) {
     return 'Email chưa được kích hoạt.';
   }
-  return 'Thao tác không thành công. Vui lòng thử lại.';
+  return 'Thao tác không thành công.';
 };
 
 const AUTH_PEPPER = '@St1!';
@@ -1382,7 +1382,7 @@ export const handleLoginSubmit = async (e) => {
   errorEl.style.display = 'none';
 
   if (!supabaseClient) {
-    errorEl.textContent = t('auth_err_supabase', 'Lỗi kết nối máy chủ. Vui lòng thử lại.');
+    errorEl.textContent = t('auth_err_supabase', 'Lỗi kết nối máy chủ.');
     errorEl.style.display = 'block';
     return;
   }
@@ -1437,11 +1437,7 @@ export const handleLoginSubmit = async (e) => {
     }
 
     if (res.error) {
-      let errMsg = translateAuthError(res.error);
-      if (!isEmail && (res.error.message || '').toLowerCase().includes('invalid')) {
-        errMsg = t('auth_err_invalid_or_google', 'Sai tài khoản hoặc mật khẩu. Nếu bạn đăng ký qua Google, hãy chọn "Tiếp tục với Google" hoặc nhập chính xác địa chỉ Gmail.');
-      }
-      errorEl.textContent = errMsg;
+      errorEl.textContent = translateAuthError(res.error);
       errorEl.style.display = 'block';
       if (submitBtn) submitBtn.disabled = false;
       return;
@@ -1524,7 +1520,7 @@ export const handleRegisterSubmit = async (e) => {
   }
 
   if (!supabaseClient) {
-    errorEl.textContent = t('auth_err_supabase', 'Lỗi kết nối máy chủ. Vui lòng thử lại.');
+    errorEl.textContent = t('auth_err_supabase', 'Lỗi kết nối máy chủ.');
     errorEl.style.display = 'block';
     return;
   }
@@ -1745,7 +1741,7 @@ export const handleDeleteAccount = async () => {
 
 export const handleGoogleSignIn = async () => {
   if (!supabaseClient) {
-    showToast(t('auth_err_supabase', 'Lỗi kết nối máy chủ. Vui lòng thử lại.'));
+    showToast(t('auth_err_supabase', 'Lỗi kết nối máy chủ.'));
     return;
   }
   triggerHaptic('medium');
