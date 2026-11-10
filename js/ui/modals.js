@@ -1448,8 +1448,6 @@ export const expandPasswordSection = () => {
     formChangePwd.classList.add('is-expanded');
   }
   if (iconChevron) iconChevron.style.transform = 'rotate(180deg)';
-  const pwdInput = document.getElementById('changeNewPassword');
-  if (pwdInput) setTimeout(() => pwdInput.focus(), 120);
 };
 
 export const expandProfileWorkplacesEdit = () => {
@@ -1479,10 +1477,6 @@ export const expandProfileWorkplacesEdit = () => {
 
   renderProfileWorkplacesEditList();
   updateProfileWorkplacesBadge();
-
-  if (nameInput) {
-    setTimeout(() => nameInput.focus(), 120);
-  }
 };
 
 export const renderProfileWorkplaces = () => {
