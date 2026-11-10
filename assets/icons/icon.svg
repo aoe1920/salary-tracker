@@ -37,40 +37,46 @@
     <filter id="claspShadow" filterUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
       <feDropShadow dx="-1.2" dy="2.5" stdDeviation="3" flood-color="#08142c" flood-opacity="0.45"/>
     </filter>
+
+    <clipPath id="squircleClip">
+      <rect width="512" height="512" rx="120" ry="120"/>
+    </clipPath>
   </defs>
 
-  <rect width="512" height="512" fill="url(#morphicBase)"/>
-  <rect width="512" height="512" fill="none" stroke="url(#specularRim)" stroke-width="3"/>
-  <rect x="12" y="12" width="488" height="488" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.5"/>
+  <g clip-path="url(#squircleClip)">
+    <rect width="512" height="512" rx="120" ry="120" fill="url(#morphicBase)"/>
+    <rect width="512" height="512" rx="120" ry="120" fill="none" stroke="url(#specularRim)" stroke-width="4"/>
+    <rect x="12" y="12" width="488" height="488" rx="108" ry="108" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.5"/>
 
-  <g filter="url(#walletDropShadow3D)">
-    <g transform="translate(256, 255) scale(11) translate(-12.5, -12)" opacity="0.6">
-      <path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4" 
-            fill="none" 
-            stroke="#ffffff" 
-            stroke-width="2.2" 
-            stroke-linecap="round" 
-            stroke-linejoin="round"/>
-    </g>
+    <g filter="url(#walletDropShadow3D)">
+      <g transform="translate(256, 255) scale(11) translate(-12.5, -12)" opacity="0.6">
+        <path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4" 
+              fill="none" 
+              stroke="#ffffff" 
+              stroke-width="2.2" 
+              stroke-linecap="round" 
+              stroke-linejoin="round"/>
+      </g>
 
-    <g transform="translate(256, 256) scale(11) translate(-12.5, -12)">
-      <path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4" 
-            fill="url(#walletGlassFill)" 
-            stroke="url(#walletStroke3D)" 
-            stroke-width="2.2" 
-            stroke-linecap="round" 
-            stroke-linejoin="round"/>
-      
-      <g filter="url(#claspShadow)">
-        <path d="M16 11h5a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-5a2 2 0 0 1-2-2v0a2 2 0 0 1 2-2Z" 
+      <g transform="translate(256, 256) scale(11) translate(-12.5, -12)">
+        <path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4" 
               fill="url(#walletGlassFill)" 
               stroke="url(#walletStroke3D)" 
               stroke-width="2.2" 
               stroke-linecap="round" 
               stroke-linejoin="round"/>
-        <circle cx="18.5" cy="13" r="1.1" fill="#0b172e" opacity="0.4"/>
-        <circle cx="18.5" cy="13" r="0.9" fill="url(#sapphireDot)"/>
-        <circle cx="18.2" cy="12.7" r="0.32" fill="#ffffff" opacity="0.8"/>
+        
+        <g filter="url(#claspShadow)">
+          <path d="M16 11h5a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-5a2 2 0 0 1-2-2v0a2 2 0 0 1 2-2Z" 
+                fill="url(#walletGlassFill)" 
+                stroke="url(#walletStroke3D)" 
+                stroke-width="2.2" 
+                stroke-linecap="round" 
+                stroke-linejoin="round"/>
+          <circle cx="18.5" cy="13" r="1.1" fill="#0b172e" opacity="0.4"/>
+          <circle cx="18.5" cy="13" r="0.9" fill="url(#sapphireDot)"/>
+          <circle cx="18.2" cy="12.7" r="0.32" fill="#ffffff" opacity="0.8"/>
+        </g>
       </g>
     </g>
   </g>
