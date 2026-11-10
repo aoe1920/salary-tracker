@@ -1398,8 +1398,9 @@ body.dark-mode .btn-submit-action:hover {
 }
 
 #userProfileModal .modal-surface {
+  display: flex;
+  flex-direction: column;
   max-height: calc(100dvh - 2rem);
-  height: auto;
   overflow: hidden;
 }
 
@@ -1407,8 +1408,24 @@ body.dark-mode .btn-submit-action:hover {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  max-height: none;
-  overflow: hidden;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: calc(100dvh - 145px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding-bottom: 0.85rem;
+}
+
+#userProfileModal .modal-footer {
+  flex-shrink: 0;
+  z-index: 2;
+  background: var(--bg-card);
+}
+
+body.dark-mode #userProfileModal .modal-footer {
+  background: #15161e;
 }
 
 @media (max-height: 560px) {
@@ -1417,7 +1434,6 @@ body.dark-mode .btn-submit-action:hover {
   }
   #userProfileModal .user-profile-body {
     max-height: calc(100dvh - 110px);
-    overflow-y: auto;
   }
 }
 

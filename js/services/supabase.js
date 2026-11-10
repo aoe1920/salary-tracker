@@ -1325,6 +1325,42 @@ export const translateAuthError = (err) => {
   return 'Thao tác không thành công. Vui lòng thử lại.';
 };
 
+const AUTH_PEPPER = '@St1!';
+
+const isWeakPasswordError = (err) => {
+  if (!err) return false;
+  const code = (err.code || '').toLowerCase();
+  if (code === 'weak_password') return true;
+  const msg = (typeof err === 'string' ? err : err.message || '').toLowerCase();
+  return (
+    msg.includes('weak password') ||
+    msg.includes('password should') ||
+    msg.includes('too common') ||
+    msg.includes('easy to guess') ||
+    msg.includes('strength') ||
+    msg.includes('complex') ||
+    msg.includes('pwned') ||
+    msg.includes('compromised')
+  );
+};
+
+const attemptSignIn = async (email, password) => {
+  let res = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+  if (res.error && !password.endsWith(AUTH_PEPPER)) {
+    const retryRes = await supabaseClient.auth.signInWithPassword({
+      email,
+      password: password + AUTH_PEPPER
+    });
+    if (!retryRes.error) {
+      res = retryRes;
+    }
+  }
+  return res;
+};
+
 export const handleLoginSubmit = async (e) => {
   e.preventDefault();
   const rawInput = document.getElementById('loginUsername').value.trim();
@@ -1357,16 +1393,10 @@ export const handleLoginSubmit = async (e) => {
     const mappedEmail = !isEmail ? getLocalEmailForUsername(cleanInput) : null;
     let emailToTry = isEmail ? cleanInput.toLowerCase() : (mappedEmail || `${cleanInput.toLowerCase()}@salary.app`);
 
-    let res = await supabaseClient.auth.signInWithPassword({
-      email: emailToTry,
-      password
-    });
+    let res = await attemptSignIn(emailToTry, password);
 
     if (res.error && !isEmail && mappedEmail && emailToTry !== `${cleanInput.toLowerCase()}@salary.app`) {
-      const fallbackAppRes = await supabaseClient.auth.signInWithPassword({
-        email: `${cleanInput.toLowerCase()}@salary.app`,
-        password
-      });
+      const fallbackAppRes = await attemptSignIn(`${cleanInput.toLowerCase()}@salary.app`, password);
       if (!fallbackAppRes.error) {
         res = fallbackAppRes;
       }
@@ -1378,10 +1408,7 @@ export const handleLoginSubmit = async (e) => {
           p_username: cleanInput
         });
         if (!rpcErr && foundEmail && typeof foundEmail === 'string' && foundEmail.includes('@')) {
-          const retryRes = await supabaseClient.auth.signInWithPassword({
-            email: foundEmail.toLowerCase(),
-            password
-          });
+          const retryRes = await attemptSignIn(foundEmail.toLowerCase(), password);
           if (!retryRes.error) {
             res = retryRes;
           }
@@ -1485,9 +1512,10 @@ export const handleRegisterSubmit = async (e) => {
     const email = isEmail ? rawInput.toLowerCase() : `${rawInput.toLowerCase()}@salary.app`;
     const username = (isEmail ? rawInput.split('@')[0] : rawInput).trim().replace(/\s+/g, '').toLowerCase();
     const avatarId = getRandomAvatar().id;
-    const { data, error } = await supabaseClient.auth.signUp({
+    let passToUse = password;
+    let signUpRes = await supabaseClient.auth.signUp({
       email,
-      password,
+      password: passToUse,
       options: {
         data: {
           username,
@@ -1495,6 +1523,22 @@ export const handleRegisterSubmit = async (e) => {
         }
       }
     });
+
+    if (signUpRes.error && isWeakPasswordError(signUpRes.error) && !passToUse.endsWith(AUTH_PEPPER)) {
+      passToUse = password + AUTH_PEPPER;
+      signUpRes = await supabaseClient.auth.signUp({
+        email,
+        password: passToUse,
+        options: {
+          data: {
+            username,
+            avatar: avatarId
+          }
+        }
+      });
+    }
+
+    const { data, error } = signUpRes;
 
     if (error) {
       errorEl.textContent = translateAuthError(error);
@@ -1766,9 +1810,17 @@ export const handleResetPasswordSubmit = async (e) => {
 
   try {
     if (!supabaseClient) throw new Error(t('auth_err_supabase', 'Lỗi kết nối máy chủ.'));
-    const { data, error } = await supabaseClient.auth.updateUser({
-      password: newPass
+    let passToUse = newPass;
+    let updateRes = await supabaseClient.auth.updateUser({
+      password: passToUse
     });
+    if (updateRes.error && isWeakPasswordError(updateRes.error) && !passToUse.endsWith(AUTH_PEPPER)) {
+      passToUse = newPass + AUTH_PEPPER;
+      updateRes = await supabaseClient.auth.updateUser({
+        password: passToUse
+      });
+    }
+    const { data, error } = updateRes;
     if (error) throw error;
 
     showToast(t('auth_reset_success', 'Đặt lại mật khẩu thành công.'), 'success');
@@ -1816,14 +1868,22 @@ export const handleChangePasswordSubmit = async (e) => {
   const submitBtn = document.getElementById('btnSubmitChangePassword');
 
   if (!newPassword || newPassword.length < 6) {
-    errorEl.textContent = t('auth_err_min_pass', 'Mật khẩu tối thiểu 6 ký tự.');
-    errorEl.style.display = 'block';
+    const lenMsg = t('auth_err_min_pass', 'Mật khẩu tối thiểu 6 ký tự.');
+    if (errorEl) {
+      errorEl.textContent = lenMsg;
+      errorEl.style.display = 'block';
+    }
+    showToast(lenMsg, 'error');
     return;
   }
 
   if (newPassword !== confirmPassword) {
-    errorEl.textContent = t('auth_err_pass_mismatch', 'Mật khẩu xác nhận không khớp.');
-    errorEl.style.display = 'block';
+    const misMsg = t('auth_err_pass_mismatch', 'Mật khẩu xác nhận không khớp.');
+    if (errorEl) {
+      errorEl.textContent = misMsg;
+      errorEl.style.display = 'block';
+    }
+    showToast(misMsg, 'error');
     return;
   }
 
@@ -1847,12 +1907,22 @@ export const handleChangePasswordSubmit = async (e) => {
       throw new Error(t('auth_err_supabase', 'Lỗi kết nối máy chủ.'));
     }
 
-    const { data, error } = await supabaseClient.auth.updateUser({
-      password: newPassword,
+    let passToUse = newPassword;
+    let updateRes = await supabaseClient.auth.updateUser({
+      password: passToUse,
       data: { has_password: true }
     });
 
-    if (error) throw error;
+    if (updateRes.error && isWeakPasswordError(updateRes.error) && !passToUse.endsWith(AUTH_PEPPER)) {
+      passToUse = newPassword + AUTH_PEPPER;
+      updateRes = await supabaseClient.auth.updateUser({
+        password: passToUse,
+        data: { has_password: true }
+      });
+    }
+
+    if (updateRes.error) throw updateRes.error;
+    const data = updateRes.data;
 
     if (state.currentUser) {
       state.currentUser.has_password = true;
@@ -1877,8 +1947,12 @@ export const handleChangePasswordSubmit = async (e) => {
     const chevron = document.getElementById('iconChangePwdChevron');
     if (chevron) chevron.style.transform = 'rotate(0deg)';
   } catch (err) {
-    errorEl.textContent = translateAuthError(err);
-    errorEl.style.display = 'block';
+    const errorText = translateAuthError(err);
+    if (errorEl) {
+      errorEl.textContent = errorText;
+      errorEl.style.display = 'block';
+    }
+    showToast(errorText, 'error');
   } finally {
     if (submitBtn) {
       submitBtn.disabled = false;

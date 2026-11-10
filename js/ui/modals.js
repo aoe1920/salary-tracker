@@ -1126,7 +1126,9 @@ export const renderShiftWorkplacesList = () => {
         triggerAppRender();
       });
 
+      let prevRateVal = '';
       rateInput.addEventListener('focus', (e) => {
+        prevRateVal = e.target.value.trim();
         e.target.select();
       });
 
@@ -1134,10 +1136,14 @@ export const renderShiftWorkplacesList = () => {
         const val = parseWpRate(e.target.value);
         if (!state.settings.workplaceRates) state.settings.workplaceRates = {};
         state.settings.workplaceRates[wp] = val;
-        e.target.value = formatWpRateDisplay(val);
+        const formatted = formatWpRateDisplay(val);
+        e.target.value = formatted;
         saveSettings();
         updateModalComputedPreview();
         triggerAppRender();
+        if (formatted !== prevRateVal && prevRateVal !== '') {
+          showToast(`Đã cập nhật đơn giá "${wp}": ${formatted} đ/h`);
+        }
       });
 
       rateInput.addEventListener('keydown', (e) => {
@@ -1446,6 +1452,9 @@ export const expandPasswordSection = () => {
     formChangePwd.style.display = 'flex';
     void formChangePwd.offsetHeight;
     formChangePwd.classList.add('is-expanded');
+    setTimeout(() => {
+      formChangePwd.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 120);
   }
   if (iconChevron) iconChevron.style.transform = 'rotate(180deg)';
 };
@@ -1465,6 +1474,9 @@ export const expandProfileWorkplacesEdit = () => {
     content.style.display = 'flex';
     void content.offsetHeight;
     content.classList.add('is-expanded');
+    setTimeout(() => {
+      content.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 120);
   }
   if (chevron) {
     chevron.style.transform = 'rotate(180deg)';
@@ -1700,7 +1712,9 @@ export const renderProfileWorkplacesEditList = () => {
         triggerAppRender();
       });
 
+      let prevRateVal = '';
       rateInput.addEventListener('focus', (e) => {
+        prevRateVal = e.target.value.trim();
         e.target.select();
       });
 
@@ -1708,10 +1722,14 @@ export const renderProfileWorkplacesEditList = () => {
         const val = parseWpRate(e.target.value);
         if (!state.settings.workplaceRates) state.settings.workplaceRates = {};
         state.settings.workplaceRates[wp] = val;
-        e.target.value = formatWpRateDisplay(val);
+        const formatted = formatWpRateDisplay(val);
+        e.target.value = formatted;
         saveSettings();
         updateModalComputedPreview();
         triggerAppRender();
+        if (formatted !== prevRateVal && prevRateVal !== '') {
+          showToast(`Đã cập nhật đơn giá "${wp}": ${formatted} đ/h`);
+        }
       });
 
       rateInput.addEventListener('keydown', (e) => {

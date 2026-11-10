@@ -3,6 +3,7 @@ import { t } from './i18n.js';
 import { renderAnalyticsDashboard, drawDashboardWeekChart } from './ui/chart.js';
 import { defineMorphIcon } from './vendor/morphicons/element.js';
 import { triggerHaptic } from './ui/haptic.js';
+import { showToast } from './ui/toast.js';
 
 defineMorphIcon();
 
@@ -143,4 +144,5 @@ export const toggleTheme = (clickEvent = null) => {
     nextTheme = isDark ? 'light' : 'dark';
   }
   applyTheme(nextTheme, true, clickEvent);
+  showToast(nextTheme === 'dark' ? 'Đã chuyển sang giao diện tối' : 'Đã chuyển sang giao diện sáng');
 };
