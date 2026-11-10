@@ -1062,6 +1062,9 @@ export const restoreCachedUserSync = () => {
           username = u.email ? u.email.split('@')[0].trim().replace(/\s+/g, '').toLowerCase() : 'user';
         }
         state.currentUser = { id: u.id, email: u.email, username, avatar: u.avatar || 'default' };
+        if (u.email) {
+          setLocalEmailForUsername(username, u.email);
+        }
         if (u.avatar) {
           if (!state.settings) state.settings = {};
           state.settings.avatar = u.avatar;
@@ -1393,7 +1396,20 @@ export const handleLoginSubmit = async (e) => {
       cleanInput = cleanInput.slice(1).trim();
     }
     const isEmail = cleanInput.includes('@') && cleanInput.includes('.');
-    const mappedEmail = !isEmail ? getLocalEmailForUsername(cleanInput) : null;
+    let mappedEmail = !isEmail ? getLocalEmailForUsername(cleanInput) : null;
+
+    if (!isEmail && !mappedEmail && typeof supabaseClient.rpc === 'function') {
+      try {
+        const { data: foundEmail, error: rpcErr } = await supabaseClient.rpc('get_login_email', {
+          p_username: cleanInput
+        });
+        if (!rpcErr && foundEmail && typeof foundEmail === 'string' && foundEmail.includes('@')) {
+          mappedEmail = foundEmail.trim().toLowerCase();
+          setLocalEmailForUsername(cleanInput, mappedEmail);
+        }
+      } catch (_) {}
+    }
+
     let emailToTry = isEmail ? cleanInput.toLowerCase() : (mappedEmail || `${cleanInput.toLowerCase()}@salary.app`);
 
     let res = await attemptSignIn(emailToTry, password);
@@ -1405,7 +1421,7 @@ export const handleLoginSubmit = async (e) => {
       }
     }
 
-    if (res.error && !isEmail && typeof supabaseClient.rpc === 'function') {
+    if (res.error && !isEmail && !mappedEmail && typeof supabaseClient.rpc === 'function') {
       try {
         const { data: foundEmail, error: rpcErr } = await supabaseClient.rpc('get_login_email', {
           p_username: cleanInput
@@ -1414,6 +1430,7 @@ export const handleLoginSubmit = async (e) => {
           const retryRes = await attemptSignIn(foundEmail.toLowerCase(), password);
           if (!retryRes.error) {
             res = retryRes;
+            setLocalEmailForUsername(cleanInput, foundEmail.trim().toLowerCase());
           }
         }
       } catch (_) {}
@@ -1937,6 +1954,9 @@ export const handleChangePasswordSubmit = async (e) => {
       state.currentUser.user_metadata.has_password = true;
       if (data?.user?.identities) state.currentUser.identities = data.user.identities;
       if (data?.user?.app_metadata) state.currentUser.app_metadata = data.user.app_metadata;
+      if (state.currentUser.email && state.currentUser.username) {
+        setLocalEmailForUsername(state.currentUser.username, state.currentUser.email);
+      }
     }
 
     const pwdTitle = document.getElementById('profileChangePwdTitle');

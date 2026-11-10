@@ -1901,7 +1901,14 @@ export const openUserProfileModal = () => {
       return;
     }
     const cleanName = rawVal.trim().replace(/\s+/g, '').toLowerCase();
-    if (!cleanName || cleanName === currentName) {
+    if (!cleanName) {
+      setUsernameViewMode();
+      return;
+    }
+    if (cleanName === currentName) {
+      if (state.currentUser?.email) {
+        setLocalEmailForUsername(cleanName, state.currentUser.email);
+      }
       setUsernameViewMode();
       return;
     }
