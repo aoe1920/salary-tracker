@@ -109,6 +109,16 @@ body.dark-mode .form-input::placeholder {
   opacity: 1;
 }
 
+input[type="date"] {
+  display: inline-flex;
+  align-items: center;
+  line-height: normal;
+}
+
+input[type="date"]::-webkit-date-and-time-value {
+  text-align: left;
+}
+
 html {
   font-size: 16px;
   background: var(--bg-app);
