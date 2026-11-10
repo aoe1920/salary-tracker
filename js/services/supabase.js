@@ -1190,6 +1190,9 @@ export const initAuth = async () => {
         }
         const activeAvatar = state.settings.avatar || u.user_metadata?.avatar || 'default';
         state.currentUser = { id: u.id, email: u.email, username, identities: u.identities, app_metadata: u.app_metadata, user_metadata: u.user_metadata, avatar: activeAvatar };
+        if (u.email) {
+          setLocalEmailForUsername(username, u.email);
+        }
         try {
           localStorage.setItem('salary_tracker_cached_user', JSON.stringify({
             id: u.id,
@@ -1417,7 +1420,11 @@ export const handleLoginSubmit = async (e) => {
     }
 
     if (res.error) {
-      errorEl.textContent = translateAuthError(res.error);
+      let errMsg = translateAuthError(res.error);
+      if (!isEmail && (res.error.message || '').toLowerCase().includes('invalid')) {
+        errMsg = t('auth_err_invalid_or_google', 'Sai tài khoản hoặc mật khẩu. Nếu bạn đăng ký qua Google, hãy chọn "Tiếp tục với Google" hoặc nhập chính xác địa chỉ Gmail.');
+      }
+      errorEl.textContent = errMsg;
       errorEl.style.display = 'block';
       if (submitBtn) submitBtn.disabled = false;
       return;
