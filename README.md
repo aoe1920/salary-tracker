@@ -14,8 +14,7 @@
 [![License](https://img.shields.io/badge/License-MIT-gray?style=flat-square)](LICENSE)
 
 <p align="center">
-  <a href="https://aoe1920.github.io/salary-tracker/"><strong>Launch App</strong></a> •
-  <a href="README.vi.md">Tiếng Việt</a>
+  <a href="https://aoe1920.github.io/salary-tracker/"><strong>Live Demo</strong></a>
 </p>
 
 </div>

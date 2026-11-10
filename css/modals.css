@@ -1159,15 +1159,16 @@ body.dark-mode .btn-table-delete:hover {
   max-height: 0;
   opacity: 0;
   transform: translateY(-6px);
-  transition: max-height 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease, transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: max-height 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.18s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
+  will-change: opacity, transform;
 }
 
 .change-pwd-form.is-expanded,
 .profile-wp-panel.is-expanded {
-  max-height: 480px;
+  max-height: 520px;
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
   pointer-events: auto;
 }
 
@@ -1575,10 +1576,12 @@ body.dark-mode .btn-avatar-edit-badge {
 }
 
 .profile-username-wrap {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   max-width: 100%;
   min-height: 28px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .profile-username-view {
@@ -1586,13 +1589,17 @@ body.dark-mode .btn-avatar-edit-badge {
   align-items: center;
   gap: 0.45rem;
   max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .profile-username-edit {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0.35rem;
   max-width: 100%;
+  min-width: 0;
+  flex-wrap: nowrap;
 }
 
 .profile-inline-input-group {
@@ -1602,6 +1609,9 @@ body.dark-mode .btn-avatar-edit-badge {
   border: 1px solid var(--border-default);
   border-radius: var(--radius-sm);
   padding: 0 0.5rem 0 0.4rem;
+  min-width: 0;
+  flex: 1;
+  max-width: 160px;
   height: 28px;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
   transition: border-color 0.14s ease, box-shadow 0.14s ease;
@@ -1627,7 +1637,9 @@ body.dark-mode .btn-avatar-edit-badge {
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--text-main);
-  width: 130px;
+  width: 100%;
+  min-width: 60px;
+  max-width: 130px;
   padding: 0;
   line-height: 1;
 }
@@ -4864,14 +4876,15 @@ body.dark-mode .app-dialog-detail-card {
   max-height: 0;
   opacity: 0;
   transform: translateY(-6px);
-  transition: max-height 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease, transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: max-height 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.18s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
+  will-change: opacity, transform;
 }
 
 .avatar-picker-shelf.is-expanded {
   max-height: 320px;
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
   pointer-events: auto;
 }
 

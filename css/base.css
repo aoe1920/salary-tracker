@@ -189,7 +189,7 @@ body.theme-transitioning .btn-action-danger,
 body.theme-transitioning .modal-box,
 body.theme-transitioning .morphic-pill-capsule,
 body.theme-transitioning .theme-btn-toggle {
-  transition: background-color 0.8s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.8s cubic-bezier(0.22, 1, 0.36, 1), color 0.8s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.8s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  transition: background-color 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1), color 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
 .font-mono {
