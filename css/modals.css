@@ -2407,14 +2407,20 @@ body.dark-mode .btn-logout-action {
   left: auto;
   transform: translateY(14px);
   z-index: 999999;
-  background: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.82) 0%, rgba(15, 23, 42, 0.68) 50%, rgba(15, 23, 42, 0.82) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.38);
   color: #ffffff;
-  padding: 0.55rem 1rem;
+  padding: 0.55rem 1.05rem;
   border-radius: var(--radius-pill);
   font-size: 0.825rem;
   font-weight: 500;
-  box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow:
+    0 18px 40px -4px rgba(15, 23, 42, 0.32),
+    0 6px 14px rgba(15, 23, 42, 0.15),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.55),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.35),
+    inset 1.5px 0 2px rgba(255, 255, 255, 0.25),
+    inset -1.5px 0 2px rgba(255, 255, 255, 0.25);
   max-width: min(92vw, 440px);
   display: inline-flex;
   align-items: center;
@@ -2425,8 +2431,8 @@ body.dark-mode .btn-logout-action {
   flex-wrap: nowrap !important;
   word-break: keep-all !important;
   transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px) saturate(190%) contrast(104%) brightness(103%);
+  -webkit-backdrop-filter: blur(14px) saturate(190%) contrast(104%) brightness(103%);
 }
 
 .toast-capsule > span {
@@ -2480,9 +2486,9 @@ body.dark-mode .btn-logout-action {
 }
 
 .toast-action-btn {
-  background: var(--primary);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.9) 0%, rgba(37, 99, 235, 0.95) 100%);
   color: #ffffff;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.45);
   border-radius: var(--radius-pill);
   height: 26px;
   display: inline-flex;
@@ -2493,13 +2499,15 @@ body.dark-mode .btn-logout-action {
   font-size: 0.775rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.1s ease;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4), inset 0 1px 1.5px rgba(255, 255, 255, 0.6);
+  transition: all 0.15s ease;
   flex-shrink: 0;
 }
 
 .toast-action-btn:hover {
-  background: var(--primary-hover);
-  transform: scale(1.02);
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.95) 0%, rgba(37, 99, 235, 0.98) 100%);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.5), inset 0 1px 1.5px rgba(255, 255, 255, 0.7);
+  transform: scale(1.03);
 }
 
 .toast-action-btn:active {
@@ -4295,19 +4303,30 @@ body.dark-mode .week-wheel-item:not(.active):hover .wheel-item-name {
 }
 
 body.dark-mode .week-wheel-item.active {
-  background: #2563eb;
-  border-color: #3b82f6;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.48) 0%, rgba(37, 99, 235, 0.28) 45%, rgba(29, 78, 216, 0.52) 100%);
+  border: 1px solid rgba(147, 197, 253, 0.45);
+  box-shadow:
+    0 10px 24px -4px rgba(0, 0, 0, 0.55),
+    0 4px 10px rgba(37, 99, 235, 0.22),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.45),
+    inset 0 -1px 1.5px rgba(0, 0, 0, 0.3),
+    inset 1.5px 0 2px rgba(255, 255, 255, 0.18),
+    inset -1.5px 0 2px rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(9px) saturate(190%) contrast(106%) brightness(106%);
+  -webkit-backdrop-filter: blur(9px) saturate(190%) contrast(106%) brightness(106%);
 }
 
 body.dark-mode .week-wheel-item.active .wheel-item-name {
   color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 body.dark-mode .week-wheel-item.active .wheel-item-sub {
   color: #ffffff;
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 body.dark-mode .btn-reset-filters:hover {
@@ -4475,10 +4494,18 @@ body.dark-mode .monthly-workplaces-section {
 }
 
 body.dark-mode .toast-capsule {
-  background: rgba(21, 22, 31, 0.95);
-  border-color: rgba(255, 255, 255, 0.14);
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.6) 50%, rgba(15, 23, 42, 0.76) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   color: #ededef;
-  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 22px 48px -6px rgba(0, 0, 0, 0.68),
+    0 8px 16px rgba(0, 0, 0, 0.42),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.42),
+    inset 0 -1px 1.5px rgba(255, 255, 255, 0.1),
+    inset 1.5px 0 2.5px rgba(255, 255, 255, 0.15),
+    inset -1.5px 0 2.5px rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(14px) saturate(190%) contrast(106%) brightness(106%);
+  -webkit-backdrop-filter: blur(14px) saturate(190%) contrast(106%) brightness(106%);
 }
 
 .shift-ot-badge {

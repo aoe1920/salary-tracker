@@ -391,8 +391,8 @@ const renderShiftsList = () => {
             <line x1="3" x2="21" y1="10" y2="10"></line>
           </svg>
         </div>
-        <div class="es-title">${hasWorkplaces() ? t('empty_shifts_title', 'Chưa có ca làm việc nào trong tuần này') : t('no_workplaces_title', 'Chưa có nơi làm việc')}</div>
-        <p class="es-desc">${hasWorkplaces() ? t('empty_shifts_desc', 'Thêm ca làm việc mới để bắt đầu theo dõi thu nhập và giờ giấc.') : t('no_workplaces_desc', 'Thêm nơi làm việc trong Cài đặt để bắt đầu tính lương.')}</p>
+        <div class="es-title">${hasWorkplaces() ? t('empty_shifts_title', 'Không có ca làm việc') : t('no_workplaces_title', 'Chưa có cơ sở làm việc')}</div>
+        <p class="es-desc">${hasWorkplaces() ? t('empty_shifts_desc', 'Chưa có bản ghi trong tuần.') : t('no_workplaces_desc', 'Cần thiết lập cơ sở làm việc trước khi thêm ca.')}</p>
         <div class="es-actions">
           ${hasWorkplaces() ? `
             <button type="button" class="btn-action-primary" id="btnEmptyAddShift">

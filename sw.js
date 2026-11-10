@@ -1,12 +1,12 @@
-const CACHE_NAME = 'salary-tracker-v203';
+const CACHE_NAME = 'salary-tracker-v204';
 const CORE_ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './css/base.css?v=20261111c',
-  './css/components.css?v=20261111c',
-  './css/modals.css?v=20261111c',
-  './js/app.js?v=20261111c',
+  './css/base.css?v=20261111d',
+  './css/components.css?v=20261111d',
+  './css/modals.css?v=20261111d',
+  './js/app.js?v=20261111d',
   './js/config.js',
   './js/i18n.js',
   './js/theme.js',
@@ -32,11 +32,7 @@ const CORE_ASSETS = [
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',
   './assets/icons/icon-1024.png',
-  './assets/icons/icon.svg',
-  './assets/icons/maskable-icon-192.png',
-  './assets/icons/maskable-icon-512.png',
-  './assets/icons/maskable-icon-1024.png',
-  './assets/icons/maskable-icon.svg'
+  './assets/icons/icon.svg'
 ];
 
 const OPTIONAL_ASSETS = [
