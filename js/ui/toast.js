@@ -22,7 +22,7 @@ export const showToast = (message) => {
       if (!toast.classList.contains('visible')) {
         toast.style.display = 'none';
       }
-    }, 240);
+    }, 450);
   }, 2500);
 };
 
@@ -52,7 +52,7 @@ export const showToastWithAction = (message, actionText, actionCallback, duratio
       toast.classList.remove('visible');
       setTimeout(() => {
         if (!toast.classList.contains('visible')) toast.style.display = 'none';
-      }, 240);
+      }, 450);
       if (typeof actionCallback === 'function') actionCallback();
     };
   }
@@ -61,6 +61,6 @@ export const showToastWithAction = (message, actionText, actionCallback, duratio
     toast.classList.remove('visible');
     setTimeout(() => {
       if (!toast.classList.contains('visible')) toast.style.display = 'none';
-    }, 240);
+    }, 450);
   }, duration);
 };

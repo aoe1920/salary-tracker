@@ -13,6 +13,7 @@ const triggerOpenAllWeeksModal = (tab) => {
 let chartAnimId = null;
 let currentRenderedValues = null;
 let currentRenderedMax = 100000;
+let lastRenderedIsDark = null;
 
 const renderWeekChartCanvas = (values, maxVal, startValues, targetValues, ease) => {
   const canvas = document.getElementById('dashboardWeekCanvas');
@@ -180,7 +181,11 @@ export const drawDashboardWeekChart = (week, animate = true) => {
     chartAnimId = null;
   }
 
-  if (!currentRenderedValues || !animate || prefersReduced) {
+  const isDark = typeof document !== 'undefined' && document.body && document.body.classList.contains('dark-mode');
+  const themeChanged = lastRenderedIsDark !== null && lastRenderedIsDark !== isDark;
+
+  if (!currentRenderedValues || (!animate && !themeChanged) || prefersReduced) {
+    lastRenderedIsDark = isDark;
     currentRenderedValues = [...targetValues];
     currentRenderedMax = targetMax;
     renderWeekChartCanvas(targetValues, targetMax, targetValues, targetValues, 1);
@@ -190,10 +195,12 @@ export const drawDashboardWeekChart = (week, animate = true) => {
   const startValues = [...currentRenderedValues];
   const startMax = currentRenderedMax;
 
-  const isIdentical = startValues.every((v, i) => Math.abs(v - targetValues[i]) < 0.01) &&
+  const isIdentical = !themeChanged &&
+    startValues.every((v, i) => Math.abs(v - targetValues[i]) < 0.01) &&
     Math.abs(startMax - targetMax) < 0.01;
 
   if (isIdentical) {
+    lastRenderedIsDark = isDark;
     currentRenderedValues = [...targetValues];
     currentRenderedMax = targetMax;
     renderWeekChartCanvas(targetValues, targetMax, targetValues, targetValues, 1);
@@ -219,6 +226,7 @@ export const drawDashboardWeekChart = (week, animate = true) => {
       chartAnimId = requestAnimationFrame(tick);
     } else {
       chartAnimId = null;
+      lastRenderedIsDark = isDark;
       currentRenderedValues = [...targetValues];
       currentRenderedMax = targetMax;
       renderWeekChartCanvas(targetValues, targetMax, startValues, targetValues, 1);

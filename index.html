@@ -39,9 +39,19 @@
     href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
     rel="stylesheet">
 
-  <link rel="stylesheet" href="./css/base.css?v=20261111r">
-  <link rel="stylesheet" href="./css/components.css?v=20261111r">
-  <link rel="stylesheet" href="./css/modals.css?v=20261111r">
+  <link rel="stylesheet" href="./css/base.css?v=20261111s">
+  <link rel="stylesheet" href="./css/components.css?v=20261111s">
+  <link rel="stylesheet" href="./css/modals.css?v=20261111s">
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('salary_tracker_theme');
+        if (t === 'dark' || (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark-mode');
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
 
 <body>
@@ -63,7 +73,7 @@
       <nav class="header-nav">
         <button id="btnToggleTheme" class="btn-morphic" data-i18n-title="nav_toggle_theme"
           title="Đổi giao diện Sáng / Tối" aria-label="Đổi giao diện Sáng / Tối">
-          <morph-icon id="themeMorphIcon" size="16" color="currentColor" stroke-width="1.75" spring="smooth"
+          <morph-icon id="themeMorphIcon" size="18" color="currentColor" stroke-width="1.75" spring="smooth"
             icon="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></morph-icon>
         </button>
         <button id="btnUserAuth" class="btn-morphic" data-i18n-title="nav_account" title="Tài khoản"
@@ -920,14 +930,7 @@
             <div class="profile-meta">
               <div class="profile-username-wrap" id="profileUsernameWrap">
                 <div class="profile-username-view" id="profileUsernameView">
-                  <h4 class="profile-name font-mono" id="profileUsername">@username</h4>
-                  <button type="button" class="btn-profile-edit-name" id="btnEditUsername"
-                    data-i18n-title="profile_edit_username" title="Đổi tên tài khoản" aria-label="Đổi tên tài khoản">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                      stroke-linejoin="round" width="13" height="13">
-                      <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
-                    </svg>
-                  </button>
+                  <h4 class="profile-name font-mono" id="profileUsername" data-i18n-title="profile_edit_username" title="Nhấp để đổi tên tài khoản">@username</h4>
                 </div>
                 <div class="profile-username-edit" id="profileUsernameEdit" style="display: none;">
                   <div class="profile-inline-input-group">
@@ -1111,25 +1114,6 @@
               </button>
             </div>
           </form>
-        </div>
-
-        <div class="profile-legal-box">
-          <button type="button" class="btn-toggle-change-pwd btn-profile-legal" id="btnProfileViewLegal" data-open-legal="terms">
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"
-                stroke-linejoin="round" width="16" height="16">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="16" y1="13" x2="8" y2="13"></line>
-                <line x1="16" y1="17" x2="8" y2="17"></line>
-              </svg>
-              <span data-i18n="profile_legal_terms">Điều khoản và Chính sách bảo mật</span>
-            </div>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
-              stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
-              <path d="m9 18 6-6-6-6"></path>
-            </svg>
-          </button>
         </div>
       </div>
 
@@ -1357,7 +1341,7 @@
 
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="./js/app.js?v=20261111r"></script>
+  <script type="module" src="./js/app.js?v=20261111s"></script>
 </body>
 
 </html>

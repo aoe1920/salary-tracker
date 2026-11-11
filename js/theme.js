@@ -49,7 +49,7 @@ export const applyTheme = (theme, save = true, clickEvent = null) => {
 
     const curWeek = getCurrentWeek();
     if (curWeek) {
-      drawDashboardWeekChart(curWeek, false);
+      drawDashboardWeekChart(curWeek, true);
     }
   };
 

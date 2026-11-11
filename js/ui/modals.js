@@ -1554,7 +1554,7 @@ export const openUserProfileModal = () => {
   const viewWrap = document.getElementById('profileUsernameView');
   const editWrap = document.getElementById('profileUsernameEdit');
   const inputEl = document.getElementById('inputEditUsername');
-  const btnEditUsername = document.getElementById('btnEditUsername');
+  const profileUsernameEl = document.getElementById('profileUsername');
   const btnSaveUsername = document.getElementById('btnSaveUsername');
   const btnCancelUsername = document.getElementById('btnCancelUsername');
 
@@ -1675,8 +1675,8 @@ export const openUserProfileModal = () => {
     }
   };
 
-  if (btnEditUsername) {
-    btnEditUsername.onclick = (e) => {
+  if (profileUsernameEl) {
+    profileUsernameEl.onclick = (e) => {
       e.preventDefault();
       triggerHaptic('light');
       setUsernameEditMode();
