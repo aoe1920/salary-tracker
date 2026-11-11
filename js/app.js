@@ -10,7 +10,7 @@ import { drawDashboardWeekChart, setAllWeeksModalOpener, renderAnalyticsDashboar
 import { renderSlipCanvas, openShareSlipModal, downloadSlipImage, copySlipImageToClipboard } from './ui/canvas-slip.js';
 import { exportCurrentWeekCSV, exportAllWeeksCSV, backupJSON, restoreJSON, setExportAppRenderer } from './ui/export.js';
 import { showConfirmDialog, showAlertDialog, initDialogHandlers } from './ui/dialog.js';
-import { closeModal, openAddShiftModal, openEditShiftModal, updateModalComputedPreview, saveShiftFromModal, deleteShift, undoLastDeleteShift, createNewWeek, openEditWeekModal, saveWeekMeta, deleteCurrentWeek, undoLastDeleteWeek, navigateWeek, renderMonthlyReport, switchSummaryTab, openAllWeeksModal, openAuthModal, switchAuthTab, clearAuthErrors, openUserProfileModal, collapsePasswordSection, collapseAvatarPicker, setupPasswordToggles, setModalAppRenderer, openResetPasswordModal, initSlimeSegmentedBars, syncSlimeGlider } from './ui/modals.js';
+import { closeModal, openLegalModal, openAddShiftModal, openEditShiftModal, updateModalComputedPreview, saveShiftFromModal, deleteShift, undoLastDeleteShift, createNewWeek, openEditWeekModal, saveWeekMeta, deleteCurrentWeek, undoLastDeleteWeek, navigateWeek, renderMonthlyReport, switchSummaryTab, openAllWeeksModal, openAuthModal, switchAuthTab, clearAuthErrors, openUserProfileModal, collapsePasswordSection, collapseAvatarPicker, setupPasswordToggles, setModalAppRenderer, openResetPasswordModal, initSlimeSegmentedBars, syncSlimeGlider } from './ui/modals.js';
 
 const updateWheelIndicator = () => {};
 
@@ -796,25 +796,28 @@ const bindEvents = () => {
     });
   }
 
-  const btnShowTerms = document.getElementById('btnShowTerms');
-  if (btnShowTerms) {
-    btnShowTerms.addEventListener('click', () => {
-      showAlertDialog({
-        title: 'Điều khoản dịch vụ',
-        message: 'Hệ thống hỗ trợ cá nhân ghi nhận ca làm việc và tính toán thu nhập. Dữ liệu được bảo toàn an toàn trên thiết bị và đồng bộ trên tài khoản cá nhân của bạn.',
-        iconType: 'info'
-      });
-    });
-  }
+  document.addEventListener('click', (e) => {
+    const legalTrigger = e.target.closest('[data-open-legal]');
+    if (legalTrigger) {
+      e.preventDefault();
+      e.stopPropagation();
+      const tab = legalTrigger.getAttribute('data-open-legal') || 'terms';
+      openLegalModal(tab);
+      return;
+    }
+  });
 
-  const btnShowPrivacy = document.getElementById('btnShowPrivacy');
-  if (btnShowPrivacy) {
-    btnShowPrivacy.addEventListener('click', () => {
-      showAlertDialog({
-        title: 'Chính sách bảo mật',
-        message: 'Thông tin ca làm, thu nhập và tài khoản được bảo mật tuyệt đối, không chia sẻ cho bên thứ ba dưới bất kỳ hình thức nào.',
-        iconType: 'info'
-      });
+  const regAgreeTerms = document.getElementById('regAgreeTerms');
+  if (regAgreeTerms) {
+    regAgreeTerms.addEventListener('change', () => {
+      const agreeBox = document.getElementById('authTermsAgreeBox');
+      if (agreeBox && regAgreeTerms.checked) {
+        agreeBox.classList.remove('terms-error-shake');
+      }
+      const regError = document.getElementById('regError');
+      if (regError && regError.textContent === t('auth_err_agree_terms')) {
+        regError.style.display = 'none';
+      }
     });
   }
 

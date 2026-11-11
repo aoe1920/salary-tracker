@@ -1519,6 +1519,21 @@ export const handleRegisterSubmit = async (e) => {
     return;
   }
 
+  const agreeTermsEl = document.getElementById('regAgreeTerms');
+  if (agreeTermsEl && !agreeTermsEl.checked) {
+    const agreeBox = document.getElementById('authTermsAgreeBox');
+    if (agreeBox) {
+      agreeBox.classList.remove('terms-error-shake');
+      void agreeBox.offsetWidth;
+      agreeBox.classList.add('terms-error-shake');
+    }
+    errorEl.textContent = t('auth_err_agree_terms', 'Vui lòng đọc và đồng ý với Điều khoản dịch vụ và Chính sách bảo mật.');
+    errorEl.style.display = 'block';
+    triggerHaptic('medium');
+    agreeTermsEl.focus();
+    return;
+  }
+
   if (!supabaseClient) {
     errorEl.textContent = t('auth_err_supabase', 'Lỗi kết nối máy chủ.');
     errorEl.style.display = 'block';

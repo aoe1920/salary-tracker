@@ -1885,6 +1885,33 @@ export const closeModal = (modalId) => {
   }
 };
 
+export const openLegalModal = (targetTab = 'terms') => {
+  const modal = document.getElementById('legalModal');
+  if (!modal) return;
+  modal.style.display = 'flex';
+  triggerModalLiquidStretch(modal);
+
+  const tabTerms = document.getElementById('tabLegalTerms');
+  const tabPrivacy = document.getElementById('tabLegalPrivacy');
+  const panelTerms = document.getElementById('legalPanelTerms');
+  const panelPrivacy = document.getElementById('legalPanelPrivacy');
+  const scrollArea = document.getElementById('legalScrollArea');
+
+  const isTerms = targetTab !== 'privacy';
+  if (tabTerms) tabTerms.classList.toggle('active', isTerms);
+  if (tabPrivacy) tabPrivacy.classList.toggle('active', !isTerms);
+  if (panelTerms) panelTerms.style.display = isTerms ? 'block' : 'none';
+  if (panelPrivacy) panelPrivacy.style.display = !isTerms ? 'block' : 'none';
+  if (scrollArea) scrollArea.scrollTop = 0;
+
+  const tabsRow = document.getElementById('legalTabsRow');
+  if (tabsRow) {
+    requestAnimationFrame(() => {
+      syncSlimeGlider(tabsRow, true);
+    });
+  }
+};
+
 export const triggerModalLiquidStretch = (modalOrSurface) => {
   if (!modalOrSurface) return;
   const surface = modalOrSurface.classList?.contains('modal-surface')
@@ -1942,12 +1969,35 @@ export const syncSlimeGlider = (barEl, immediate = false) => {
 
 export const initSlimeSegmentedBars = () => {
   const syncAll = (immediate = false) => {
-    document.querySelectorAll('.summary-tab-nav, .auth-tabs-row, .stats-time-pills').forEach(bar => {
+    document.querySelectorAll('.summary-tab-nav, .auth-tabs-row, .stats-time-pills, .legal-tabs-row').forEach(bar => {
       syncSlimeGlider(bar, immediate);
     });
   };
 
   document.addEventListener('click', (e) => {
+    const legalTabBtn = e.target.closest('.legal-tab-btn');
+    if (legalTabBtn) {
+      const target = legalTabBtn.getAttribute('data-legal-tab') || 'terms';
+      const isTerms = target !== 'privacy';
+      const tabTerms = document.getElementById('tabLegalTerms');
+      const tabPrivacy = document.getElementById('tabLegalPrivacy');
+      const panelTerms = document.getElementById('legalPanelTerms');
+      const panelPrivacy = document.getElementById('legalPanelPrivacy');
+      const scrollArea = document.getElementById('legalScrollArea');
+      if (tabTerms) tabTerms.classList.toggle('active', isTerms);
+      if (tabPrivacy) tabPrivacy.classList.toggle('active', !isTerms);
+      if (panelTerms) panelTerms.style.display = isTerms ? 'block' : 'none';
+      if (panelPrivacy) panelPrivacy.style.display = !isTerms ? 'block' : 'none';
+      if (scrollArea) scrollArea.scrollTop = 0;
+      const bar = legalTabBtn.closest('.legal-tabs-row');
+      if (bar) {
+        requestAnimationFrame(() => {
+          syncSlimeGlider(bar, false);
+        });
+      }
+      return;
+    }
+
     const btn = e.target.closest('.summary-tab-btn, .auth-tab-btn, .filter-pill-btn, .week-wheel-item');
     if (!btn) return;
     if (btn.classList.contains('week-wheel-item')) {
@@ -1957,13 +2007,33 @@ export const initSlimeSegmentedBars = () => {
       });
       return;
     }
-    const bar = btn.closest('.summary-tab-nav, .auth-tabs-row, .stats-time-pills');
+    const bar = btn.closest('.summary-tab-nav, .auth-tabs-row, .stats-time-pills, .legal-tabs-row');
     if (bar) {
       requestAnimationFrame(() => {
         syncSlimeGlider(bar, false);
       });
     }
   });
+
+  const btnAcceptLegal = document.getElementById('btnAcceptLegalTerms');
+  if (btnAcceptLegal) {
+    btnAcceptLegal.addEventListener('click', () => {
+      closeModal('legalModal');
+      const agreeCheckbox = document.getElementById('regAgreeTerms');
+      if (agreeCheckbox) {
+        agreeCheckbox.checked = true;
+      }
+      const agreeBox = document.getElementById('authTermsAgreeBox');
+      if (agreeBox) {
+        agreeBox.classList.remove('terms-error-shake');
+      }
+      const regError = document.getElementById('regError');
+      if (regError && regError.textContent === t('auth_err_agree_terms')) {
+        regError.style.display = 'none';
+      }
+      triggerHaptic('light');
+    });
+  }
 
   window.addEventListener('resize', () => {
     syncAll(true);
