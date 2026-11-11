@@ -842,6 +842,11 @@ export const loadState = async () => {
           if (Array.isArray(data.weeks) && data.weeks.length > 0) {
             loadedWeeks = data.weeks;
             clearPendingSync();
+            try {
+              localStorage.removeItem(GUEST_WEEKS_KEY);
+              localStorage.removeItem(GUEST_SETTINGS_KEY);
+              localStorage.removeItem('salary_tracker_vault_backup');
+            } catch (_) {}
           }
           if (data.settings) loadedSettings = data.settings;
           if (data.username && typeof data.username === 'string' && state.currentUser) {
@@ -869,6 +874,31 @@ export const loadState = async () => {
             } catch (_) {}
           }
         }
+      }
+
+      if (!loadedWeeks || !Array.isArray(loadedWeeks) || loadedWeeks.length === 0) {
+        const guestRaw = localStorage.getItem(GUEST_WEEKS_KEY);
+        if (guestRaw) {
+          try {
+            const parsed = JSON.parse(guestRaw);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              loadedWeeks = parsed;
+            }
+          } catch (_) {}
+        }
+        const guestSettingsRaw = localStorage.getItem(GUEST_SETTINGS_KEY);
+        if (guestSettingsRaw) {
+          try {
+            const parsedSettings = JSON.parse(guestSettingsRaw);
+            if (parsedSettings && typeof parsedSettings === 'object') {
+              loadedSettings = parsedSettings;
+            }
+          } catch (_) {}
+        }
+        try {
+          localStorage.removeItem(GUEST_WEEKS_KEY);
+          localStorage.removeItem(GUEST_SETTINGS_KEY);
+        } catch (_) {}
       }
 
       if (!loadedWeeks || !Array.isArray(loadedWeeks) || loadedWeeks.length === 0) {
@@ -938,13 +968,14 @@ export const loadState = async () => {
       state.settings.workplaceRates['Mặc định'] = 40000;
     }
 
+    normalizeWorkplacesAndRates();
+
     localStorage.setItem(getWeeksStorageKey(), JSON.stringify(state.weeks));
     localStorage.setItem(getSettingsStorageKey(), JSON.stringify(state.settings));
     if (hasValidShifts(state.weeks)) {
       localStorage.setItem('salary_tracker_vault_backup', JSON.stringify(state.weeks));
     }
 
-    normalizeWorkplacesAndRates();
     if (state.currentUser) {
       if (!state.settings?.avatar || state.settings.avatar === 'default') {
         if (!state.settings) state.settings = {};

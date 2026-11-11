@@ -1,4 +1,4 @@
-import { state, getCurrentWeek, getLatestWeek, hasWorkplaces, getDefaultWorkplace, getWorkplaceColor } from './state.js';
+import { state, getCurrentWeek, getLatestWeek, hasWorkplaces, getDefaultWorkplace, getWorkplaceColor, normalizeWorkplacesAndRates } from './state.js';
 import { fmtCurrency, fmtHours, getShiftRate, getShiftEarnings, calculateWeekTotalSalary, hoursToColonFormat, hoursToHourMinutes, getVietnameseDayOfWeek, getMondayDate, getShiftDateObj, getShiftDateShort, getShiftDateFull, getWeekDateRangeDisplay, ensureWeekStartDate, getDayClass, formatShiftType, detectShiftType, parseSmartTime, parseSmartDate, escapeHtml, calculateSmartShiftDefaults, sortShiftsChronologically } from './calculator.js';
 import { t, getLocalizedWeekName, getLocalizedShiftType, getLocalizedDayName } from './i18n.js';
 import { applyTheme, toggleTheme } from './theme.js';
@@ -15,6 +15,7 @@ import { closeModal, openLegalModal, openAddShiftModal, openEditShiftModal, upda
 const updateWheelIndicator = () => {};
 
 function renderApp() {
+  normalizeWorkplacesAndRates();
   renderDateDisplay();
   renderWeekPills();
   renderWeekDetails();
@@ -397,14 +398,14 @@ const renderShiftsList = () => {
         <p class="es-desc">${hasWorkplaces() ? t('empty_shifts_desc', 'Chưa có bản ghi trong tuần.') : t('no_workplaces_desc', 'Cần thiết lập cơ sở làm việc trước khi thêm ca.')}</p>
         <div class="es-actions">
           ${hasWorkplaces() ? `
-            <button type="button" class="btn-morphic btn-action-primary btn-icon-only" id="btnEmptyAddShift" data-i18n-title="btn_add_shift" title="${t('btn_add_shift', 'Thêm ca')}" aria-label="${t('btn_add_shift', 'Thêm ca')}">
+            <button type="button" class="btn-morphic btn-morphic-primary" id="btnEmptyAddShift" data-i18n-title="btn_add_shift" title="${t('btn_add_shift', 'Thêm ca')}" aria-label="${t('btn_add_shift', 'Thêm ca')}">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
                 <path d="M5 12h14"></path>
                 <path d="M12 5v14"></path>
               </svg>
             </button>
           ` : `
-            <button type="button" class="btn-morphic btn-action-primary btn-icon-only" id="btnEmptyAddWp" data-i18n-title="btn_add_workplace" title="${t('btn_add_workplace', 'Thêm nơi làm')}" aria-label="${t('btn_add_workplace', 'Thêm nơi làm')}">
+            <button type="button" class="btn-morphic btn-morphic-primary" id="btnEmptyAddWp" data-i18n-title="btn_add_workplace" title="${t('btn_add_workplace', 'Thêm nơi làm')}" aria-label="${t('btn_add_workplace', 'Thêm nơi làm')}">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
                 <path d="M5 12h14"></path>
                 <path d="M12 5v14"></path>
@@ -412,7 +413,7 @@ const renderShiftsList = () => {
             </button>
           `}
           ${!isOnlyWeek ? `
-            <button type="button" class="btn-morphic btn-action-danger btn-icon-only" id="btnEmptyDeleteWeek" data-i18n-title="btn_delete_week" title="${t('btn_delete_week', 'Xóa tuần')}" aria-label="${t('btn_delete_week', 'Xóa tuần')}">
+            <button type="button" class="btn-morphic btn-morphic-danger" id="btnEmptyDeleteWeek" data-i18n-title="btn_delete_week" title="${t('btn_delete_week', 'Xóa tuần')}" aria-label="${t('btn_delete_week', 'Xóa tuần')}">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
                 <path d="M3 6h18"></path>
                 <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>

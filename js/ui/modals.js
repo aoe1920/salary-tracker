@@ -626,9 +626,17 @@ export const renderMonthlyReport = () => {
 
   if (monthKeys.length === 0) {
     container.innerHTML = `
-      <div class="empty-state" style="padding: 2.5rem 1rem;">
-        <div class="empty-state-title font-sans">${t('empty_month_title', 'Chưa có dữ liệu theo tháng')}</div>
-        <p class="empty-state-desc font-sans">${t('empty_month_desc', 'Hãy thêm ca làm việc vào các tuần để hệ thống tự động tổng hợp báo cáo tháng cho bạn.')}</p>
+      <div class="empty-state" style="padding: 2.25rem 1rem;">
+        <div class="es-icon-ring" style="margin-bottom: 0.45rem;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+            <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+            <line x1="16" x2="16" y1="2" y2="6"></line>
+            <line x1="8" x2="8" y1="2" y2="6"></line>
+            <line x1="3" x2="21" y1="10" y2="10"></line>
+          </svg>
+        </div>
+        <div class="empty-state-title font-sans">${t('empty_month_title', 'Chưa có dữ liệu tháng')}</div>
+        <p class="empty-state-desc font-sans">${t('empty_month_desc', 'Thêm ca vào tuần để xem báo cáo tháng.')}</p>
       </div>
     `;
     return;

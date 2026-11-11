@@ -30,41 +30,71 @@ export const normalizeWorkplacesAndRates = () => {
   if (!Array.isArray(state.settings.workplaces) || state.settings.workplaces.length === 0) {
     state.settings.workplaces = ['Mặc định'];
   }
-  const oldIdx = state.settings.workplaces.findIndex(w => w === 'Chính' || w === 'Cơ sở chính' || w === 'Cơm Chin Chin' || (typeof w === 'string' && w.toLowerCase().includes('chin chin')));
-  if (oldIdx !== -1) {
-    const oldName = state.settings.workplaces[oldIdx];
-    state.settings.workplaces[oldIdx] = 'Mặc định';
-    if (state.settings.workplaceRates && state.settings.workplaceRates[oldName] !== undefined) {
-      state.settings.workplaceRates['Mặc định'] = state.settings.workplaceRates[oldName];
-      delete state.settings.workplaceRates[oldName];
-    }
-    if (state.settings.defaultWorkplace === oldName) {
-      state.settings.defaultWorkplace = 'Mặc định';
-    }
-    if (Array.isArray(state.weeks)) {
-      state.weeks.forEach(w => {
-        if (Array.isArray(w.shifts)) {
-          w.shifts.forEach(s => {
-            if (s.workplace === oldName || s.workplace === 'Cơm Chin Chin') s.workplace = 'Mặc định';
-          });
+
+  const isOldWp = (w) => {
+    if (!w || typeof w !== 'string') return false;
+    const clean = w.trim().toLowerCase();
+    return clean === 'chính' || clean === 'cơ sở chính' || clean.includes('chin chin');
+  };
+
+  let migratedRate = null;
+  if (state.settings.workplaceRates && typeof state.settings.workplaceRates === 'object') {
+    Object.keys(state.settings.workplaceRates).forEach(k => {
+      if (isOldWp(k)) {
+        if (migratedRate === null && typeof state.settings.workplaceRates[k] === 'number') {
+          migratedRate = state.settings.workplaceRates[k];
         }
-      });
-    }
+        delete state.settings.workplaceRates[k];
+      }
+    });
   }
+
+  let migratedColor = null;
+  if (state.settings.workplaceColors && typeof state.settings.workplaceColors === 'object') {
+    Object.keys(state.settings.workplaceColors).forEach(k => {
+      if (isOldWp(k)) {
+        if (!migratedColor) migratedColor = state.settings.workplaceColors[k];
+        delete state.settings.workplaceColors[k];
+      }
+    });
+  }
+
+  state.settings.workplaces = state.settings.workplaces.map(w => isOldWp(w) ? 'Mặc định' : w);
+  if (!state.settings.workplaces.includes('Mặc định')) {
+    state.settings.workplaces.unshift('Mặc định');
+  }
+  state.settings.workplaces = Array.from(new Set(state.settings.workplaces.filter(Boolean)));
+
+  if (isOldWp(state.settings.defaultWorkplace) || !state.settings.workplaces.includes(state.settings.defaultWorkplace)) {
+    state.settings.defaultWorkplace = 'Mặc định';
+  }
+
   if (Array.isArray(state.weeks)) {
     state.weeks.forEach(w => {
       if (Array.isArray(w.shifts)) {
         w.shifts.forEach(s => {
-          if (!s.workplace || s.workplace === 'Chính' || s.workplace === 'Cơm Chin Chin') {
+          if (!s.workplace || isOldWp(s.workplace)) {
             s.workplace = 'Mặc định';
           }
         });
       }
     });
   }
+
   if (!state.settings.workplaceRates || typeof state.settings.workplaceRates !== 'object') {
     state.settings.workplaceRates = {};
   }
+  if (state.settings.workplaceRates['Mặc định'] === undefined) {
+    state.settings.workplaceRates['Mặc định'] = migratedRate || Number(state.settings.defaultRate) || 40000;
+  }
+
+  if (!state.settings.workplaceColors || typeof state.settings.workplaceColors !== 'object') {
+    state.settings.workplaceColors = {};
+  }
+  if (!state.settings.workplaceColors['Mặc định']) {
+    state.settings.workplaceColors['Mặc định'] = migratedColor || '#6366f1';
+  }
+
   if (hasWorkplaces()) {
     if (!state.settings.defaultWorkplace || !state.settings.workplaces.includes(state.settings.defaultWorkplace)) {
       state.settings.defaultWorkplace = state.settings.workplaces[0];
@@ -74,7 +104,7 @@ export const normalizeWorkplacesAndRates = () => {
   }
   const defWp = getDefaultWorkplace();
   if (defWp && (state.settings.workplaceRates[defWp] === undefined || state.settings.workplaceRates[defWp] === null)) {
-    const fallbackRate = Number(state.settings.defaultRate) || (state.weeks[0]?.rate) || 35000;
+    const fallbackRate = Number(state.settings.defaultRate) || (state.weeks[0]?.rate) || 40000;
     state.settings.workplaceRates[defWp] = fallbackRate;
   }
 };
