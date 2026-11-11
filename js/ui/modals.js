@@ -81,6 +81,10 @@ const updateWorkplaceInputOptions = (currentVal = '') => {
 };
 
 export const openAddShiftModal = (prefill = null) => {
+  if (!hasWorkplaces()) {
+    openUserProfileModal();
+    return;
+  }
   const modal = document.getElementById('shiftModal');
   const form = document.getElementById('shiftForm');
   form.reset();
@@ -97,8 +101,6 @@ export const openAddShiftModal = (prefill = null) => {
   updateShiftDayOptions(week);
   const defaultWp = getDefaultWorkplace();
   updateWorkplaceInputOptions(defaultWp);
-
-  renderShiftWorkplacesList();
 
   const smartDefaults = calculateSmartShiftDefaults(prefill, new Date());
 
@@ -129,13 +131,13 @@ export const openAddShiftModal = (prefill = null) => {
 
   updateModalComputedPreview();
   modal.style.display = 'flex';
-
-  if (!hasWorkplaces()) {
-    openWorkplaceModal();
-  }
 };
 
 export const openEditShiftModal = (shift) => {
+  if (!hasWorkplaces()) {
+    openUserProfileModal();
+    return;
+  }
   const modal = document.getElementById('shiftModal');
   document.getElementById('shiftModalTitle').textContent = t('modal_edit_shift', 'Sửa ca');
   const shiftSubEdit = document.getElementById('shiftModalSubtitle');
@@ -148,8 +150,6 @@ export const openEditShiftModal = (shift) => {
   const week = getCurrentWeek();
   updateShiftDayOptions(week);
   updateWorkplaceInputOptions(shift.workplace || '');
-
-  renderShiftWorkplacesList();
 
   document.getElementById('shiftDay').value = shift.day;
   document.getElementById('shiftType').value = shift.type;
@@ -239,7 +239,7 @@ export const saveShiftFromModal = async (e) => {
   e.preventDefault();
   if (!hasWorkplaces()) {
     showToast(t('warn_no_workplace', 'Chưa có nơi làm việc.'));
-    openWorkplaceModal();
+    openUserProfileModal();
     return;
   }
 
@@ -430,6 +430,7 @@ export const openEditWeekModal = () => {
   const btnDel = document.getElementById('btnDeleteCurrentWeekInModal');
   if (btnDel) {
     const isOnly = !state.weeks || state.weeks.length <= 1;
+    btnDel.style.display = isOnly ? 'none' : 'inline-flex';
     btnDel.disabled = isOnly;
     btnDel.classList.toggle('is-disabled', isOnly);
     btnDel.title = isOnly ? 'Không thể xóa tuần duy nhất' : t('btn_delete_week', 'Xóa tuần');
@@ -810,15 +811,17 @@ export const openAllWeeksModal = (initialTab = 'analytics') => {
               </svg>
             </button>
           `}
-          <button type="button" class="btn-table-action btn-table-delete" data-delete-week="${week.id}" title="${t('btn_delete_week', 'Xóa tuần')} ${escapeHtml(getLocalizedWeekName(week.name))}" aria-label="${t('btn_delete_week', 'Xóa tuần')}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13">
-              <path d="M3 6h18"></path>
-              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-              <line x1="10" x2="10" y1="11" y2="17"></line>
-              <line x1="14" x2="14" y1="11" y2="17"></line>
-            </svg>
-          </button>
+          ${state.weeks.length > 1 ? `
+            <button type="button" class="btn-table-action btn-table-delete" data-delete-week="${week.id}" title="${t('btn_delete_week', 'Xóa tuần')} ${escapeHtml(getLocalizedWeekName(week.name))}" aria-label="${t('btn_delete_week', 'Xóa tuần')}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13">
+                <path d="M3 6h18"></path>
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                <line x1="10" x2="10" y1="11" y2="17"></line>
+                <line x1="14" x2="14" y1="11" y2="17"></line>
+              </svg>
+            </button>
+          ` : ''}
         </div>
       </td>
     `;
@@ -832,16 +835,18 @@ export const openAllWeeksModal = (initialTab = 'analytics') => {
       });
     }
 
-    tr.querySelector(`[data-delete-week="${week.id}"]`).addEventListener('click', async () => {
-      if (state.weeks.length <= 1) {
-        await showAlertDialog({
-          title: t('btn_delete_week', 'Xóa tuần'),
-          message: t('alert_cannot_delete_only_week', 'Không thể xóa tuần duy nhất còn lại.'),
-          isError: true,
-          iconType: 'error'
-        });
-        return;
-      }
+    const btnDelWeekRow = tr.querySelector(`[data-delete-week="${week.id}"]`);
+    if (btnDelWeekRow) {
+      btnDelWeekRow.addEventListener('click', async () => {
+        if (state.weeks.length <= 1) {
+          await showAlertDialog({
+            title: t('btn_delete_week', 'Xóa tuần'),
+            message: t('alert_cannot_delete_only_week', 'Không thể xóa tuần duy nhất còn lại.'),
+            isError: true,
+            iconType: 'error'
+          });
+          return;
+        }
       const confirmed = await showConfirmDialog({
         title: t('btn_delete_week', 'Xóa tuần làm'),
         message: t('confirm_delete_week', 'Xóa tuần này cùng toàn bộ ca làm đã ghi?'),
@@ -861,8 +866,9 @@ export const openAllWeeksModal = (initialTab = 'analytics') => {
         showToast(`Đã xóa ${week.name}`);
       }
     });
+  }
 
-    tbody.appendChild(tr);
+  tbody.appendChild(tr);
   });
 
   const elTotalEarnings = document.getElementById('allTimeTotalEarnings');
@@ -903,346 +909,15 @@ const formatWpRateDisplay = (num) => {
   return new Intl.NumberFormat('vi-VN').format(val);
 };
 
-export const renderShiftWorkplacesList = () => {
-  const container = document.getElementById('shiftWpQuickList');
-  if (!container) return;
-  container.innerHTML = '';
-  normalizeWorkplacesAndRates();
+export const renderShiftWorkplacesList = () => {};
 
-  const countBadge = document.getElementById('swmListCountBadge');
-  if (countBadge) {
-    countBadge.textContent = String(state.settings.workplaces.length);
-  }
+export const addWorkplaceFromShiftModal = () => {};
 
-  const currentDefaultWp = getDefaultWorkplace();
-  const hasMultiple = state.settings.workplaces.length > 1;
+export const openWorkplaceModal = () => openUserProfileModal();
 
-  if (!state.settings.workplaces || state.settings.workplaces.length === 0) {
-    const emptyState = document.createElement('div');
-    emptyState.className = 'swq-empty-card';
-    emptyState.textContent = 'Chưa có nơi làm việc nào';
-    container.appendChild(emptyState);
-    return;
-  }
+export const closeWorkplaceModal = () => closeModal('userProfileModal');
 
-  state.settings.workplaces.forEach((wp, idx) => {
-    const wpCol = getWorkplaceColor(wp);
-    const rate = (state.settings.workplaceRates && state.settings.workplaceRates[wp] !== undefined)
-      ? state.settings.workplaceRates[wp]
-      : '';
-    const isDefault = (wp === currentDefaultWp);
-
-    const row = document.createElement('div');
-    row.className = `swq-item-card ${isDefault ? 'is-default-card' : ''}`;
-    row.dataset.wp = wp;
-    row.innerHTML = `
-      <div class="swq-card-top">
-        <div class="swq-card-identity">
-          <span class="wb-color-dot" style="background:${wpCol.fill};"></span>
-          <span class="swq-name" title="${escapeHtml(wp)}">${escapeHtml(wp)}</span>
-          ${isDefault ? `
-            <span class="wp-default-tag" title="${t('tag_default_workplace', 'Mặc định')}">
-              <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-              </svg>
-            </span>
-          ` : (hasMultiple ? `
-            <button type="button" class="btn-set-default-wp" data-set-default="${escapeHtml(wp)}" title="${t('btn_set_default_wp', 'Đặt làm nơi làm việc mặc định')}" aria-label="${t('btn_set_default_wp', 'Đặt làm nơi làm việc mặc định')}">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="11" height="11">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-              </svg>
-            </button>
-          ` : '')}
-        </div>
-        <div class="swq-card-actions">
-          <button type="button" class="swq-btn-icon btn-rename-workplace" data-rename-wp="${idx}" title="${t('btn_rename_wp', 'Đổi tên nơi làm')}" aria-label="Đổi tên">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="13" height="13">
-              <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
-              <path d="m15 5 4 4"></path>
-            </svg>
-          </button>
-          <button type="button" class="swq-btn-icon is-danger ${hasMultiple ? 'btn-remove-workplace' : 'is-disabled'}" ${hasMultiple ? `data-del-wp="${idx}"` : 'disabled aria-disabled="true"'} title="${hasMultiple ? t('btn_delete_wp', 'Xóa nơi làm') : 'Cần có ít nhất một nơi làm việc'}" aria-label="Xóa">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="13" height="13">
-              <path d="M3 6h18"></path>
-              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-            </svg>
-          </button>
-        </div>
-      </div>
-      <div class="swq-card-bottom">
-        <span class="swq-rate-label">Đơn giá theo giờ:</span>
-        <div class="swq-rate-input-wrap">
-          <input type="text" inputmode="numeric" class="swq-rate-input" data-wp="${escapeHtml(wp)}" value="${formatWpRateDisplay(rate)}" placeholder="0" autocomplete="off">
-          <span class="swq-rate-tag">đ/h</span>
-        </div>
-      </div>
-    `;
-
-    const renameBtn = row.querySelector('[data-rename-wp]');
-    if (renameBtn) {
-      renameBtn.addEventListener('click', () => {
-        triggerHaptic('light');
-        row.innerHTML = `
-          <div class="swq-edit-mode-wrap">
-            <div class="swq-edit-header">
-              <span class="wb-color-dot" style="background:${wpCol.fill};"></span>
-              <span class="swq-edit-title">Đổi tên: <strong>${escapeHtml(wp)}</strong></span>
-            </div>
-            <div class="swq-edit-form">
-              <input type="text" class="swq-name-input form-input font-sans" value="${escapeHtml(wp)}" placeholder="${t('ph_workplace_name', 'Tên nơi làm')}" autocomplete="off">
-              <div class="swq-edit-btn-group">
-                <button type="button" class="btn-save-wp-rename btn-action-primary" title="${t('btn_save', 'Lưu')}">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="12" height="12">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                  <span>${t('btn_save', 'Lưu')}</span>
-                </button>
-                <button type="button" class="btn-cancel-wp-rename btn-morphic" title="${t('btn_cancel', 'Hủy')}">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                  </svg>
-                  <span>${t('btn_cancel', 'Hủy')}</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        `;
-
-        const nameInput = row.querySelector('.swq-name-input');
-        if (nameInput) {
-          nameInput.focus();
-          nameInput.select();
-        }
-
-        const handleSave = () => {
-          const newName = (nameInput?.value || '').trim();
-          if (!newName) {
-            showToast(t('warn_wp_name_empty', 'Chưa nhập tên nơi làm việc.'));
-            nameInput?.focus();
-            return;
-          }
-          if (newName === wp) {
-            renderShiftWorkplacesList();
-            return;
-          }
-          if (state.settings.workplaces.some(w => w.toLowerCase() === newName.toLowerCase() && w !== wp)) {
-            showToast(t('warn_wp_exists', 'Tên nơi làm việc này đã tồn tại.'));
-            nameInput?.focus();
-            return;
-          }
-
-          state.settings.workplaces[idx] = newName;
-          const currentRate = state.settings.workplaceRates?.[wp] ?? 0;
-          if (!state.settings.workplaceRates) state.settings.workplaceRates = {};
-          state.settings.workplaceRates[newName] = currentRate;
-          delete state.settings.workplaceRates[wp];
-
-          if (state.settings.defaultWorkplace === wp) {
-            state.settings.defaultWorkplace = newName;
-          }
-
-          state.weeks.forEach(w => {
-            if (Array.isArray(w.shifts)) {
-              w.shifts.forEach(s => {
-                if (s.workplace === wp) {
-                  s.workplace = newName;
-                }
-              });
-            }
-          });
-
-          saveSettings();
-          saveWeeks();
-          renderShiftWorkplacesList();
-          updateWorkplaceInputOptions(newName);
-          updateModalComputedPreview();
-          triggerAppRender();
-          triggerHaptic('medium');
-          showToast(`Đã đổi tên thành "${newName}"`);
-        };
-
-        row.querySelector('.btn-save-wp-rename')?.addEventListener('click', handleSave);
-        row.querySelector('.btn-cancel-wp-rename')?.addEventListener('click', () => {
-          triggerHaptic('light');
-          renderShiftWorkplacesList();
-        });
-
-        nameInput?.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            handleSave();
-          } else if (e.key === 'Escape') {
-            e.preventDefault();
-            triggerHaptic('light');
-            renderShiftWorkplacesList();
-          }
-        });
-      });
-    }
-
-    const setDefaultBtn = row.querySelector('[data-set-default]');
-    if (setDefaultBtn) {
-      setDefaultBtn.addEventListener('click', () => {
-        triggerHaptic('medium');
-        state.settings.defaultWorkplace = wp;
-        saveSettings();
-        renderShiftWorkplacesList();
-        updateWorkplaceInputOptions(wp);
-        updateModalComputedPreview();
-        triggerAppRender();
-        showToast(`Đã đặt "${wp}" làm nơi làm việc mặc định`);
-      });
-    }
-
-    const delBtn = row.querySelector('[data-del-wp]');
-    if (delBtn) {
-      delBtn.addEventListener('click', async () => {
-        triggerHaptic('light');
-        const confirmed = await showConfirmDialog({
-          title: t('btn_delete_wp', 'Xóa cơ sở'),
-          message: t('confirm_delete_wp', 'Xóa cơ sở làm việc khỏi danh sách?'),
-          details: wp,
-          confirmText: t('btn_delete', 'Xóa'),
-          isDanger: true,
-          iconType: 'delete'
-        });
-        if (!confirmed) return;
-        const removed = state.settings.workplaces.splice(idx, 1)[0];
-        if (state.settings.workplaceRates && state.settings.workplaceRates[removed] !== undefined) {
-          delete state.settings.workplaceRates[removed];
-        }
-        if (state.settings.defaultWorkplace === removed) {
-          state.settings.defaultWorkplace = state.settings.workplaces[0] || '';
-        }
-        saveSettings();
-        renderShiftWorkplacesList();
-        updateWorkplaceInputOptions();
-        updateModalComputedPreview();
-        triggerAppRender();
-        triggerHaptic('medium');
-        showToast(`Đã xóa nơi làm: ${removed}`);
-      });
-    }
-
-    const rateInput = row.querySelector('.swq-rate-input');
-    if (rateInput) {
-      rateInput.addEventListener('input', (e) => {
-        const val = parseWpRate(e.target.value);
-        if (!state.settings.workplaceRates) state.settings.workplaceRates = {};
-        state.settings.workplaceRates[wp] = val;
-        saveSettings();
-        updateModalComputedPreview();
-        triggerAppRender();
-      });
-
-      let prevRateVal = '';
-      rateInput.addEventListener('focus', (e) => {
-        prevRateVal = e.target.value.trim();
-        e.target.select();
-      });
-
-      rateInput.addEventListener('blur', (e) => {
-        const val = parseWpRate(e.target.value);
-        if (!state.settings.workplaceRates) state.settings.workplaceRates = {};
-        state.settings.workplaceRates[wp] = val;
-        const formatted = formatWpRateDisplay(val);
-        e.target.value = formatted;
-        saveSettings();
-        updateModalComputedPreview();
-        triggerAppRender();
-        if (formatted !== prevRateVal && prevRateVal !== '') {
-          showToast(`Đã cập nhật đơn giá "${wp}": ${formatted} đ/h`);
-        }
-      });
-
-      rateInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          rateInput.blur();
-        }
-      });
-    }
-
-    container.appendChild(row);
-  });
-};
-
-export const addWorkplaceFromShiftModal = () => {
-  const nameInput = document.getElementById('shiftNewWpName');
-  const rateInput = document.getElementById('shiftNewWpRate');
-  if (!nameInput) return;
-  const val = nameInput.value.trim();
-  if (!val) {
-    showToast(t('warn_wp_name_empty', 'Chưa nhập tên nơi làm việc.'));
-    nameInput.focus();
-    return;
-  }
-  normalizeWorkplacesAndRates();
-  if (state.settings.workplaces.some(w => w.toLowerCase() === val.toLowerCase())) {
-    showToast(t('warn_wp_exists', 'Tên nơi làm việc này đã tồn tại.'));
-    nameInput.focus();
-    return;
-  }
-
-  const isFirst = state.settings.workplaces.length === 0;
-  state.settings.workplaces.push(val);
-  if (isFirst || !state.settings.defaultWorkplace) {
-    state.settings.defaultWorkplace = val;
-  }
-
-  const customRate = rateInput ? parseWpRate(rateInput.value) : 0;
-  if (!state.settings.workplaceRates) state.settings.workplaceRates = {};
-  state.settings.workplaceRates[val] = customRate;
-
-  saveSettings();
-  nameInput.value = '';
-  if (rateInput) rateInput.value = '';
-
-  renderShiftWorkplacesList();
-  updateWorkplaceInputOptions(val);
-  updateModalComputedPreview();
-  triggerAppRender();
-  triggerHaptic('medium');
-  showToast(`Đã thêm nơi làm việc: ${val}`);
-};
-
-let returnToProfileAfterWorkplaceModal = false;
-
-export const openWorkplaceModal = (opts = {}) => {
-  const modal = document.getElementById('workplaceModal');
-  if (!modal) return;
-  returnToProfileAfterWorkplaceModal = Boolean(opts && opts.returnToProfile);
-  if (returnToProfileAfterWorkplaceModal) {
-    const profileModal = document.getElementById('userProfileModal');
-    if (profileModal) profileModal.style.display = 'none';
-  }
-  renderShiftWorkplacesList();
-  modal.style.display = 'flex';
-  const nameInput = document.getElementById('shiftNewWpName');
-  if (nameInput) setTimeout(() => nameInput.focus(), 100);
-};
-
-export const closeWorkplaceModal = () => {
-  const modal = document.getElementById('workplaceModal');
-  if (modal) modal.style.display = 'none';
-  updateWorkplaceInputOptions();
-  updateModalComputedPreview();
-  triggerAppRender();
-  if (returnToProfileAfterWorkplaceModal) {
-    returnToProfileAfterWorkplaceModal = false;
-    openUserProfileModal();
-  }
-};
-
-export const toggleWorkplacePanel = (forceOpen = null) => {
-  if (forceOpen === false) {
-    closeWorkplaceModal();
-  } else {
-    openWorkplaceModal();
-  }
-};
+export const toggleWorkplacePanel = () => openUserProfileModal();
 
 export const openAuthModal = (defaultTab = 'login') => {
   const modal = document.getElementById('authModal');
@@ -1770,6 +1445,11 @@ export const renderProfileWorkplacesEditList = () => {
 };
 
 export const addWorkplaceFromProfile = () => {
+  if (!state.currentUser && state.settings.workplaces && state.settings.workplaces.length >= 1) {
+    showToast('Vui lòng đăng nhập để thêm từ 2 cơ sở làm việc');
+    openAuthModal('login');
+    return;
+  }
   const nameInput = document.getElementById('profileNewWpName');
   const rateInput = document.getElementById('profileNewWpRate');
   if (!nameInput) return;
@@ -2182,15 +1862,6 @@ export const closeModal = (modalId) => {
       collapseProfileWorkplacesEdit();
       saveSettings();
       triggerAppRender();
-    }
-  }
-  if (modalId === 'workplaceModal') {
-    updateWorkplaceInputOptions();
-    updateModalComputedPreview();
-    triggerAppRender();
-    if (returnToProfileAfterWorkplaceModal) {
-      returnToProfileAfterWorkplaceModal = false;
-      openUserProfileModal();
     }
   }
 };

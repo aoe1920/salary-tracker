@@ -26,11 +26,11 @@
 
 
   <link rel="manifest" href="./manifest.json">
-  <link rel="icon" type="image/svg+xml" href="./assets/icons/icon.svg?v=20261111i">
-  <link rel="icon" type="image/png" sizes="1024x1024" href="./assets/icons/icon-1024.png?v=20261111i">
-  <link rel="icon" type="image/png" sizes="512x512" href="./assets/icons/icon-512.png?v=20261111i">
-  <link rel="alternate icon" type="image/png" sizes="192x192" href="./assets/icons/icon-192.png?v=20261111i">
-  <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png?v=20261111i">
+  <link rel="icon" type="image/svg+xml" href="./assets/icons/icon.svg?v=20261111j">
+  <link rel="icon" type="image/png" sizes="1024x1024" href="./assets/icons/icon-1024.png?v=20261111j">
+  <link rel="icon" type="image/png" sizes="512x512" href="./assets/icons/icon-512.png?v=20261111j">
+  <link rel="alternate icon" type="image/png" sizes="192x192" href="./assets/icons/icon-192.png?v=20261111j">
+  <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png?v=20261111j">
 
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,9 +39,9 @@
     href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
     rel="stylesheet">
 
-  <link rel="stylesheet" href="./css/base.css?v=20261111i">
-  <link rel="stylesheet" href="./css/components.css?v=20261111i">
-  <link rel="stylesheet" href="./css/modals.css?v=20261111i">
+  <link rel="stylesheet" href="./css/base.css?v=20261111j">
+  <link rel="stylesheet" href="./css/components.css?v=20261111j">
+  <link rel="stylesheet" href="./css/modals.css?v=20261111j">
 </head>
 
 <body>
@@ -376,62 +376,6 @@
         </button>
       </div>
     </form>
-  </div>
-
-
-  <div class="modal-backdrop" id="workplaceModal" style="display: none;">
-    <div class="modal-surface modal-surface-sm">
-      <div class="modal-header">
-        <div class="modal-title-wrap">
-          <h3 class="modal-title" data-i18n="modal_workplaces_title">Cơ sở làm việc</h3>
-          <span class="modal-subtitle" data-i18n="modal_workplaces_desc">Địa điểm và lương cơ bản</span>
-        </div>
-        <button type="button" class="btn-morphic modal-close" data-close-modal="workplaceModal"
-          data-i18n-title="btn_close" title="Đóng" aria-label="Đóng">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"
-            stroke-linejoin="round" width="16" height="16">
-            <path d="M18 6 6 18"></path>
-            <path d="m6 6 12 12"></path>
-          </svg>
-        </button>
-      </div>
-
-      <div class="modal-body">
-        <div class="shift-add-wp-card">
-          <div class="shift-add-wp-title">Thêm nơi làm mới</div>
-          <div class="shift-add-wp-inputs">
-            <div class="shift-add-wp-name-wrap">
-              <input type="text" id="shiftNewWpName" class="form-input" placeholder="Tên nơi làm" autocomplete="off">
-            </div>
-            <div class="shift-add-wp-rate-wrap">
-              <input type="text" inputmode="numeric" id="shiftNewWpRate" class="form-input" placeholder="Đơn giá" autocomplete="off">
-              <span class="shift-rate-unit">đ/h</span>
-            </div>
-            <button type="button" id="btnShiftAddWp" class="btn-action-primary shift-add-wp-btn" title="Thêm nơi làm việc" aria-label="Thêm nơi làm việc">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="swm-list-header">
-          <span class="swm-list-title">Danh sách nơi làm</span>
-          <span class="swm-list-badge font-mono" id="swmListCountBadge">0</span>
-        </div>
-
-        <div class="shift-wp-quick-list" id="shiftWpQuickList"></div>
-      </div>
-
-      <div class="modal-footer modal-footer-end">
-        <button type="button" class="btn-action-primary shift-wp-done-btn" data-close-modal="workplaceModal" title="Xong" aria-label="Xong">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-        </button>
-      </div>
-    </div>
   </div>
 
 
@@ -1235,7 +1179,7 @@
 
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="./js/app.js?v=20261111i"></script>
+  <script type="module" src="./js/app.js?v=20261111j"></script>
 </body>
 
 </html>

@@ -10,7 +10,7 @@ import { drawDashboardWeekChart, setAllWeeksModalOpener, renderAnalyticsDashboar
 import { renderSlipCanvas, openShareSlipModal, downloadSlipImage, copySlipImageToClipboard } from './ui/canvas-slip.js';
 import { exportCurrentWeekCSV, exportAllWeeksCSV, backupJSON, restoreJSON, setExportAppRenderer } from './ui/export.js';
 import { showConfirmDialog, showAlertDialog, initDialogHandlers } from './ui/dialog.js';
-import { closeModal, openAddShiftModal, openEditShiftModal, updateModalComputedPreview, saveShiftFromModal, deleteShift, undoLastDeleteShift, createNewWeek, openEditWeekModal, saveWeekMeta, deleteCurrentWeek, undoLastDeleteWeek, navigateWeek, renderMonthlyReport, switchSummaryTab, openAllWeeksModal, renderShiftWorkplacesList, addWorkplaceFromShiftModal, toggleWorkplacePanel, openWorkplaceModal, closeWorkplaceModal, openAuthModal, switchAuthTab, clearAuthErrors, openUserProfileModal, collapsePasswordSection, collapseAvatarPicker, setupPasswordToggles, setModalAppRenderer, openResetPasswordModal, initSlimeSegmentedBars, syncSlimeGlider } from './ui/modals.js';
+import { closeModal, openAddShiftModal, openEditShiftModal, updateModalComputedPreview, saveShiftFromModal, deleteShift, undoLastDeleteShift, createNewWeek, openEditWeekModal, saveWeekMeta, deleteCurrentWeek, undoLastDeleteWeek, navigateWeek, renderMonthlyReport, switchSummaryTab, openAllWeeksModal, openAuthModal, switchAuthTab, clearAuthErrors, openUserProfileModal, collapsePasswordSection, collapseAvatarPicker, setupPasswordToggles, setModalAppRenderer, openResetPasswordModal, initSlimeSegmentedBars, syncSlimeGlider } from './ui/modals.js';
 
 const updateWheelIndicator = () => {};
 
@@ -380,6 +380,8 @@ const renderShiftsList = () => {
     const shiftsCountBadge = document.getElementById('shiftsCountBadge');
     if (shiftsCountBadge) shiftsCountBadge.textContent = '0 ca';
 
+    const isOnlyWeek = !state.weeks || state.weeks.length <= 1;
+
     listContainer.innerHTML = `
       <div class="empty-shifts-box">
         <div class="es-icon-ring">
@@ -410,16 +412,18 @@ const renderShiftsList = () => {
               <span>${t('btn_add_workplace', 'Thêm nơi làm')}</span>
             </button>
           `}
-          <button type="button" class="btn-action-secondary" id="btnEmptyDeleteWeek">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
-              <path d="M3 6h18"></path>
-              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-              <line x1="10" x2="10" y1="11" y2="17"></line>
-              <line x1="14" x2="14" y1="11" y2="17"></line>
-            </svg>
-            <span>${t('btn_delete_week', 'Xóa tuần')}</span>
-          </button>
+          ${!isOnlyWeek ? `
+            <button type="button" class="btn-action-secondary" id="btnEmptyDeleteWeek">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+                <path d="M3 6h18"></path>
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                <line x1="10" x2="10" y1="11" y2="17"></line>
+                <line x1="14" x2="14" y1="11" y2="17"></line>
+              </svg>
+              <span>${t('btn_delete_week', 'Xóa tuần')}</span>
+            </button>
+          ` : ''}
         </div>
       </div>
     `;
@@ -428,7 +432,7 @@ const renderShiftsList = () => {
     if (btnAdd) btnAdd.addEventListener('click', () => openAddShiftModal());
 
     const btnWp = document.getElementById('btnEmptyAddWp');
-    if (btnWp) btnWp.addEventListener('click', () => openAddShiftModal());
+    if (btnWp) btnWp.addEventListener('click', () => openUserProfileModal());
 
     const btnDel = document.getElementById('btnEmptyDeleteWeek');
     if (btnDel) btnDel.addEventListener('click', deleteCurrentWeek);
@@ -456,7 +460,7 @@ const renderShiftsList = () => {
       </button>
     `;
     const btnBannerWp = banner.querySelector('#btnBannerAddWp');
-    if (btnBannerWp) btnBannerWp.addEventListener('click', () => openAddShiftModal());
+    if (btnBannerWp) btnBannerWp.addEventListener('click', () => openUserProfileModal());
     listContainer.appendChild(banner);
   }
 
@@ -964,41 +968,11 @@ const bindEvents = () => {
   setupCustomSelect('shiftWorkplace');
   setupCustomSelect('filterWorkplaceSelect');
 
-  const btnShiftAddWp = document.getElementById('btnShiftAddWp');
-  if (btnShiftAddWp) {
-    btnShiftAddWp.addEventListener('click', addWorkplaceFromShiftModal);
-  }
-  const shiftNewWpName = document.getElementById('shiftNewWpName');
-  if (shiftNewWpName) {
-    shiftNewWpName.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        addWorkplaceFromShiftModal();
-      }
-    });
-  }
-  const shiftNewWpRate = document.getElementById('shiftNewWpRate');
-  if (shiftNewWpRate) {
-    shiftNewWpRate.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        addWorkplaceFromShiftModal();
-      }
-    });
-    shiftNewWpRate.addEventListener('blur', () => {
-      const cleaned = shiftNewWpRate.value.trim().replace(/[^\d]/g, '');
-      const num = Number(cleaned);
-      if (!isNaN(num) && num > 0) {
-        shiftNewWpRate.value = new Intl.NumberFormat('vi-VN').format(num);
-      }
-    });
-  }
-
   const kpiCardWp = document.getElementById('kpiCardWorkplaces');
   if (kpiCardWp) {
     kpiCardWp.addEventListener('click', () => {
       triggerHaptic('light');
-      openWorkplaceModal();
+      openUserProfileModal();
     });
   }
 

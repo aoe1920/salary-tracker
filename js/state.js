@@ -5,9 +5,9 @@ export const state = {
   weeks: [],
   currentWeekId: null,
   settings: {
-    workplaces: ['Chính'],
+    workplaces: ['Cơ sở chính'],
     workplaceRates: {},
-    defaultWorkplace: 'Chính'
+    defaultWorkplace: 'Cơ sở chính'
   }
 };
 
@@ -27,7 +27,9 @@ export const getDefaultWorkplace = () => {
 
 export const normalizeWorkplacesAndRates = () => {
   if (!state.settings) state.settings = {};
-  if (!Array.isArray(state.settings.workplaces)) state.settings.workplaces = [];
+  if (!Array.isArray(state.settings.workplaces) || state.settings.workplaces.length === 0) {
+    state.settings.workplaces = ['Cơ sở chính'];
+  }
   if (!state.settings.workplaceRates || typeof state.settings.workplaceRates !== 'object') {
     state.settings.workplaceRates = {};
   }
