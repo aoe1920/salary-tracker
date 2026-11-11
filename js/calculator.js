@@ -175,6 +175,64 @@ export const getMondayDate = (d = new Date()) => {
   return `${year}-${month}-${dayOfMonth}`;
 };
 
+export const parseSmartDate = (raw) => {
+  if (!raw) return null;
+  const str = String(raw).trim();
+  if (!str) return null;
+
+  const curYear = new Date().getFullYear();
+  let d = 0, m = 0, y = curYear;
+
+  if (/^\d{4}[-/.]\d{1,2}[-/.]\d{1,2}$/.test(str)) {
+    const parts = str.split(/[-/.]/);
+    y = parseInt(parts[0], 10);
+    m = parseInt(parts[1], 10);
+    d = parseInt(parts[2], 10);
+  } else if (/^\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}$/.test(str)) {
+    const parts = str.split(/[-/.]/);
+    d = parseInt(parts[0], 10);
+    m = parseInt(parts[1], 10);
+    y = parseInt(parts[2], 10);
+    if (y < 100) y += (y < 70 ? 2000 : 1900);
+  } else if (/^\d{1,2}[-/.]\d{1,2}$/.test(str)) {
+    const parts = str.split(/[-/.]/);
+    d = parseInt(parts[0], 10);
+    m = parseInt(parts[1], 10);
+  } else if (/^\d{4,8}$/.test(str)) {
+    if (str.length === 8) {
+      d = parseInt(str.slice(0, 2), 10);
+      m = parseInt(str.slice(2, 4), 10);
+      y = parseInt(str.slice(4, 8), 10);
+    } else if (str.length === 6) {
+      d = parseInt(str.slice(0, 2), 10);
+      m = parseInt(str.slice(2, 4), 10);
+      let shortY = parseInt(str.slice(4, 6), 10);
+      y = shortY < 100 ? (shortY < 70 ? 2000 + shortY : 1900 + shortY) : shortY;
+    } else if (str.length === 4) {
+      d = parseInt(str.slice(0, 2), 10);
+      m = parseInt(str.slice(2, 4), 10);
+    }
+  } else {
+    return null;
+  }
+
+  if (m < 1 || m > 12 || d < 1 || d > 31 || y < 1900 || y > 2100) return null;
+
+  const dateObj = new Date(y, m - 1, d);
+  if (dateObj.getFullYear() !== y || dateObj.getMonth() !== m - 1 || dateObj.getDate() !== d) {
+    return null;
+  }
+
+  const pad = (n) => String(n).padStart(2, '0');
+  return {
+    year: y,
+    month: m,
+    day: d,
+    iso: `${y}-${pad(m)}-${pad(d)}`,
+    display: `${pad(d)}/${pad(m)}/${y}`
+  };
+};
+
 export const getShiftDateObj = (week, dayStr) => {
   if (!week || !week.startDate) return null;
   const dayOffsets = { 'T2': 0, 'T3': 1, 'T4': 2, 'T5': 3, 'T6': 4, 'T7': 5, 'CN': 6 };

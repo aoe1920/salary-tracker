@@ -26,11 +26,11 @@
 
 
   <link rel="manifest" href="./manifest.json">
-  <link rel="icon" type="image/svg+xml" href="./assets/icons/icon.svg?v=20261111j">
-  <link rel="icon" type="image/png" sizes="1024x1024" href="./assets/icons/icon-1024.png?v=20261111j">
-  <link rel="icon" type="image/png" sizes="512x512" href="./assets/icons/icon-512.png?v=20261111j">
-  <link rel="alternate icon" type="image/png" sizes="192x192" href="./assets/icons/icon-192.png?v=20261111j">
-  <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png?v=20261111j">
+  <link rel="icon" type="image/svg+xml" href="./assets/icons/icon.svg?v=20261111k">
+  <link rel="icon" type="image/png" sizes="1024x1024" href="./assets/icons/icon-1024.png?v=20261111k">
+  <link rel="icon" type="image/png" sizes="512x512" href="./assets/icons/icon-512.png?v=20261111k">
+  <link rel="alternate icon" type="image/png" sizes="192x192" href="./assets/icons/icon-192.png?v=20261111k">
+  <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png?v=20261111k">
 
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,9 +39,9 @@
     href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
     rel="stylesheet">
 
-  <link rel="stylesheet" href="./css/base.css?v=20261111j">
-  <link rel="stylesheet" href="./css/components.css?v=20261111j">
-  <link rel="stylesheet" href="./css/modals.css?v=20261111j">
+  <link rel="stylesheet" href="./css/base.css?v=20261111k">
+  <link rel="stylesheet" href="./css/components.css?v=20261111k">
+  <link rel="stylesheet" href="./css/modals.css?v=20261111k">
 </head>
 
 <body>
@@ -335,7 +335,7 @@
         <div class="form-grid-2">
           <div class="form-item">
             <label class="form-label" for="shiftOtRate" data-i18n="modal_ot">Hệ số ca</label>
-            <input type="number" step="1" min="1" max="10" id="shiftOtRate" class="form-input" value="1" placeholder="1">
+            <input type="text" inputmode="decimal" maxlength="4" id="shiftOtRate" class="form-input font-mono" value="1" placeholder="1">
           </div>
 
           <div class="form-item">
@@ -561,7 +561,7 @@
 
         <div class="form-item">
           <label class="form-label" for="editWeekStartDateInput" data-i18n="modal_week_start">Ngày bắt đầu tuần</label>
-          <input type="date" id="editWeekStartDateInput" class="form-input font-mono" required>
+          <input type="text" inputmode="numeric" id="editWeekStartDateInput" class="form-input font-mono" placeholder="DD/MM/YYYY" maxlength="10" autocomplete="off" required>
         </div>
       </div>
 
@@ -809,6 +809,10 @@
             </svg>
             <span data-i18n="auth_google_continue">Tiếp tục với Google</span>
           </button>
+        </div>
+
+        <div class="auth-terms-note font-sans">
+          <span>Bằng cách tiếp tục, bạn đồng ý với <button type="button" class="auth-terms-btn" id="btnShowTerms">Điều khoản dịch vụ</button> và <button type="button" class="auth-terms-btn" id="btnShowPrivacy">Chính sách bảo mật</button>.</span>
         </div>
       </div>
     </div>
@@ -1179,7 +1183,7 @@
 
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="./js/app.js?v=20261111j"></script>
+  <script type="module" src="./js/app.js?v=20261111k"></script>
 </body>
 
 </html>

@@ -1,5 +1,5 @@
 import { state, getCurrentWeek, hasWorkplaces, getDefaultWorkplace, getWorkplaceColor, normalizeWorkplacesAndRates } from '../state.js';
-import { fmtCurrency, fmtHours, parseTimeToMinutes, parseSmartTime, calculateHoursDiff, getShiftRate, getShiftEarnings, calculateSmartShiftDefaults, detectShiftType, getVietnameseDayOfWeek, getMondayDate, getShiftDateObj, getShiftDateShort, getWeekDateRangeDisplay, ensureWeekStartDate, getDayClass, escapeHtml, calculateWeekTotalSalary, sortShiftsChronologically } from '../calculator.js';
+import { fmtCurrency, fmtHours, parseTimeToMinutes, parseSmartTime, parseSmartDate, calculateHoursDiff, getShiftRate, getShiftEarnings, calculateSmartShiftDefaults, detectShiftType, getVietnameseDayOfWeek, getMondayDate, getShiftDateObj, getShiftDateShort, getWeekDateRangeDisplay, ensureWeekStartDate, getDayClass, escapeHtml, calculateWeekTotalSalary, sortShiftsChronologically } from '../calculator.js';
 import { t, getLocalizedWeekName, getLocalizedShiftType, getLocalizedDayName, formatShiftType } from '../i18n.js';
 import { saveWeeks, saveSettings, updateSyncStatusUI, updateHeaderAuthUI, supabaseClient, handleLinkGoogleAccount, setLocalEmailForUsername } from '../services/supabase.js';
 import { showToast, showToastWithAction } from './toast.js';
@@ -166,8 +166,9 @@ export const openEditShiftModal = (shift) => {
   if (breakInput) breakInput.value = shift.breakMinutes || 0;
   const otInput = document.getElementById('shiftOtRate');
   if (otInput) {
-    const rawVal = Number(shift.otRate) || 1;
-    otInput.value = rawVal % 1 === 0 ? String(Math.round(rawVal)) : String(rawVal);
+    const rawVal = parseFloat(shift.otRate) || 1;
+    const clamped = Math.min(10, Math.max(1, rawVal));
+    otInput.value = clamped % 1 === 0 ? String(Math.round(clamped)) : String(Number(clamped.toFixed(2)));
   }
   const allowanceInput = document.getElementById('shiftAllowance');
   if (allowanceInput) allowanceInput.value = String(shift.allowance || '0');
@@ -183,8 +184,8 @@ export const updateModalComputedPreview = () => {
   const rawStart = document.getElementById('shiftStart')?.value;
   const rawEnd = document.getElementById('shiftEnd')?.value;
   const breakMins = Number(document.getElementById('shiftBreak')?.value || 0);
-  const rawOt = Number(document.getElementById('shiftOtRate')?.value);
-  const otRate = (!isNaN(rawOt) && rawOt > 0) ? (rawOt % 1 === 0 ? Math.round(rawOt) : Number(rawOt.toFixed(2))) : 1;
+  const rawOt = parseFloat(document.getElementById('shiftOtRate')?.value || '1');
+  const otRate = (!isNaN(rawOt) && rawOt >= 1) ? Math.min(10, Math.round(rawOt * 100) / 100) : 1;
   const allowance = Number(document.getElementById('shiftAllowance')?.value || 0);
   const deduction = Number(document.getElementById('shiftDeduction')?.value || 0);
   const workplace = (document.getElementById('shiftWorkplace')?.value || '').trim();
@@ -262,8 +263,8 @@ export const saveShiftFromModal = async (e) => {
   document.getElementById('shiftEnd').value = end;
 
   const breakMinutes = Math.max(0, Number(document.getElementById('shiftBreak')?.value || 0));
-  const rawOt = Number(document.getElementById('shiftOtRate')?.value);
-  const otRate = (!isNaN(rawOt) && rawOt > 0) ? (rawOt % 1 === 0 ? Math.round(rawOt) : Number(rawOt.toFixed(2))) : 1;
+  const rawOt = parseFloat(document.getElementById('shiftOtRate')?.value || '1');
+  const otRate = (!isNaN(rawOt) && rawOt >= 1) ? Math.min(10, Math.round(rawOt * 100) / 100) : 1;
   const allowance = Math.max(0, Number(document.getElementById('shiftAllowance')?.value || 0));
   const deduction = Math.max(0, Number(document.getElementById('shiftDeduction')?.value || 0));
   const workplace = (document.getElementById('shiftWorkplace')?.value || '').trim();
@@ -423,7 +424,9 @@ export const openEditWeekModal = () => {
   if (!week) return;
 
   document.getElementById('editWeekNameInput').value = week.name;
-  document.getElementById('editWeekStartDateInput').value = week.startDate || getMondayDate(new Date());
+  const curStart = week.startDate || getMondayDate(new Date());
+  const parsedStart = parseSmartDate(curStart);
+  document.getElementById('editWeekStartDateInput').value = parsedStart ? parsedStart.display : curStart;
   const editRateInput = document.getElementById('editWeekRateInput');
   if (editRateInput) editRateInput.value = week.rate || 0;
 
@@ -445,7 +448,13 @@ export const saveWeekMeta = (e) => {
   if (!week) return;
 
   const newName = document.getElementById('editWeekNameInput').value.trim();
-  const newStartDate = document.getElementById('editWeekStartDateInput').value;
+  const rawStartDate = document.getElementById('editWeekStartDateInput').value.trim();
+  const parsedStart = parseSmartDate(rawStartDate);
+  if (!parsedStart) {
+    showToast('Ngày bắt đầu không hợp lệ');
+    document.getElementById('editWeekStartDateInput').focus();
+    return;
+  }
   const editRateInput = document.getElementById('editWeekRateInput');
   if (editRateInput) {
     const newRate = Number(editRateInput.value);
@@ -453,7 +462,7 @@ export const saveWeekMeta = (e) => {
   }
 
   if (newName) week.name = newName;
-  if (newStartDate) week.startDate = newStartDate;
+  week.startDate = parsedStart.iso;
 
   saveWeeks();
   closeModal('editWeekModal');

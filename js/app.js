@@ -1,5 +1,5 @@
 import { state, getCurrentWeek, getLatestWeek, hasWorkplaces, getDefaultWorkplace, getWorkplaceColor } from './state.js';
-import { fmtCurrency, fmtHours, getShiftRate, getShiftEarnings, calculateWeekTotalSalary, hoursToColonFormat, hoursToHourMinutes, getVietnameseDayOfWeek, getMondayDate, getShiftDateObj, getShiftDateShort, getShiftDateFull, getWeekDateRangeDisplay, ensureWeekStartDate, getDayClass, formatShiftType, detectShiftType, parseSmartTime, escapeHtml, calculateSmartShiftDefaults, sortShiftsChronologically } from './calculator.js';
+import { fmtCurrency, fmtHours, getShiftRate, getShiftEarnings, calculateWeekTotalSalary, hoursToColonFormat, hoursToHourMinutes, getVietnameseDayOfWeek, getMondayDate, getShiftDateObj, getShiftDateShort, getShiftDateFull, getWeekDateRangeDisplay, ensureWeekStartDate, getDayClass, formatShiftType, detectShiftType, parseSmartTime, parseSmartDate, escapeHtml, calculateSmartShiftDefaults, sortShiftsChronologically } from './calculator.js';
 import { t, getLocalizedWeekName, getLocalizedShiftType, getLocalizedDayName } from './i18n.js';
 import { applyTheme, toggleTheme } from './theme.js';
 import { supabaseClient, loadState, saveWeeks, syncWithSupabase, saveSettings, initAuth, restoreCachedUserSync, restoreCachedStateSync, updateHeaderAuthUI, updateSyncStatusUI, syncPendingToCloud, handleLoginSubmit, handleRegisterSubmit, handleLogout, handleDeleteAccount, handleGoogleSignIn, handleForgotPasswordSubmit, handleResetPasswordSubmit, handleLinkGoogleAccount, handleChangePasswordSubmit, setupRealtimeSync, setupAutoSync, setSupabaseAppRenderer } from './services/supabase.js';
@@ -683,8 +683,21 @@ const bindEvents = () => {
   if (shiftBreakInput) shiftBreakInput.addEventListener('input', updateModalComputedPreview);
   const shiftOtRateInput = document.getElementById('shiftOtRate');
   if (shiftOtRateInput) {
-    shiftOtRateInput.addEventListener('input', updateModalComputedPreview);
-    shiftOtRateInput.addEventListener('change', updateModalComputedPreview);
+    shiftOtRateInput.addEventListener('input', () => {
+      let val = shiftOtRateInput.value.replace(/[^\d.]/g, '');
+      const parts = val.split('.');
+      if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join('');
+      if (val.length > 4) val = val.slice(0, 4);
+      shiftOtRateInput.value = val;
+      updateModalComputedPreview();
+    });
+    shiftOtRateInput.addEventListener('blur', () => {
+      let num = parseFloat(shiftOtRateInput.value);
+      if (isNaN(num) || num < 1) num = 1;
+      if (num > 10) num = 10;
+      shiftOtRateInput.value = String(num % 1 === 0 ? Math.round(num) : Number(num.toFixed(2)));
+      updateModalComputedPreview();
+    });
   }
   const shiftAllowanceInput = document.getElementById('shiftAllowance');
   if (shiftAllowanceInput) {
@@ -749,6 +762,15 @@ const bindEvents = () => {
  
   const editWeekForm = document.getElementById('editWeekForm');
   if (editWeekForm) editWeekForm.addEventListener('submit', saveWeekMeta);
+  const editWeekStartDateInput = document.getElementById('editWeekStartDateInput');
+  if (editWeekStartDateInput) {
+    editWeekStartDateInput.addEventListener('blur', () => {
+      const parsed = parseSmartDate(editWeekStartDateInput.value);
+      if (parsed) {
+        editWeekStartDateInput.value = parsed.display;
+      }
+    });
+  }
   const btnDeleteCurrentWeek = document.getElementById('btnDeleteCurrentWeek');
   if (btnDeleteCurrentWeek) btnDeleteCurrentWeek.addEventListener('click', deleteCurrentWeek);
   const btnDeleteCurrentWeekBar = document.getElementById('btnDeleteCurrentWeekBar');
@@ -770,6 +792,28 @@ const bindEvents = () => {
       } else {
         openAuthModal('login');
       }
+    });
+  }
+
+  const btnShowTerms = document.getElementById('btnShowTerms');
+  if (btnShowTerms) {
+    btnShowTerms.addEventListener('click', () => {
+      showAlertDialog({
+        title: 'Điều khoản dịch vụ',
+        message: 'Hệ thống hỗ trợ cá nhân ghi nhận ca làm việc và tính toán thu nhập. Dữ liệu được bảo toàn an toàn trên thiết bị và đồng bộ trên tài khoản cá nhân của bạn.',
+        iconType: 'info'
+      });
+    });
+  }
+
+  const btnShowPrivacy = document.getElementById('btnShowPrivacy');
+  if (btnShowPrivacy) {
+    btnShowPrivacy.addEventListener('click', () => {
+      showAlertDialog({
+        title: 'Chính sách bảo mật',
+        message: 'Thông tin ca làm, thu nhập và tài khoản được bảo mật tuyệt đối, không chia sẻ cho bên thứ ba dưới bất kỳ hình thức nào.',
+        iconType: 'info'
+      });
     });
   }
 
