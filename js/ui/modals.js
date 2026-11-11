@@ -2195,16 +2195,7 @@ export const closeModal = (modalId) => {
   }
 };
 
-export const triggerModalLiquidStretch = (modalOrSurface) => {
-  if (!modalOrSurface) return;
-  const surface = modalOrSurface.classList?.contains('modal-surface')
-    ? modalOrSurface
-    : modalOrSurface.querySelector?.('.modal-surface');
-  if (!surface) return;
-  surface.classList.remove('modal-liquid-stretch');
-  void surface.offsetWidth;
-  surface.classList.add('modal-liquid-stretch');
-};
+export const triggerModalLiquidStretch = () => {};
 
 export const syncSlimeGlider = (barEl, immediate = false) => {
   if (!barEl) return;
@@ -2238,14 +2229,9 @@ export const syncSlimeGlider = (barEl, immediate = false) => {
   glider.style.height = `${h}px`;
 
   if (immediate) {
-    void glider.offsetWidth;
-    glider.style.transition = '';
-  }
-
-  if (!immediate) {
-    activeBtn.classList.remove('slime-pill-bounce');
-    void activeBtn.offsetWidth;
-    activeBtn.classList.add('slime-pill-bounce');
+    requestAnimationFrame(() => {
+      glider.style.transition = '';
+    });
   }
 };
 
@@ -2257,14 +2243,8 @@ export const initSlimeSegmentedBars = () => {
   };
 
   document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.summary-tab-btn, .auth-tab-btn, .filter-pill-btn, .week-wheel-item');
+    const btn = e.target.closest('.summary-tab-btn, .auth-tab-btn, .filter-pill-btn');
     if (!btn) return;
-    if (btn.classList.contains('week-wheel-item')) {
-      btn.classList.remove('slime-pill-bounce');
-      void btn.offsetWidth;
-      btn.classList.add('slime-pill-bounce');
-      return;
-    }
     const bar = btn.closest('.summary-tab-nav, .auth-tabs-row, .stats-time-pills');
     if (bar) {
       requestAnimationFrame(() => {

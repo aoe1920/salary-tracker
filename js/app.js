@@ -125,43 +125,41 @@ const onWheelTrackScroll = () => {
   const container = document.getElementById('weekPillsList');
   if (!container || !state.weeks || !state.weeks.length) return;
 
-  const trackCenter = container.scrollLeft + (container.clientWidth / 2);
-  let closestItem = null;
-  let minDiff = Infinity;
-
-  const items = container.querySelectorAll('.week-wheel-item');
-  items.forEach(item => {
-    const itemCenter = item.offsetLeft + (item.offsetWidth / 2);
-    const diff = Math.abs(itemCenter - trackCenter);
-    if (diff < minDiff) {
-      minDiff = diff;
-      closestItem = item;
-    }
-  });
-
-  if (!closestItem) return;
-  const targetWeekId = closestItem.getAttribute('data-week-id');
-  if (targetWeekId && targetWeekId !== state.currentWeekId) {
-    triggerHaptic('light');
-    const oldIdx = state.weeks.findIndex(w => w.id === state.currentWeekId);
-    const newIdx = state.weeks.findIndex(w => w.id === targetWeekId);
-    currentSlideClass = newIdx > oldIdx ? 'shifts-slide-next' : 'shifts-slide-prev';
-    state.currentWeekId = targetWeekId;
-    localStorage.setItem('salary_tracker_current_week', targetWeekId);
-    items.forEach(it => {
-      it.classList.toggle('active', it.getAttribute('data-week-id') === targetWeekId);
-    });
-    renderWeekDetails();
-    renderShiftsList();
-    updateWeekNavButtons();
-  }
-
   clearTimeout(wheelScrollEndTimer);
   wheelScrollEndTimer = setTimeout(() => {
-    if (!isProgrammaticWheelScroll) {
+    if (isProgrammaticWheelScroll) return;
+    const trackCenter = container.scrollLeft + (container.clientWidth / 2);
+    let closestItem = null;
+    let minDiff = Infinity;
+
+    const items = container.querySelectorAll('.week-wheel-item');
+    items.forEach(item => {
+      const itemCenter = item.offsetLeft + (item.offsetWidth / 2);
+      const diff = Math.abs(itemCenter - trackCenter);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestItem = item;
+      }
+    });
+
+    if (!closestItem) return;
+    const targetWeekId = closestItem.getAttribute('data-week-id');
+    if (targetWeekId && targetWeekId !== state.currentWeekId) {
+      triggerHaptic('light');
+      const oldIdx = state.weeks.findIndex(w => w.id === state.currentWeekId);
+      const newIdx = state.weeks.findIndex(w => w.id === targetWeekId);
+      currentSlideClass = newIdx > oldIdx ? 'shifts-slide-next' : 'shifts-slide-prev';
+      state.currentWeekId = targetWeekId;
+      localStorage.setItem('salary_tracker_current_week', targetWeekId);
+      items.forEach(it => {
+        it.classList.toggle('active', it.getAttribute('data-week-id') === targetWeekId);
+      });
+      renderWeekDetails();
+      renderShiftsList();
+      updateWeekNavButtons();
       scrollWheelToActive('smooth');
     }
-  }, 160);
+  }, 100);
 };
 
 const scrollWheelToActive = (behavior = 'smooth') => {
@@ -371,9 +369,7 @@ const renderWeekDetails = () => {
 const renderShiftsList = () => {
   const listContainer = document.getElementById('shiftsList');
   if (listContainer) {
-    listContainer.classList.remove('shifts-list-fade', 'shifts-slide-next', 'shifts-slide-prev');
-    void listContainer.offsetWidth;
-    listContainer.classList.add(currentSlideClass);
+    listContainer.className = `shifts-stack ${currentSlideClass}`;
     currentSlideClass = 'shifts-list-fade';
     listContainer.innerHTML = '';
   }

@@ -26,49 +26,7 @@ export const triggerHaptic = (type = 'light') => {
   }
 };
 
-const INTERACTIVE_SELECTOR = [
-  'button',
-  '[role="button"]',
-  'a.btn',
-  'input[type="button"]',
-  'input[type="submit"]',
-  'input[type="reset"]',
-  'input[type="checkbox"]',
-  'input[type="radio"]',
-  'summary',
-  '.btn',
-  '.btn-icon',
-  '.btn-primary',
-  '.btn-secondary',
-  '.btn-danger',
-  '.btn-close',
-  '.dock-btn',
-  '.dock-fab',
-  '.dock-item',
-  '.nav-btn',
-  '.day-btn',
-  '.day-pill',
-  '.week-item',
-  '.week-wheel-item',
-  '.tab-btn',
-  '.segmented-btn',
-  '.chip',
-  '.filter-chip',
-  '.action-btn',
-  '.workplace-item',
-  '.workplace-action-btn',
-  '.modal-close',
-  '.close-btn',
-  '.accordion-header',
-  '.accordion-trigger',
-  '.avatar-option',
-  '.avatar-choice',
-  '.avatar-card',
-  '.avatar-item',
-  '.select-option',
-  '.dropdown-item',
-  '[data-haptic]'
-].join(', ');
+const INTERACTIVE_SELECTOR = 'button, [role="button"], a.btn, input[type="button"], input[type="submit"], input[type="checkbox"], input[type="radio"], summary, .btn, .btn-icon, .dock-fab, .dock-btn, .week-wheel-item, .modal-close, [data-haptic]';
 
 let lastHandledElement = null;
 let lastHandledTime = 0;
