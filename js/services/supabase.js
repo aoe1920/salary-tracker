@@ -963,11 +963,8 @@ export const loadState = async () => {
       state.settings.workplaces = ['Mặc định'];
     }
     if (!state.settings.workplaceRates || typeof state.settings.workplaceRates !== 'object') {
-      state.settings.workplaceRates = { 'Mặc định': 40000 };
-    } else if (state.settings.workplaceRates['Mặc định'] === undefined) {
-      state.settings.workplaceRates['Mặc định'] = 40000;
+      state.settings.workplaceRates = {};
     }
-
     normalizeWorkplacesAndRates();
 
     localStorage.setItem(getWeeksStorageKey(), JSON.stringify(state.weeks));
@@ -1183,11 +1180,8 @@ export const restoreCachedStateSync = () => {
       state.settings.workplaces = ['Mặc định'];
     }
     if (!state.settings.workplaceRates || typeof state.settings.workplaceRates !== 'object') {
-      state.settings.workplaceRates = { 'Mặc định': 40000 };
-    } else if (state.settings.workplaceRates['Mặc định'] === undefined) {
-      state.settings.workplaceRates['Mặc định'] = 40000;
+      state.settings.workplaceRates = {};
     }
-
     normalizeWorkplacesAndRates();
   } catch (_) {}
 };

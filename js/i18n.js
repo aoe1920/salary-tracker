@@ -203,6 +203,7 @@ const I18N_VI = {
     btn_rename_wp: 'Đổi tên nơi làm',
     warn_wp_name_empty: 'Chưa nhập tên nơi làm',
     warn_wp_exists: 'Tên nơi làm đã tồn tại',
+    warn_cannot_delete_last_wp: 'Cần giữ lại ít nhất 1 cơ sở làm việc',
     warn_invalid_time: 'Giờ không hợp lệ',
     ph_workplace_name: 'Tên nơi làm',
     tag_default_workplace: 'Mặc định',

@@ -1401,6 +1401,10 @@ export const renderProfileWorkplacesEditList = () => {
     if (delBtn) {
       delBtn.addEventListener('click', async () => {
         triggerHaptic('light');
+        if (state.settings.workplaces.length <= 1) {
+          showToast(t('warn_cannot_delete_last_wp', 'Cần giữ lại ít nhất 1 cơ sở làm việc. Bạn có thể nhấn đổi tên.'));
+          return;
+        }
         const confirmed = await showConfirmDialog({
           title: t('btn_delete_wp', 'Xóa cơ sở'),
           message: t('confirm_delete_wp', 'Xóa cơ sở làm việc khỏi danh sách?'),
@@ -1415,7 +1419,19 @@ export const renderProfileWorkplacesEditList = () => {
           delete state.settings.workplaceRates[removed];
         }
         if (state.settings.defaultWorkplace === removed) {
-          state.settings.defaultWorkplace = state.settings.workplaces[0] || '';
+          state.settings.defaultWorkplace = state.settings.workplaces[0] || 'Mặc định';
+        }
+        if (Array.isArray(state.weeks)) {
+          state.weeks.forEach(w => {
+            if (Array.isArray(w.shifts)) {
+              w.shifts.forEach(s => {
+                if (s.workplace === removed) {
+                  s.workplace = state.settings.defaultWorkplace;
+                }
+              });
+            }
+          });
+          saveWeeks();
         }
         saveSettings();
         renderProfileWorkplacesEditList();
