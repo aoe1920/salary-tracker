@@ -30,7 +30,7 @@ export const normalizeWorkplacesAndRates = () => {
   if (!Array.isArray(state.settings.workplaces) || state.settings.workplaces.length === 0) {
     state.settings.workplaces = ['Mặc định'];
   }
-  const oldIdx = state.settings.workplaces.findIndex(w => w === 'Chính' || w === 'Cơ sở chính');
+  const oldIdx = state.settings.workplaces.findIndex(w => w === 'Chính' || w === 'Cơ sở chính' || w === 'Cơm Chin Chin' || (typeof w === 'string' && w.toLowerCase().includes('chin chin')));
   if (oldIdx !== -1) {
     const oldName = state.settings.workplaces[oldIdx];
     state.settings.workplaces[oldIdx] = 'Mặc định';
@@ -45,11 +45,22 @@ export const normalizeWorkplacesAndRates = () => {
       state.weeks.forEach(w => {
         if (Array.isArray(w.shifts)) {
           w.shifts.forEach(s => {
-            if (s.workplace === oldName) s.workplace = 'Mặc định';
+            if (s.workplace === oldName || s.workplace === 'Cơm Chin Chin') s.workplace = 'Mặc định';
           });
         }
       });
     }
+  }
+  if (Array.isArray(state.weeks)) {
+    state.weeks.forEach(w => {
+      if (Array.isArray(w.shifts)) {
+        w.shifts.forEach(s => {
+          if (!s.workplace || s.workplace === 'Chính' || s.workplace === 'Cơm Chin Chin') {
+            s.workplace = 'Mặc định';
+          }
+        });
+      }
+    });
   }
   if (!state.settings.workplaceRates || typeof state.settings.workplaceRates !== 'object') {
     state.settings.workplaceRates = {};
@@ -63,7 +74,7 @@ export const normalizeWorkplacesAndRates = () => {
   }
   const defWp = getDefaultWorkplace();
   if (defWp && (state.settings.workplaceRates[defWp] === undefined || state.settings.workplaceRates[defWp] === null)) {
-    const fallbackRate = Number(state.settings.defaultRate) || (state.weeks[0]?.rate) || 0;
+    const fallbackRate = Number(state.settings.defaultRate) || (state.weeks[0]?.rate) || 35000;
     state.settings.workplaceRates[defWp] = fallbackRate;
   }
 };

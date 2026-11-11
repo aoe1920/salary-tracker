@@ -97,7 +97,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3.18,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -111,7 +111,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3.23,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -125,7 +125,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 2.8,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -139,7 +139,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3.07,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       }
     ]
@@ -161,7 +161,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -175,7 +175,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -189,7 +189,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3.5,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -203,7 +203,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3.5,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -217,7 +217,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       }
     ]
@@ -239,7 +239,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3.25,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -253,7 +253,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -267,7 +267,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -281,7 +281,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3.5,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -295,7 +295,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 2.82,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       }
     ]
@@ -317,7 +317,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 2.98,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -331,7 +331,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3.03,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -345,7 +345,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 2.88,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -359,7 +359,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3.65,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -373,7 +373,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 2.9,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -387,7 +387,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       }
     ]
@@ -409,7 +409,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3.42,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -423,7 +423,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 1.67,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -437,7 +437,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3.5,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -451,7 +451,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 2.4,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -465,7 +465,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 2.8,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       }
     ]
@@ -487,7 +487,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3.42,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -501,7 +501,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -515,7 +515,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 2.58,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -529,7 +529,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3.25,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       }
     ]
@@ -551,7 +551,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -565,7 +565,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 2.75,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -579,7 +579,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 2.9,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -593,7 +593,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3.33,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -607,7 +607,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3.17,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       }
     ]
@@ -629,7 +629,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3.32,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -643,7 +643,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 2.92,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       }
     ]
@@ -665,7 +665,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 4.42,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -679,7 +679,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 4.41,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       }
     ]
@@ -701,7 +701,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3.25,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       },
       {
@@ -715,7 +715,7 @@ export const VERIFIED_USER_WEEKS = [
         "allowance": 0,
         "deduction": 0,
         "hours": 3,
-        "workplace": "Cơm Chin Chin",
+        "workplace": "Mặc định",
         "note": ""
       }
     ]
@@ -723,9 +723,9 @@ export const VERIFIED_USER_WEEKS = [
 ];
 
 export const VERIFIED_USER_SETTINGS = {
-  workplaces: ['Cơm Chin Chin'],
-  workplaceRates: { 'Cơm Chin Chin': 40000 },
-  workplaceColors: { 'Cơm Chin Chin': '#6366f1' },
+  workplaces: ['Mặc định'],
+  workplaceRates: { 'Mặc định': 40000 },
+  workplaceColors: { 'Mặc định': '#6366f1' },
   defaultRate: 40000,
   avatar: 'vibrent_1'
 };
@@ -740,9 +740,9 @@ export const reconcileWeeksWithVerified = (weeks) => {
 export const restoreVerifiedUserData = () => {
   state.weeks = JSON.parse(JSON.stringify(VERIFIED_USER_WEEKS));
   if (!state.settings) state.settings = {};
-  state.settings.workplaces = ['Cơm Chin Chin'];
-  state.settings.workplaceRates = { 'Cơm Chin Chin': 40000 };
-  state.settings.workplaceColors = { 'Cơm Chin Chin': '#6366f1' };
+  state.settings.workplaces = ['Mặc định'];
+  state.settings.workplaceRates = { 'Mặc định': 40000 };
+  state.settings.workplaceColors = { 'Mặc định': '#6366f1' };
   state.settings.defaultRate = 40000;
   state.currentWeekId = state.weeks[state.weeks.length - 1].id;
   localStorage.setItem(getWeeksStorageKey(), JSON.stringify(state.weeks));
@@ -930,12 +930,12 @@ export const loadState = async () => {
       state.settings = { ...state.settings, ...loadedSettings };
     }
     if (!Array.isArray(state.settings.workplaces) || state.settings.workplaces.length === 0) {
-      state.settings.workplaces = ['Cơm Chin Chin'];
+      state.settings.workplaces = ['Mặc định'];
     }
     if (!state.settings.workplaceRates || typeof state.settings.workplaceRates !== 'object') {
-      state.settings.workplaceRates = { 'Cơm Chin Chin': 40000 };
-    } else if (state.settings.workplaceRates['Cơm Chin Chin'] === undefined) {
-      state.settings.workplaceRates['Cơm Chin Chin'] = 40000;
+      state.settings.workplaceRates = { 'Mặc định': 40000 };
+    } else if (state.settings.workplaceRates['Mặc định'] === undefined) {
+      state.settings.workplaceRates['Mặc định'] = 40000;
     }
 
     localStorage.setItem(getWeeksStorageKey(), JSON.stringify(state.weeks));
@@ -1149,12 +1149,12 @@ export const restoreCachedStateSync = () => {
       state.settings = { ...state.settings, ...loadedSettings };
     }
     if (!Array.isArray(state.settings.workplaces) || state.settings.workplaces.length === 0) {
-      state.settings.workplaces = ['Cơm Chin Chin'];
+      state.settings.workplaces = ['Mặc định'];
     }
     if (!state.settings.workplaceRates || typeof state.settings.workplaceRates !== 'object') {
-      state.settings.workplaceRates = { 'Cơm Chin Chin': 40000 };
-    } else if (state.settings.workplaceRates['Cơm Chin Chin'] === undefined) {
-      state.settings.workplaceRates['Cơm Chin Chin'] = 40000;
+      state.settings.workplaceRates = { 'Mặc định': 40000 };
+    } else if (state.settings.workplaceRates['Mặc định'] === undefined) {
+      state.settings.workplaceRates['Mặc định'] = 40000;
     }
 
     normalizeWorkplacesAndRates();
@@ -1464,6 +1464,11 @@ export const handleLoginSubmit = async (e) => {
     } catch (_) {}
 
     updateHeaderAuthUI();
+    try {
+      localStorage.removeItem(GUEST_WEEKS_KEY);
+      localStorage.removeItem(GUEST_SETTINGS_KEY);
+      localStorage.removeItem('salary_tracker_vault_backup');
+    } catch (_) {}
     await loadState();
     triggerAppRender();
 
@@ -1594,17 +1599,31 @@ export const handleRegisterSubmit = async (e) => {
     if (!state.settings) state.settings = {};
     state.settings.avatar = avatarId;
 
-    const copyGuest = document.getElementById('regCopyGuestData')?.checked;
-    let initialWeeks = [{ id: 'week-1', name: 'Tuần 1', rate: 0, shifts: [] }];
-    if (copyGuest) {
-      const guestRaw = localStorage.getItem(GUEST_WEEKS_KEY);
-      if (guestRaw) {
-        try {
-          const parsed = JSON.parse(guestRaw);
-          if (Array.isArray(parsed) && parsed.length > 0) initialWeeks = parsed;
-        } catch (_) {}
-      }
+    let initialWeeks = [{ id: 'week-1', name: 'Tuần 1', rate: 35000, shifts: [] }];
+    const guestRaw = localStorage.getItem(GUEST_WEEKS_KEY);
+    if (guestRaw) {
+      try {
+        const parsed = JSON.parse(guestRaw);
+        if (Array.isArray(parsed) && parsed.length > 0) initialWeeks = parsed;
+      } catch (_) {}
+    } else if (Array.isArray(state.weeks) && state.weeks.length > 0) {
+      initialWeeks = state.weeks;
     }
+
+    const guestSettingsRaw = localStorage.getItem(GUEST_SETTINGS_KEY);
+    if (guestSettingsRaw) {
+      try {
+        const parsedSettings = JSON.parse(guestSettingsRaw);
+        if (parsedSettings && typeof parsedSettings === 'object') {
+          state.settings = { ...state.settings, ...parsedSettings };
+        }
+      } catch (_) {}
+    }
+
+    try {
+      localStorage.removeItem(GUEST_WEEKS_KEY);
+      localStorage.removeItem(GUEST_SETTINGS_KEY);
+    } catch (_) {}
 
     state.weeks = initialWeeks;
     state.currentWeekId = state.weeks[state.weeks.length - 1].id;
@@ -1657,26 +1676,27 @@ export const handleLogout = async () => {
   });
   if (confirmed) {
     if (supabaseClient) {
-      await supabaseClient.auth.signOut();
+      try { await supabaseClient.auth.signOut(); } catch (_) {}
     }
-    state.currentUser = null;
     try {
-      localStorage.removeItem('salary_tracker_cached_user');
-      const keysToRemove = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const k = localStorage.key(i);
-        if (k && (k.startsWith('salary_cloud_cache') || k.startsWith('shift_tracker_') || k.startsWith('salary_user_weeks'))) {
-          keysToRemove.push(k);
-        }
-      }
-      keysToRemove.forEach(k => localStorage.removeItem(k));
+      localStorage.clear();
     } catch (_) {}
-    state.weeks = JSON.parse(JSON.stringify(GUEST_DEFAULT_DATA));
-    if (!state.settings) state.settings = {};
-    state.settings.workplaces = [];
-    state.settings.avatar = getRandomAvatar().id;
-    const latest = getLatestWeek() || state.weeks[state.weeks.length - 1];
-    state.currentWeekId = latest.id;
+    state.currentUser = null;
+    state.settings = {
+      workplaces: ['Mặc định'],
+      workplaceRates: { 'Mặc định': 35000 },
+      defaultWorkplace: 'Mặc định',
+      avatar: getRandomAvatar().id,
+      theme: 'light'
+    };
+    state.weeks = [{
+      id: 'week-1',
+      name: 'Tuần 1',
+      rate: 35000,
+      startDate: getMondayDate(new Date()),
+      shifts: []
+    }];
+    state.currentWeekId = 'week-1';
     saveWeeks();
     saveSettings();
     updateHeaderAuthUI();

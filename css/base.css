@@ -438,16 +438,37 @@ body.dark-mode .brand-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
-  border: 1px solid var(--border-default);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.58) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.88);
   color: var(--text-muted);
   cursor: pointer;
-  transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease, transform 0.1s ease, box-shadow 0.12s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
   user-select: none;
   padding: 0;
   flex-shrink: 0;
-  box-shadow: var(--shadow-sm);
+  box-shadow:
+    -2px 4px 10px -1px rgba(15, 23, 42, 0.08),
+    -1px 2px 4px rgba(15, 23, 42, 0.04),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 1.5px rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
   position: relative;
+}
+
+.btn-morphic:hover:not(:disabled):not(.is-disabled) {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.72) 100%);
+  border-color: #ffffff;
+  color: var(--text-main);
+  transform: translateY(-1px);
+  box-shadow:
+    -3px 6px 14px -1px rgba(15, 23, 42, 0.12),
+    -1px 2px 5px rgba(15, 23, 42, 0.06),
+    inset 0 1.5px 2px #ffffff;
+}
+
+.btn-morphic:active:not(:disabled):not(.is-disabled) {
+  transform: translateY(0) scale(0.94);
 }
 
 @media (prefers-reduced-motion: reduce) {
