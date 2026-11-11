@@ -1770,16 +1770,39 @@ body.dark-mode .no-workplaces-banner {
 }
 
 .floating-dock .btn-morphic-primary {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.92) 0%, rgba(37, 99, 235, 0.95) 100%) !important;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.72) 0%, rgba(37, 99, 235, 0.45) 45%, rgba(29, 78, 216, 0.7) 100%) !important;
   color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.45) !important;
-  box-shadow: 0 8px 22px -2px rgba(37, 99, 235, 0.5), inset 0 1px 1.5px rgba(255, 255, 255, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.75) !important;
+  box-shadow:
+    0 10px 24px -2px rgba(37, 99, 235, 0.42),
+    0 3px 8px rgba(15, 23, 42, 0.08),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 2px rgba(30, 58, 138, 0.5),
+    inset 1.5px 0 2px rgba(255, 255, 255, 0.4),
+    inset -1.5px 0 2px rgba(255, 255, 255, 0.4) !important;
+  backdrop-filter: blur(8px) saturate(190%) contrast(106%) brightness(105%);
+  -webkit-backdrop-filter: blur(8px) saturate(190%) contrast(106%) brightness(105%);
 }
 
 .floating-dock .btn-morphic-primary:hover:not(:disabled):not(.is-disabled) {
-  background: linear-gradient(135deg, rgba(96, 165, 250, 0.95) 0%, rgba(37, 99, 235, 0.98) 100%) !important;
-  box-shadow: 0 10px 28px -2px rgba(37, 99, 235, 0.6), inset 0 1px 1.5px rgba(255, 255, 255, 0.7) !important;
-  transform: translateY(-1px) scale(1.04);
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.8) 0%, rgba(37, 99, 235, 0.52) 45%, rgba(29, 78, 216, 0.78) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.9) !important;
+  box-shadow:
+    0 14px 30px -2px rgba(37, 99, 235, 0.52),
+    0 4px 10px rgba(15, 23, 42, 0.1),
+    inset 0 1.5px 2px rgba(255, 255, 255, 1),
+    inset 0 -1px 2px rgba(30, 58, 138, 0.55),
+    inset 1.5px 0 2px rgba(255, 255, 255, 0.5),
+    inset -1.5px 0 2px rgba(255, 255, 255, 0.5) !important;
+  transform: translateY(-1px) scale(1.05);
+}
+
+.floating-dock .btn-morphic-primary:active {
+  transform: scale(0.92) !important;
+}
+
+.floating-dock .btn-morphic-primary svg {
+  filter: drop-shadow(0 1px 2px rgba(15, 23, 42, 0.25));
 }
 
 .slip-canvas-container {
@@ -1877,4 +1900,36 @@ body.dark-mode .floating-dock .btn-morphic.is-disabled {
   pointer-events: none !important;
   box-shadow: none !important;
   transform: none !important;
+}
+
+body.dark-mode .floating-dock .btn-morphic-primary {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.58) 0%, rgba(37, 99, 235, 0.32) 45%, rgba(29, 78, 216, 0.54) 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow:
+    0 12px 28px -4px rgba(37, 99, 235, 0.45),
+    0 4px 12px rgba(0, 0, 0, 0.35),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.8),
+    inset 0 -1px 1.5px rgba(0, 0, 0, 0.35),
+    inset 1.5px 0 2px rgba(255, 255, 255, 0.3),
+    inset -1.5px 0 2px rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(8px) saturate(190%) contrast(108%) brightness(108%);
+  -webkit-backdrop-filter: blur(8px) saturate(190%) contrast(108%) brightness(108%);
+}
+
+body.dark-mode .floating-dock .btn-morphic-primary:hover:not(:disabled):not(.is-disabled) {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.68) 0%, rgba(37, 99, 235, 0.42) 45%, rgba(29, 78, 216, 0.64) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.7) !important;
+  box-shadow:
+    0 16px 34px -4px rgba(37, 99, 235, 0.55),
+    0 6px 14px rgba(0, 0, 0, 0.4),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 1.5px rgba(0, 0, 0, 0.4),
+    inset 1.5px 0 2px rgba(255, 255, 255, 0.4),
+    inset -1.5px 0 2px rgba(255, 255, 255, 0.4) !important;
+  transform: translateY(-1px) scale(1.05);
+}
+
+body.dark-mode .floating-dock .btn-morphic-primary:active {
+  transform: scale(0.92) !important;
 }

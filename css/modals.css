@@ -1674,6 +1674,7 @@ body.dark-mode .btn-avatar-edit-badge {
   flex-direction: column;
   min-width: 0;
   flex: 1;
+  overflow: visible;
 }
 
 .profile-name {
@@ -1694,6 +1695,7 @@ body.dark-mode .btn-avatar-edit-badge {
   max-width: 100%;
   min-height: 32px;
   min-width: 0;
+  overflow: visible;
 }
 
 .profile-username-view {
@@ -1852,6 +1854,12 @@ body.dark-mode .btn-inline-cancel:hover {
 .btn-profile-edit-name {
   width: 24px;
   height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  max-width: 24px;
+  max-height: 24px;
+  box-sizing: border-box;
+  align-self: center;
   border-radius: 50%;
   border: 1px solid var(--border-subtle);
   background: var(--bg-card);
@@ -1861,6 +1869,7 @@ body.dark-mode .btn-inline-cancel:hover {
   justify-content: center;
   cursor: pointer;
   padding: 0;
+  margin: 0 1px;
   flex-shrink: 0;
   transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.14s ease, border-color 0.14s ease, color 0.14s ease;
   overflow: visible;
@@ -4365,6 +4374,38 @@ body.dark-mode .floating-dock .btn-morphic.is-disabled {
   pointer-events: none !important;
   box-shadow: none !important;
   transform: none !important;
+}
+
+body.dark-mode .floating-dock .btn-morphic-primary {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.58) 0%, rgba(37, 99, 235, 0.32) 45%, rgba(29, 78, 216, 0.54) 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow:
+    0 12px 28px -4px rgba(37, 99, 235, 0.45),
+    0 4px 12px rgba(0, 0, 0, 0.35),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.8),
+    inset 0 -1px 1.5px rgba(0, 0, 0, 0.35),
+    inset 1.5px 0 2px rgba(255, 255, 255, 0.3),
+    inset -1.5px 0 2px rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(8px) saturate(190%) contrast(108%) brightness(108%);
+  -webkit-backdrop-filter: blur(8px) saturate(190%) contrast(108%) brightness(108%);
+}
+
+body.dark-mode .floating-dock .btn-morphic-primary:hover:not(:disabled):not(.is-disabled) {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.68) 0%, rgba(37, 99, 235, 0.42) 45%, rgba(29, 78, 216, 0.64) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.7) !important;
+  box-shadow:
+    0 16px 34px -4px rgba(37, 99, 235, 0.55),
+    0 6px 14px rgba(0, 0, 0, 0.4),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 1.5px rgba(0, 0, 0, 0.4),
+    inset 1.5px 0 2px rgba(255, 255, 255, 0.4),
+    inset -1.5px 0 2px rgba(255, 255, 255, 0.4) !important;
+  transform: translateY(-1px) scale(1.05);
+}
+
+body.dark-mode .floating-dock .btn-morphic-primary:active {
+  transform: scale(0.92) !important;
 }
 
 body.dark-mode .week-wheel-container {
