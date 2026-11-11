@@ -760,6 +760,7 @@ export const switchSummaryTab = (tab) => {
       syncSlimeGlider(navBar, false);
     });
   }
+  triggerModalLiquidStretch(document.getElementById('allWeeksModal'));
 };
 
 export const openAllWeeksModal = (initialTab = 'analytics') => {
@@ -1325,6 +1326,7 @@ export const switchAuthTab = (tab) => {
       syncSlimeGlider(tabsRowEl, false);
     });
   }
+  triggerModalLiquidStretch(document.getElementById('authModal'));
 };
 
 export const clearAuthErrors = () => {
@@ -1463,6 +1465,7 @@ export const expandAvatarPicker = () => {
     shelf.style.display = 'flex';
     void shelf.offsetHeight;
     shelf.classList.add('is-expanded');
+    triggerModalLiquidStretch(document.getElementById('userProfileModal'));
   }
 };
 
@@ -1475,6 +1478,7 @@ export const expandPasswordSection = () => {
     formChangePwd.style.display = 'flex';
     void formChangePwd.offsetHeight;
     formChangePwd.classList.add('is-expanded');
+    triggerModalLiquidStretch(document.getElementById('userProfileModal'));
     setTimeout(() => {
       formChangePwd.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }, 120);
@@ -1497,6 +1501,7 @@ export const expandProfileWorkplacesEdit = () => {
     content.style.display = 'flex';
     void content.offsetHeight;
     content.classList.add('is-expanded');
+    triggerModalLiquidStretch(document.getElementById('userProfileModal'));
     setTimeout(() => {
       content.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }, 120);
@@ -1861,6 +1866,7 @@ export const openUserProfileModal = () => {
     if (viewWrap) viewWrap.style.display = 'none';
     if (editWrap) {
       editWrap.style.display = 'flex';
+      triggerModalLiquidStretch(document.getElementById('userProfileModal'));
       if (inputEl) {
         inputEl.value = state.currentUser?.username || '';
         requestAnimationFrame(() => {
@@ -2198,6 +2204,17 @@ export const closeModal = (modalId) => {
       openUserProfileModal();
     }
   }
+};
+
+export const triggerModalLiquidStretch = (modalOrSurface) => {
+  if (!modalOrSurface) return;
+  const surface = modalOrSurface.classList?.contains('modal-surface')
+    ? modalOrSurface
+    : modalOrSurface.querySelector?.('.modal-surface');
+  if (!surface) return;
+  surface.classList.remove('modal-liquid-stretch');
+  void surface.offsetWidth;
+  surface.classList.add('modal-liquid-stretch');
 };
 
 export const syncSlimeGlider = (barEl, immediate = false) => {
