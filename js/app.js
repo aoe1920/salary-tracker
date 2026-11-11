@@ -564,11 +564,10 @@ const renderShiftsList = () => {
 
     card.querySelector(`[data-delete-shift="${shift.id}"]`).addEventListener('click', async () => {
       const confirmed = await showConfirmDialog({
-        title: t('btn_delete_shift', 'Xóa ca'),
-        message: t('confirm_delete_shift', 'Xóa ca làm này?'),
+        title: t('btn_delete_shift', 'Xóa ca làm'),
+        message: t('confirm_delete_shift', 'Xóa ca làm việc này khỏi lịch tuần?'),
         details: `${getLocalizedDayName(shift.day)} • ${getLocalizedShiftType(shift.type)} • ${shift.start} – ${shift.end}`,
         confirmText: t('btn_delete', 'Xóa'),
-        cancelText: t('btn_cancel', 'Hủy'),
         isDanger: true,
         iconType: 'delete'
       });
@@ -711,11 +710,10 @@ const bindEvents = () => {
         const end = document.getElementById('shiftEnd')?.value || '';
         const detailStr = (day && type && start && end) ? `${getLocalizedDayName(day)} • ${getLocalizedShiftType(type)} • ${start} – ${end}` : '';
         const confirmed = await showConfirmDialog({
-          title: t('btn_delete_shift', 'Xóa ca'),
-          message: t('confirm_delete_shift', 'Xóa ca làm này?'),
+          title: t('btn_delete_shift', 'Xóa ca làm'),
+          message: t('confirm_delete_shift', 'Xóa ca làm việc này khỏi lịch tuần?'),
           details: detailStr,
           confirmText: t('btn_delete', 'Xóa'),
-          cancelText: t('btn_cancel', 'Hủy'),
           isDanger: true,
           iconType: 'delete'
         });

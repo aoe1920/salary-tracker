@@ -617,6 +617,10 @@ body.dark-mode .hero-period-title .hero-period-year {
   scroll-snap-align: center;
   scroll-snap-stop: always;
   will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  touch-action: manipulation;
 }
 
 .week-wheel-item:active {
@@ -1730,6 +1734,8 @@ body.dark-mode .no-workplaces-banner {
   transition: box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   contain: layout style;
   will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .floating-dock:hover {
@@ -1749,6 +1755,10 @@ body.dark-mode .no-workplaces-banner {
   color: var(--text-main);
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4);
   transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  touch-action: manipulation;
 }
 
 .floating-dock .btn-morphic:hover:not(:disabled):not(.is-disabled) {

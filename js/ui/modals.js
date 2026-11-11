@@ -288,11 +288,10 @@ export const saveShiftFromModal = async (e) => {
 
   if (overlappingShift) {
     const confirmSave = await showConfirmDialog({
-      title: t('confirm_overlap_title', 'Trùng giờ làm'),
-      message: `Ca làm (${start} – ${end}) bị trùng giờ với ca khác trong ngày.`,
+      title: t('confirm_overlap_title', 'Trùng ca làm'),
+      message: t('confirm_shift_overlap', 'Ca làm bị trùng khung giờ với ca khác trong ngày.'),
       details: `${getLocalizedShiftType(overlappingShift.type)}: ${overlappingShift.start} – ${overlappingShift.end}`,
-      confirmText: t('btn_continue_save', 'Vẫn lưu'),
-      cancelText: t('btn_cancel', 'Hủy'),
+      confirmText: t('btn_continue_save', 'Lưu'),
       isDanger: false,
       isWarning: true,
       iconType: 'warning'
@@ -478,11 +477,10 @@ export const deleteCurrentWeek = async () => {
   }
 
   const confirmed = await showConfirmDialog({
-    title: t('btn_delete_week', 'Xóa tuần'),
-    message: t('confirm_delete_week', 'Xóa tuần làm này?'),
+    title: t('btn_delete_week', 'Xóa tuần làm'),
+    message: t('confirm_delete_week', 'Xóa tuần này cùng toàn bộ ca làm đã ghi?'),
     details: `${getLocalizedWeekName(week.name)} • ${week.shifts.length} ${t('unit_shift', 'ca')}`,
     confirmText: t('btn_delete', 'Xóa'),
-    cancelText: t('btn_cancel', 'Hủy'),
     isDanger: true,
     iconType: 'delete'
   });
@@ -845,11 +843,10 @@ export const openAllWeeksModal = (initialTab = 'analytics') => {
         return;
       }
       const confirmed = await showConfirmDialog({
-        title: t('btn_delete_week', 'Xóa tuần'),
-        message: t('confirm_delete_week', 'Xóa tuần làm này?'),
+        title: t('btn_delete_week', 'Xóa tuần làm'),
+        message: t('confirm_delete_week', 'Xóa tuần này cùng toàn bộ ca làm đã ghi?'),
         details: `${getLocalizedWeekName(week.name)} • ${week.shifts.length} ${t('unit_shift', 'ca')}`,
         confirmText: t('btn_delete', 'Xóa'),
-        cancelText: t('btn_cancel', 'Hủy'),
         isDanger: true,
         iconType: 'delete'
       });
@@ -1104,10 +1101,10 @@ export const renderShiftWorkplacesList = () => {
       delBtn.addEventListener('click', async () => {
         triggerHaptic('light');
         const confirmed = await showConfirmDialog({
-          title: t('btn_delete_wp', 'Xóa nơi làm'),
-          message: `Xóa nơi làm việc "${wp}"?`,
+          title: t('btn_delete_wp', 'Xóa cơ sở'),
+          message: t('confirm_delete_wp', 'Xóa cơ sở làm việc khỏi danh sách?'),
+          details: wp,
           confirmText: t('btn_delete', 'Xóa'),
-          cancelText: t('btn_cancel', 'Hủy'),
           isDanger: true,
           iconType: 'delete'
         });
@@ -1703,10 +1700,10 @@ export const renderProfileWorkplacesEditList = () => {
       delBtn.addEventListener('click', async () => {
         triggerHaptic('light');
         const confirmed = await showConfirmDialog({
-          title: t('btn_delete_wp', 'Xóa nơi làm'),
-          message: `Xóa nơi làm việc "${wp}"?`,
+          title: t('btn_delete_wp', 'Xóa cơ sở'),
+          message: t('confirm_delete_wp', 'Xóa cơ sở làm việc khỏi danh sách?'),
+          details: wp,
           confirmText: t('btn_delete', 'Xóa'),
-          cancelText: t('btn_cancel', 'Hủy'),
           isDanger: true,
           iconType: 'delete'
         });
@@ -1881,9 +1878,9 @@ export const openUserProfileModal = () => {
 
   renderAvatarPickerGrid();
 
-  const btnToggleAvatar = document.getElementById('btnToggleAvatarPicker');
-  if (btnToggleAvatar) {
-    btnToggleAvatar.onclick = (e) => {
+  const avatarBadge = document.getElementById('profileAvatarBadge');
+  if (avatarBadge) {
+    avatarBadge.onclick = (e) => {
       e.preventDefault();
       triggerHaptic('light');
       const shelf = document.getElementById('avatarPickerShelf');
@@ -1894,14 +1891,6 @@ export const openUserProfileModal = () => {
       } else {
         collapseAvatarPicker();
       }
-    };
-  }
-
-  const avatarBadge = document.getElementById('profileAvatarBadge');
-  if (avatarBadge && btnToggleAvatar) {
-    avatarBadge.onclick = (e) => {
-      e.preventDefault();
-      btnToggleAvatar.click();
     };
   }
 
