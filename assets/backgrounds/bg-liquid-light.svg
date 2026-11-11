@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGradLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9dc4f8" />
+      <stop offset="45%" stop-color="#8db8f4" />
+      <stop offset="85%" stop-color="#7eaef0" />
+      <stop offset="100%" stop-color="#6f9fe5" />
+    </linearGradient>
+
+    <radialGradient id="sunGlow" cx="70%" cy="25%" r="65%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.45" />
+      <stop offset="40%" stop-color="#cbe0ff" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#8db8f4" stop-opacity="0" />
+    </radialGradient>
+
+    <linearGradient id="ribbon1" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="35%" stop-color="#2563eb" />
+      <stop offset="70%" stop-color="#1d4ed8" />
+      <stop offset="100%" stop-color="#1e40af" />
+    </linearGradient>
+
+    <linearGradient id="ribbon2" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#60a5fa" />
+      <stop offset="40%" stop-color="#3b82f6" />
+      <stop offset="80%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+
+    <linearGradient id="ribbonHighlight1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#bfdbfe" stop-opacity="0.9" />
+      <stop offset="50%" stop-color="#93c5fd" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#60a5fa" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="ribbonCrease" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a" stop-opacity="0.85" />
+      <stop offset="60%" stop-color="#172554" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="ribbon3" x1="100%" y1="20%" x2="0%" y2="80%">
+      <stop offset="0%" stop-color="#93c5fd" />
+      <stop offset="30%" stop-color="#60a5fa" />
+      <stop offset="70%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+
+    <linearGradient id="ribbon4" x1="0%" y1="40%" x2="100%" y2="60%">
+      <stop offset="0%" stop-color="#1d4ed8" />
+      <stop offset="40%" stop-color="#2563eb" />
+      <stop offset="80%" stop-color="#60a5fa" />
+      <stop offset="100%" stop-color="#93c5fd" />
+    </linearGradient>
+
+    <filter id="softBlur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="35" />
+    </filter>
+
+    <filter id="dropShadowFold" x="-20%" y="-20%" width="150%" height="150%">
+      <feDropShadow dx="-15" dy="25" stdDeviation="22" flood-color="#0f172a" flood-opacity="0.28" />
+    </filter>
+
+    <filter id="gentleFold" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="-10" dy="16" stdDeviation="15" flood-color="#1e3a8a" flood-opacity="0.22" />
+    </filter>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#bgGradLight)" />
+  <rect width="1920" height="1080" fill="url(#sunGlow)" />
+
+  <g opacity="0.45" filter="url(#softBlur)">
+    <path d="M-100,500 C200,200 500,800 800,400 C1100,100 1400,600 1700,300 C1850,150 2000,250 2100,200 L2100,1200 L-100,1200 Z" fill="url(#ribbon1)" />
+  </g>
+
+  <g filter="url(#dropShadowFold)">
+    <path d="M1100,-80 C1250,80 1420,240 1520,380 C1620,520 1660,700 1540,820 C1430,930 1260,940 1140,860 C1010,770 980,590 1060,450 C1140,310 1310,210 1440,110 L1600,-80 Z" fill="url(#ribbon3)" opacity="0.9" />
+  </g>
+
+  <path d="M1240,40 C1340,170 1480,310 1550,430 C1620,550 1630,680 1530,760 C1430,840 1310,830 1210,760 C1120,690 1100,550 1170,440 C1240,330 1380,240 1480,140 Z" fill="none" stroke="url(#ribbonHighlight1)" stroke-width="8" opacity="0.65" />
+
+  <g filter="url(#dropShadowFold)">
+    <path d="M-120,420 C100,340 320,440 460,580 C600,720 620,910 500,1040 C410,1130 260,1160 120,1120 C-30,1080 -120,950 -140,800 Z" fill="url(#ribbon2)" opacity="0.95" />
+    <path d="M-40,440 C160,370 340,470 450,590 C560,710 570,870 460,980" fill="none" stroke="url(#ribbonHighlight1)" stroke-width="6" opacity="0.8" />
+  </g>
+
+  <g filter="url(#gentleFold)">
+    <path d="M520,1120 C640,960 780,820 950,720 C1120,620 1320,580 1500,640 C1680,700 1820,840 1960,980 L1960,1150 L500,1150 Z" fill="url(#ribbon4)" opacity="0.85" />
+    <path d="M530,1100 C650,940 790,810 960,710 C1130,610 1320,575 1490,630" fill="none" stroke="url(#ribbonHighlight1)" stroke-width="5" opacity="0.7" />
+  </g>
+
+  <g filter="url(#dropShadowFold)">
+    <path d="M1350,-100 C1480,50 1650,180 1780,310 C1910,440 2000,600 1960,750 C1920,900 1780,990 1620,980 C1460,970 1340,860 1310,710 C1280,560 1360,420 1480,290 C1590,170 1730,70 1840,-60 Z" fill="url(#ribbon1)" opacity="0.92" />
+    <path d="M1420,-40 C1540,90 1690,210 1810,330 C1920,440 1980,580 1940,700" fill="none" stroke="url(#ribbonHighlight1)" stroke-width="7" opacity="0.75" />
+  </g>
+
+  <g filter="url(#gentleFold)">
+    <path d="M-80,180 C120,80 340,110 520,210 C700,310 810,480 800,660 C790,820 680,950 520,990 C360,1030 200,960 90,840 C-20,720 -60,560 -80,390 Z" fill="url(#ribbon2)" opacity="0.88" />
+    <path d="M-40,190 C140,100 340,130 500,220 C660,310 760,460 760,620" fill="none" stroke="url(#ribbonHighlight1)" stroke-width="6" opacity="0.8" />
+  </g>
+
+  <rect width="1920" height="1080" fill="url(#sunGlow)" opacity="0.6" />
+
+  <radialGradient id="centerGlassReadability" cx="50%" cy="46%" r="55%">
+    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.32" />
+    <stop offset="50%" stop-color="#ffffff" stop-opacity="0.12" />
+    <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+  </radialGradient>
+  <rect width="1920" height="1080" fill="url(#centerGlassReadability)" />
+</svg>

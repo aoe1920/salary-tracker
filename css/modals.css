@@ -12,14 +12,18 @@
 }
 
 .modal-surface {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(248, 250, 252, 0.88) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
   border-radius: var(--radius-lg);
   width: 100%;
   max-width: 520px;
   max-height: calc(100vh - 2rem);
   max-height: calc(100dvh - 2rem);
-  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.25);
+  box-shadow:
+    -18px 28px 56px -8px rgba(15, 23, 42, 0.25),
+    -6px 10px 20px rgba(15, 23, 42, 0.12),
+    inset 1px 1.5px 2px rgba(255, 255, 255, 0.95),
+    inset -1px -1px 2px rgba(255, 255, 255, 0.4);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -2476,8 +2480,8 @@ body.dark-mode .btn-logout-action {
   font-size: 0.84rem;
   font-weight: 600;
   box-shadow:
-    0 18px 42px -4px rgba(15, 23, 42, 0.16),
-    0 6px 14px rgba(15, 23, 42, 0.08),
+    -14px 20px 42px -4px rgba(15, 23, 42, 0.2),
+    -4px 6px 14px rgba(15, 23, 42, 0.08),
     inset 0 1.5px 2px #ffffff,
     inset 0 -1px 2px rgba(0, 0, 0, 0.05),
     inset 1.5px 0 2px rgba(255, 255, 255, 0.8),
@@ -4130,9 +4134,15 @@ body.dark-mode .app-header {
 }
 
 body.dark-mode .modal-surface {
-  background: #111218;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.7);
+  background: linear-gradient(135deg, rgba(20, 22, 32, 0.9) 0%, rgba(12, 14, 22, 0.86) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    -20px 32px 64px -8px rgba(0, 0, 0, 0.8),
+    -8px 12px 24px rgba(0, 0, 0, 0.55),
+    inset 1px 1.5px 2px rgba(255, 255, 255, 0.28),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(28px) saturate(190%) contrast(106%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(106%);
 }
 
 body.dark-mode .modal-header,
@@ -4589,8 +4599,8 @@ body.dark-mode .toast-capsule {
   border: 1px solid rgba(255, 255, 255, 0.22);
   color: #f8fafc;
   box-shadow:
-    0 22px 50px -6px rgba(0, 0, 0, 0.72),
-    0 8px 18px rgba(0, 0, 0, 0.45),
+    -16px 24px 50px -6px rgba(0, 0, 0, 0.75),
+    -6px 8px 18px rgba(0, 0, 0, 0.45),
     inset 0 1.5px 2px rgba(255, 255, 255, 0.38),
     inset 0 -1px 2px rgba(0, 0, 0, 0.5),
     inset 1.5px 0 2.5px rgba(255, 255, 255, 0.15),
@@ -4903,12 +4913,26 @@ body.dark-mode .app-dialog-backdrop {
   max-width: 380px;
   width: 100%;
   border-radius: var(--radius-lg);
-  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.45);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    -16px 26px 52px -10px rgba(15, 23, 42, 0.35),
+    -5px 8px 18px rgba(15, 23, 42, 0.15),
+    inset 1px 1.5px 2px rgba(255, 255, 255, 0.95);
   transform: scale3d(0.96, 0.96, 1) translate3d(0, 6px, 0);
   opacity: 0;
   transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+}
+
+body.dark-mode .modal-surface-dialog {
+  background: linear-gradient(135deg, rgba(22, 24, 34, 0.92) 0%, rgba(14, 16, 24, 0.88) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    -18px 30px 60px -10px rgba(0, 0, 0, 0.85),
+    -6px 10px 22px rgba(0, 0, 0, 0.6),
+    inset 1px 1.5px 2px rgba(255, 255, 255, 0.3);
 }
 
 .app-dialog-backdrop.open .modal-surface-dialog {
@@ -5079,12 +5103,12 @@ body.dark-mode .app-dialog-detail-card {
 
 .btn-dialog-action-icon.btn-action-primary:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.4), 0 8px 20px -2px rgba(37, 99, 235, 0.45) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.4), -4px 8px 18px -2px rgba(37, 99, 235, 0.45) !important;
 }
 
 .btn-dialog-action-icon.btn-action-danger:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.4), 0 8px 20px -2px rgba(239, 68, 68, 0.45) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.4), -4px 8px 18px -2px rgba(239, 68, 68, 0.45) !important;
 }
 
 .btn-dialog-action-icon svg {
@@ -5098,38 +5122,48 @@ body.dark-mode .app-dialog-detail-card {
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.95) 0%, rgba(37, 99, 235, 0.95) 100%);
   border: 1px solid rgba(255, 255, 255, 0.4);
   color: #ffffff;
-  box-shadow: 0 8px 20px -2px rgba(37, 99, 235, 0.45), inset 0 1px 1.5px rgba(255, 255, 255, 0.6);
+  box-shadow: -4px 8px 18px -2px rgba(37, 99, 235, 0.45), inset 0 1.5px 2px rgba(255, 255, 255, 0.6);
 }
 
 .btn-dialog-action-icon.btn-action-primary:hover {
   background: linear-gradient(135deg, rgba(96, 165, 250, 0.98) 0%, rgba(37, 99, 235, 1) 100%);
   border-color: rgba(255, 255, 255, 0.6);
-  box-shadow: 0 12px 26px -2px rgba(37, 99, 235, 0.55), inset 0 1px 1.5px rgba(255, 255, 255, 0.8);
+  box-shadow: -6px 12px 24px -2px rgba(37, 99, 235, 0.55), inset 0 1.5px 2px rgba(255, 255, 255, 0.8);
 }
 
 .btn-dialog-action-icon.btn-action-danger {
   background: linear-gradient(135deg, rgba(239, 68, 68, 0.95) 0%, rgba(220, 38, 38, 0.95) 100%);
   border: 1px solid rgba(255, 255, 255, 0.4);
   color: #ffffff;
-  box-shadow: 0 8px 20px -2px rgba(239, 68, 68, 0.45), inset 0 1px 1.5px rgba(255, 255, 255, 0.6);
+  box-shadow: -4px 8px 18px -2px rgba(239, 68, 68, 0.45), inset 0 1.5px 2px rgba(255, 255, 255, 0.6);
 }
 
 .btn-dialog-action-icon.btn-action-danger:hover {
   background: linear-gradient(135deg, rgba(248, 113, 113, 0.98) 0%, rgba(220, 38, 38, 1) 100%);
   border-color: rgba(255, 255, 255, 0.6);
-  box-shadow: 0 12px 26px -2px rgba(239, 68, 68, 0.55), inset 0 1px 1.5px rgba(255, 255, 255, 0.8);
+  box-shadow: -6px 12px 24px -2px rgba(239, 68, 68, 0.55), inset 0 1.5px 2px rgba(255, 255, 255, 0.8);
 }
 
 body.dark-mode .btn-dialog-action-icon.btn-action-primary {
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.75) 0%, rgba(37, 99, 235, 0.85) 100%);
   border-color: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 10px 24px -2px rgba(37, 99, 235, 0.5), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
+  box-shadow: -4px 8px 20px -2px rgba(37, 99, 235, 0.5), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
+}
+
+body.dark-mode .btn-dialog-action-icon.btn-action-primary:hover {
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: -6px 12px 24px -2px rgba(37, 99, 235, 0.6), inset 0 1px 1.5px rgba(255, 255, 255, 0.55);
 }
 
 body.dark-mode .btn-dialog-action-icon.btn-action-danger {
   background: linear-gradient(135deg, rgba(239, 68, 68, 0.8) 0%, rgba(220, 38, 38, 0.9) 100%);
   border-color: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 10px 24px -2px rgba(239, 68, 68, 0.5), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
+  box-shadow: -4px 8px 20px -2px rgba(239, 68, 68, 0.5), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
+}
+
+body.dark-mode .btn-dialog-action-icon.btn-action-danger:hover {
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: -6px 12px 24px -2px rgba(239, 68, 68, 0.6), inset 0 1px 1.5px rgba(255, 255, 255, 0.55);
 }
 
 @media (max-width: 480px) {

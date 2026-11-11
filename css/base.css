@@ -1,18 +1,18 @@
 :root {
-  --bg-app: #f8f9fa;
-  --bg-card: #ffffff;
-  --bg-card-gradient: #ffffff;
-  --bg-card-hover: #f9fafb;
-  --bg-card-active: #f3f4f6;
-  --bg-input: #ffffff;
-  --bg-subtle: #f3f4f6;
+  --bg-app: #8bb8f0;
+  --bg-card: rgba(255, 255, 255, 0.84);
+  --bg-card-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.68) 100%);
+  --bg-card-hover: rgba(255, 255, 255, 0.94);
+  --bg-card-active: rgba(255, 255, 255, 0.98);
+  --bg-input: rgba(255, 255, 255, 0.92);
+  --bg-subtle: rgba(255, 255, 255, 0.55);
 
-  --border-subtle: #e5e7eb;
-  --border-default: #d1d5db;
+  --border-subtle: rgba(255, 255, 255, 0.65);
+  --border-default: rgba(255, 255, 255, 0.85);
   --border-focus: #2563eb;
 
   --text-main: #0f172a;
-  --text-muted: #475569;
+  --text-muted: #334155;
   --text-dim: #475569;
   --text-white: #ffffff;
 
@@ -39,23 +39,23 @@
   --radius-lg: 12px;
   --radius-pill: 9999px;
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 12px 32px -4px rgba(0, 0, 0, 0.08);
+  --shadow-sm: -2px 3px 8px -1px rgba(15, 23, 42, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  --shadow-md: -6px 10px 22px -2px rgba(15, 23, 42, 0.12), inset 1px 1.5px 2px rgba(255, 255, 255, 0.95);
+  --shadow-lg: -14px 22px 42px -4px rgba(15, 23, 42, 0.18), inset 1px 1.5px 2px rgba(255, 255, 255, 0.95);
 }
 
 html.dark-mode,
 body.dark-mode {
-  --bg-app: #0a0b0e;
-  --bg-card: #121319;
-  --bg-card-gradient: #121319;
-  --bg-card-hover: #171821;
-  --bg-card-active: #1c1d27;
-  --bg-input: #0c0d12;
-  --bg-subtle: #15161f;
+  --bg-app: #05070d;
+  --bg-card: rgba(18, 20, 28, 0.82);
+  --bg-card-gradient: linear-gradient(135deg, rgba(22, 24, 34, 0.85) 0%, rgba(14, 16, 24, 0.78) 100%);
+  --bg-card-hover: rgba(24, 26, 38, 0.9);
+  --bg-card-active: rgba(30, 32, 46, 0.95);
+  --bg-input: rgba(10, 11, 16, 0.85);
+  --bg-subtle: rgba(22, 24, 34, 0.6);
 
-  --border-subtle: rgba(255, 255, 255, 0.10);
-  --border-default: rgba(255, 255, 255, 0.16);
+  --border-subtle: rgba(255, 255, 255, 0.12);
+  --border-default: rgba(255, 255, 255, 0.18);
   --border-focus: #3b82f6;
 
   --text-main: #f8fafc;
@@ -76,9 +76,9 @@ body.dark-mode {
 
   --color-money: #34d399;
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  --shadow-md: 0 4px 16px -2px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  --shadow-lg: 0 16px 40px -8px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --shadow-sm: -2px 3px 8px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --shadow-md: -8px 14px 28px -2px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --shadow-lg: -18px 30px 54px -6px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
 *, *::before, *::after {
@@ -122,7 +122,7 @@ input[type="date"]::-webkit-date-and-time-value {
 
 html {
   font-size: 16px;
-  background: var(--bg-app);
+  background-color: #8bb8f0;
   color: var(--text-main);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -136,8 +136,11 @@ body {
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 4.25rem);
   line-height: 1.5;
-  background-color: #f8fafc;
-  background: var(--bg-app);
+  background-color: #8bb8f0;
+  background-image: url('../assets/backgrounds/bg-liquid-light.svg?v=20261111m');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
   background-attachment: fixed;
   color: var(--text-main);
   caret-color: var(--primary);
@@ -152,9 +155,13 @@ body {
   }
 }
 
-html.dark-mode,
+html.dark-mode {
+  background-color: #05070d;
+}
+
 body.dark-mode {
-  background-color: #0b0f19;
+  background-color: #05070d;
+  background-image: url('../assets/backgrounds/bg-liquid-dark.svg?v=20261111m');
 }
 
 ::view-transition-old(root),
@@ -310,8 +317,17 @@ body::-webkit-scrollbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.52) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow:
+    -8px 14px 28px -4px rgba(15, 23, 42, 0.1),
+    -2px 4px 8px rgba(15, 23, 42, 0.04),
+    inset 1px 1.5px 2px rgba(255, 255, 255, 0.95);
+  margin-bottom: 0.75rem;
 }
 
 .header-left {
