@@ -542,6 +542,16 @@ export const navigateWeek = (direction) => {
     state.currentWeekId = state.weeks[nextIndex].id;
     localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
     triggerAppRender();
+    const track = document.getElementById('weekPillsList');
+    if (track) {
+      const activeItem = track.querySelector(`.week-wheel-item[data-week-id="${state.currentWeekId}"]`);
+      if (activeItem) {
+        activeItem.classList.remove('slime-pill-bounce');
+        requestAnimationFrame(() => {
+          activeItem.classList.add('slime-pill-bounce');
+        });
+      }
+    }
   }
 };
 
@@ -1875,7 +1885,17 @@ export const closeModal = (modalId) => {
   }
 };
 
-export const triggerModalLiquidStretch = () => {};
+export const triggerModalLiquidStretch = (modalOrSurface) => {
+  if (!modalOrSurface) return;
+  const surface = modalOrSurface.classList?.contains('modal-surface')
+    ? modalOrSurface
+    : modalOrSurface.querySelector?.('.modal-surface');
+  if (!surface) return;
+  surface.classList.remove('modal-liquid-stretch');
+  requestAnimationFrame(() => {
+    surface.classList.add('modal-liquid-stretch');
+  });
+};
 
 export const syncSlimeGlider = (barEl, immediate = false) => {
   if (!barEl) return;
@@ -1912,6 +1932,11 @@ export const syncSlimeGlider = (barEl, immediate = false) => {
     requestAnimationFrame(() => {
       glider.style.transition = '';
     });
+  } else {
+    activeBtn.classList.remove('slime-pill-bounce');
+    requestAnimationFrame(() => {
+      activeBtn.classList.add('slime-pill-bounce');
+    });
   }
 };
 
@@ -1923,8 +1948,15 @@ export const initSlimeSegmentedBars = () => {
   };
 
   document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.summary-tab-btn, .auth-tab-btn, .filter-pill-btn');
+    const btn = e.target.closest('.summary-tab-btn, .auth-tab-btn, .filter-pill-btn, .week-wheel-item');
     if (!btn) return;
+    if (btn.classList.contains('week-wheel-item')) {
+      btn.classList.remove('slime-pill-bounce');
+      requestAnimationFrame(() => {
+        btn.classList.add('slime-pill-bounce');
+      });
+      return;
+    }
     const bar = btn.closest('.summary-tab-nav, .auth-tabs-row, .stats-time-pills');
     if (bar) {
       requestAnimationFrame(() => {

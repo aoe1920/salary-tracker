@@ -211,8 +211,9 @@ const renderWeekPills = () => {
     item.addEventListener('click', (e) => {
       e.preventDefault();
       item.classList.remove('slime-pill-bounce');
-      void item.offsetWidth;
-      item.classList.add('slime-pill-bounce');
+      requestAnimationFrame(() => {
+        item.classList.add('slime-pill-bounce');
+      });
       if (state.currentWeekId !== week.id) {
         triggerHaptic('light');
         const oldIdx = state.weeks.findIndex(w => w.id === state.currentWeekId);
