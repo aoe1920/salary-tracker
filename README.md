@@ -1,10 +1,10 @@
 <div align="center">
 
-![Salary Tracker Poster](assets/poster.png)
+![Salary Tracker](assets/poster.png)
 
 # Salary Tracker
 
-**Modern, Precision Shift Scheduling and Wage Tracking Progressive Web App**
+**Precision Shift Scheduling and Wage Tracking Progressive Web App**
 
 [![Live Demo](https://img.shields.io/badge/Demo-aoe1920.github.io%2Fsalary--tracker-3b82f6?style=flat-square&logo=googlechrome&logoColor=white)](https://aoe1920.github.io/salary-tracker/)
 [![Version](https://img.shields.io/badge/Release-v2.0.0-10b981?style=flat-square)](https://github.com/aoe1920/salary-tracker/releases)
@@ -21,27 +21,28 @@
 
 ---
 
-Salary Tracker is an offline-first Progressive Web App designed for shift workers, freelancers, and multi-workplace staff to track hours, calculate wages accurately, and generate instant payslips.
+Salary Tracker is an offline-first Progressive Web App designed for shift workers, freelancers, and multi-workplace staff to log hours accurately, automate wage calculations, and generate client-side payslips.
 
-## Highlights
+## Key Features
 
-- **Smart Shift Detection:** Automatically classifies Morning, Noon, or Evening shifts by time overlap.
-- **Precision Calculations:** Exact net hours after breaks, overnight shift handling past 00:00, overtime multipliers (1x, 1.5x, 2x, 3x), and allowances or deductions.
-- **Multi-Workplace:** Manage multiple jobs with separate hourly rates and distinct color codes.
-- **Canvas Payslips:** Render high-DPI payslips client-side and copy directly to clipboard or export as PNG, CSV, and JSON.
-- **Cloud Sync and Security:** Supabase authentication (Username, Email, Google OAuth PKCE) with PostgreSQL Row Level Security (RLS).
-- **Offline-First PWA:** Full offline capability via Service Worker Cache Storage, haptic feedback on mobile, and iOS-inspired Liquid Glass dock navigation.
+- **Smart Shift Detection:** Automatically classifies shifts into Morning, Noon, or Night based on time overlap.
+- **Precision Wage Calculations:** Exact net hours with unpaid break deductions, seamless overnight shifts spanning past midnight, configurable overtime multipliers (1.5x, 2.0x, 3.0x), and shift allowances.
+- **Multi-Workplace Management:** Manage multiple employers with independent hourly wages, distinct color tags, and aggregated hours and earnings breakdown.
+- **Instant Canvas Payslips:** Renders high-DPI payslips client-side with one-click clipboard copying and high-resolution PNG export.
+- **Cloud Synchronization and Security:** Supabase Cloud authentication (Email, Password, Google OAuth PKCE) protected by PostgreSQL Row Level Security (RLS) for complete privacy and tenant isolation.
+- **Offline-First PWA Architecture:** Operates seamlessly without network connectivity via Service Worker Cache Storage, with native-like haptic feedback on mobile.
+- **Abstract Acrylic Liquid Glass UI:** Translucent layered panels, specular rim highlights, balanced light and dark modes, and mobile-friendly floating dock navigation.
 
 ## Tech Stack
 
-- **Frontend:** Vanilla JavaScript (ES2022 Modules), Modern CSS3 (Variables, Grid, Flexbox)
-- **Backend:** Supabase (PostgreSQL 15, GoTrue Auth, Row Level Security)
-- **Storage and PWA:** Service Worker API, Cache Storage, Web App Manifest
-- **Rendering:** HTML5 Canvas API, SVG
+- **Frontend:** Vanilla JavaScript (ES2022 Modules), Modern CSS3 (Variables, Flexbox, Grid, Backdrop Filters)
+- **Backend and Cloud:** Supabase (PostgreSQL 15, GoTrue Auth, Row Level Security)
+- **Offline and Storage:** Service Worker API, Cache Storage, Web App Manifest
+- **Rendering:** HTML5 Canvas API, Inline Vector SVG
 
 ## Quickstart
 
-Run locally without build tools:
+Run locally without build steps:
 
 ```bash
 git clone https://github.com/aoe1920/salary-tracker.git
@@ -49,17 +50,17 @@ cd salary-tracker
 npx serve .
 ```
 
-Navigate to `http://localhost:3000` (or `http://localhost:8080`).
+Open `http://localhost:3000` or `http://localhost:8080` in any modern web browser.
 
 ## PWA Installation
 
-- **iOS (Safari):** Tap Share -> Add to Home Screen -> Add.
-- **Android (Chrome):** Tap Menu -> Install app.
-- **Desktop (Chrome/Edge):** Click Install in the address bar.
+- **iOS (Safari):** Tap the Share button -> select Add to Home Screen -> tap Add.
+- **Android (Chrome):** Tap the three-dot Menu -> select Install app.
+- **Desktop (Chrome / Edge):** Click the Install button in the address bar.
 
 ## Database Setup
 
-Execute in your Supabase SQL Editor:
+Run the following SQL migration in your Supabase SQL Editor to initialize the schema and security policies:
 
 ```sql
 create table if not exists public.user_salary_data (
@@ -114,4 +115,24 @@ grant execute on function public.get_login_email(text) to anon, authenticated;
 
 ## License
 
-[MIT](LICENSE)
+MIT License
+
+Copyright (c) 2026 Tien Dang
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
