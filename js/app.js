@@ -541,14 +541,14 @@ const renderShiftsList = () => {
         </div>
 
         <div class="sl-actions-wrap">
-          <button type="button" class="btn-micro-action btn-edit-shift" title="${t('btn_edit_shift', 'Sửa ca')}" data-edit-shift="${shift.id}" aria-label="${t('btn_edit_shift', 'Sửa')}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+          <button type="button" class="btn-morphic btn-edit-shift" title="${t('btn_edit_shift', 'Sửa ca')}" data-edit-shift="${shift.id}" aria-label="${t('btn_edit_shift', 'Sửa')}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
               <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path>
               <path d="m15 5 4 4"></path>
             </svg>
           </button>
-          <button type="button" class="btn-micro-action btn-delete-shift" title="${t('btn_delete_shift', 'Xóa ca')}" data-delete-shift="${shift.id}" aria-label="${t('btn_delete_shift', 'Xóa')}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+          <button type="button" class="btn-morphic btn-delete-shift" title="${t('btn_delete_shift', 'Xóa ca')}" data-delete-shift="${shift.id}" aria-label="${t('btn_delete_shift', 'Xóa')}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
               <path d="M3 6h18"></path>
               <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
               <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
@@ -1224,6 +1224,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderApp();
   initSlimeSegmentedBars();
 
+  const cachedUserId = state.currentUser?.id || '';
+  const cachedWeeksStr = JSON.stringify(state.weeks);
+  const cachedSettingsStr = JSON.stringify(state.settings);
+  const cachedWeekId = state.currentWeekId;
+
   await initAuth();
   await loadState();
   if (state.settings && state.settings.language) {
@@ -1234,7 +1239,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.currentWeekId = latest.id;
     localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
   }
-  renderApp();
+  const hasStateChanged =
+    cachedUserId !== (state.currentUser?.id || '') ||
+    cachedWeeksStr !== JSON.stringify(state.weeks) ||
+    cachedSettingsStr !== JSON.stringify(state.settings) ||
+    cachedWeekId !== state.currentWeekId;
+  if (hasStateChanged) {
+    renderApp();
+  } else {
+    updateHeaderAuthUI();
+    updateSyncStatusUI();
+  }
   setupRealtimeSync();
   setupAutoSync();
 

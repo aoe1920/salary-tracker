@@ -9,26 +9,31 @@ const stripExclamation = (text) => {
 export const showToast = (message) => {
   const toast = document.getElementById('toast');
   if (!toast) return;
+  clearTimeout(toast._timer);
+  clearTimeout(toast._hideTimer);
   const safeMessage = stripExclamation(message);
   toast.innerHTML = `<span>${safeMessage}</span>`;
+  toast.classList.remove('visible');
   toast.style.display = 'inline-flex';
+  void toast.offsetWidth;
   requestAnimationFrame(() => {
     toast.classList.add('visible');
   });
-  clearTimeout(toast._timer);
   toast._timer = setTimeout(() => {
     toast.classList.remove('visible');
-    setTimeout(() => {
+    toast._hideTimer = setTimeout(() => {
       if (!toast.classList.contains('visible')) {
         toast.style.display = 'none';
       }
-    }, 450);
+    }, 600);
   }, 2500);
 };
 
 export const showToastWithAction = (message, actionText, actionCallback, duration = 8000) => {
   const toast = document.getElementById('toast');
   if (!toast) return;
+  clearTimeout(toast._timer);
+  clearTimeout(toast._hideTimer);
   const safeMessage = stripExclamation(message);
   const cleanActionText = stripExclamation(actionText || t('btn_undo', 'Hoàn tác'));
   toast.innerHTML = `
@@ -40,27 +45,30 @@ export const showToastWithAction = (message, actionText, actionCallback, duratio
       </svg>
     </button>
   `;
+  toast.classList.remove('visible');
   toast.style.display = 'inline-flex';
+  void toast.offsetWidth;
   requestAnimationFrame(() => {
     toast.classList.add('visible');
   });
-  clearTimeout(toast._timer);
 
   const btn = document.getElementById('btnToastAction');
   if (btn) {
     btn.onclick = () => {
+      clearTimeout(toast._timer);
+      clearTimeout(toast._hideTimer);
       toast.classList.remove('visible');
-      setTimeout(() => {
+      toast._hideTimer = setTimeout(() => {
         if (!toast.classList.contains('visible')) toast.style.display = 'none';
-      }, 450);
+      }, 600);
       if (typeof actionCallback === 'function') actionCallback();
     };
   }
 
   toast._timer = setTimeout(() => {
     toast.classList.remove('visible');
-    setTimeout(() => {
+    toast._hideTimer = setTimeout(() => {
       if (!toast.classList.contains('visible')) toast.style.display = 'none';
-    }, 450);
+    }, 600);
   }, duration);
 };

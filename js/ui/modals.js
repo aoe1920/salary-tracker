@@ -41,13 +41,6 @@ const getUniqueWorkplacesList = () => {
   if (Array.isArray(state.settings.workplaces)) {
     state.settings.workplaces.forEach(wp => { if (wp && wp.trim()) set.add(wp.trim()); });
   }
-  if (Array.isArray(state.weeks)) {
-    state.weeks.forEach(w => {
-      if (Array.isArray(w.shifts)) {
-        w.shifts.forEach(s => { if (s.workplace && s.workplace.trim()) set.add(s.workplace.trim()); });
-      }
-    });
-  }
   return Array.from(set);
 };
 
@@ -56,9 +49,13 @@ const updateWorkplaceInputOptions = (currentVal = '') => {
   if (!select) return;
 
   const list = getUniqueWorkplacesList();
+  const cleanCurrent = typeof currentVal === 'string' ? currentVal.trim() : '';
+  if (cleanCurrent && !list.includes(cleanCurrent)) {
+    list.push(cleanCurrent);
+  }
   const defaultWp = getDefaultWorkplace();
-  const targetVal = (currentVal && list.includes(currentVal))
-    ? currentVal
+  const targetVal = (cleanCurrent && list.includes(cleanCurrent))
+    ? cleanCurrent
     : (defaultWp && list.includes(defaultWp) ? defaultWp : (list[0] || ''));
 
   select.innerHTML = '';
@@ -989,6 +986,7 @@ export const switchAuthTab = (tab) => {
   const formForgot = document.getElementById('formForgotPassword');
   const tabsRow = document.querySelector('.auth-tabs-row');
   const oauthWrap = document.getElementById('authOauthWrap');
+  const btnBackToLogin = document.getElementById('btnBackToLogin');
   const title = document.getElementById('authModalTitle');
 
   if (tab === 'login') {
@@ -999,6 +997,7 @@ export const switchAuthTab = (tab) => {
     if (formRegister) formRegister.style.display = 'none';
     if (formForgot) formForgot.style.display = 'none';
     if (oauthWrap) oauthWrap.style.display = 'flex';
+    if (btnBackToLogin) btnBackToLogin.style.display = 'none';
     if (title) title.textContent = t('auth_tab_login', 'Đăng nhập tài khoản');
   } else if (tab === 'register') {
     if (btnRegister) btnRegister.classList.add('active');
@@ -1008,6 +1007,7 @@ export const switchAuthTab = (tab) => {
     if (formLogin) formLogin.style.display = 'none';
     if (formForgot) formForgot.style.display = 'none';
     if (oauthWrap) oauthWrap.style.display = 'flex';
+    if (btnBackToLogin) btnBackToLogin.style.display = 'none';
     if (title) title.textContent = t('auth_tab_register', 'Đăng ký tài khoản mới');
   } else if (tab === 'forgot') {
     if (tabsRow) tabsRow.style.display = 'none';
@@ -1015,6 +1015,7 @@ export const switchAuthTab = (tab) => {
     if (formRegister) formRegister.style.display = 'none';
     if (formForgot) formForgot.style.display = 'flex';
     if (oauthWrap) oauthWrap.style.display = 'none';
+    if (btnBackToLogin) btnBackToLogin.style.display = 'flex';
     if (title) title.textContent = t('auth_forgot_title', 'Khôi phục mật khẩu');
     document.getElementById('forgotEmail')?.focus();
   }
@@ -1033,10 +1034,12 @@ export const clearAuthErrors = () => {
   const regErr = document.getElementById('regError');
   const forgotErr = document.getElementById('forgotError');
   const forgotSuccess = document.getElementById('forgotSuccess');
+  const agreeBox = document.getElementById('authTermsAgreeBox');
   if (loginErr) { loginErr.style.display = 'none'; loginErr.textContent = ''; }
   if (regErr) { regErr.style.display = 'none'; regErr.textContent = ''; }
   if (forgotErr) { forgotErr.style.display = 'none'; forgotErr.textContent = ''; }
   if (forgotSuccess) { forgotSuccess.style.display = 'none'; forgotSuccess.textContent = ''; }
+  if (agreeBox) { agreeBox.classList.remove('terms-error-shake'); }
 };
 
 export const renderAvatarPickerGrid = () => {

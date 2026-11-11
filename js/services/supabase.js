@@ -1,7 +1,7 @@
 import { SUPABASE_URL, SUPABASE_ANON_KEY, GUEST_DEFAULT_DATA, GUEST_WEEKS_KEY, GUEST_SETTINGS_KEY, LOCAL_CACHE_WEEKS_KEY, LOCAL_CACHE_SETTINGS_KEY, PENDING_SYNC_KEY } from '../config.js';
 import { state, getWeeksStorageKey, getSettingsStorageKey, normalizeWorkplacesAndRates, getLatestWeek } from '../state.js';
 import { t } from '../i18n.js';
-import { ensureWeekStartDate, syncShiftsTypeConsistency } from '../calculator.js';
+import { ensureWeekStartDate, syncShiftsTypeConsistency, getMondayDate } from '../calculator.js';
 import { showToast } from '../ui/toast.js';
 import { showConfirmDialog } from '../ui/dialog.js';
 import { applyTheme } from '../theme.js';
@@ -876,13 +876,27 @@ export const loadState = async () => {
         }
       }
 
+      if (!loadedSettings) {
+        const cachedUserSettings = localStorage.getItem(getSettingsStorageKey());
+        if (cachedUserSettings) {
+          try {
+            const parsedSettings = JSON.parse(cachedUserSettings);
+            if (parsedSettings && typeof parsedSettings === 'object') {
+              loadedSettings = parsedSettings;
+            }
+          } catch (_) {}
+        }
+      }
+
       if (!loadedWeeks || !Array.isArray(loadedWeeks) || loadedWeeks.length === 0) {
+        let migratedGuestData = false;
         const guestRaw = localStorage.getItem(GUEST_WEEKS_KEY);
         if (guestRaw) {
           try {
             const parsed = JSON.parse(guestRaw);
             if (Array.isArray(parsed) && parsed.length > 0) {
               loadedWeeks = parsed;
+              migratedGuestData = true;
             }
           } catch (_) {}
         }
@@ -892,8 +906,12 @@ export const loadState = async () => {
             const parsedSettings = JSON.parse(guestSettingsRaw);
             if (parsedSettings && typeof parsedSettings === 'object') {
               loadedSettings = parsedSettings;
+              migratedGuestData = true;
             }
           } catch (_) {}
+        }
+        if (migratedGuestData) {
+          markPendingSync();
         }
         try {
           localStorage.removeItem(GUEST_WEEKS_KEY);
@@ -956,8 +974,22 @@ export const loadState = async () => {
       state.weeks = JSON.parse(JSON.stringify(GUEST_DEFAULT_DATA));
     }
 
-    if (loadedSettings) {
-      state.settings = { ...state.settings, ...loadedSettings };
+    const preservedTheme = state.settings?.theme || localStorage.getItem('salary_tracker_theme') || 'light';
+    if (loadedSettings && typeof loadedSettings === 'object') {
+      state.settings = {
+        workplaces: ['Mặc định'],
+        workplaceRates: { 'Mặc định': 40000 },
+        defaultWorkplace: 'Mặc định',
+        theme: preservedTheme,
+        ...loadedSettings
+      };
+    } else {
+      state.settings = {
+        workplaces: ['Mặc định'],
+        workplaceRates: { 'Mặc định': 40000 },
+        defaultWorkplace: 'Mặc định',
+        theme: preservedTheme
+      };
     }
     if (!Array.isArray(state.settings.workplaces) || state.settings.workplaces.length === 0) {
       state.settings.workplaces = ['Mặc định'];
@@ -997,7 +1029,7 @@ export const loadState = async () => {
     state.currentWeekId = latest.id;
     localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
 
-    if (state.currentUser && supabaseClient && hasValidShifts(state.weeks)) {
+    if (state.currentUser && supabaseClient && hasPendingSync() && hasValidShifts(state.weeks)) {
       syncPendingToCloud(false);
     }
     updateHeaderAuthUI();
@@ -1173,8 +1205,23 @@ export const restoreCachedStateSync = () => {
       localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
     }
 
-    if (loadedSettings) {
-      state.settings = { ...state.settings, ...loadedSettings };
+    const baseTheme = state.settings?.theme || localStorage.getItem('salary_tracker_theme') || 'light';
+    if (loadedSettings && typeof loadedSettings === 'object') {
+      state.settings = {
+        workplaces: ['Mặc định'],
+        workplaceRates: { 'Mặc định': 40000 },
+        defaultWorkplace: 'Mặc định',
+        theme: baseTheme,
+        ...loadedSettings
+      };
+    } else {
+      state.settings = {
+        workplaces: ['Mặc định'],
+        workplaceRates: { 'Mặc định': 40000 },
+        defaultWorkplace: 'Mặc định',
+        theme: baseTheme,
+        ...(state.currentUser?.avatar && state.currentUser.avatar !== 'default' ? { avatar: state.currentUser.avatar } : {})
+      };
     }
     if (!Array.isArray(state.settings.workplaces) || state.settings.workplaces.length === 0) {
       state.settings.workplaces = ['Mặc định'];
@@ -1412,7 +1459,7 @@ export const handleLoginSubmit = async (e) => {
     return;
   }
 
-  const submitBtn = document.getElementById('btnSubmitLogin');
+  const submitBtn = document.getElementById('btnFormLoginSubmit');
   if (submitBtn) submitBtn.disabled = true;
 
   try {
@@ -1488,18 +1535,47 @@ export const handleLoginSubmit = async (e) => {
       }));
     } catch (_) {}
 
-    updateHeaderAuthUI();
     try {
       localStorage.removeItem(GUEST_WEEKS_KEY);
       localStorage.removeItem(GUEST_SETTINGS_KEY);
       localStorage.removeItem('salary_tracker_vault_backup');
     } catch (_) {}
-    await loadState();
-    triggerAppRender();
 
-    document.getElementById('authModal').style.display = 'none';
-    document.getElementById('formLogin').reset();
-    showToast(t('auth_login_success', 'Đăng nhập thành công. Chào @{username}.').replace('{username}', username));
+    const hasUserCache = Boolean(localStorage.getItem(getWeeksStorageKey()));
+    if (hasUserCache) {
+      restoreCachedStateSync();
+      if (state.settings && (!state.settings.avatar || state.settings.avatar === 'default')) {
+        state.settings.avatar = activeAvatar;
+      }
+      const cachedWeeksStr = JSON.stringify(state.weeks);
+      const cachedSettingsStr = JSON.stringify(state.settings);
+      document.getElementById('authModal').style.display = 'none';
+      document.getElementById('formLogin').reset();
+      updateHeaderAuthUI();
+      updateSyncStatusUI();
+      triggerAppRender();
+      showToast(t('auth_login_success', 'Đăng nhập thành công. Chào @{username}.').replace('{username}', username));
+      loadState().then(() => {
+        const changed =
+          cachedWeeksStr !== JSON.stringify(state.weeks) ||
+          cachedSettingsStr !== JSON.stringify(state.settings);
+        if (changed) {
+          triggerAppRender();
+          updateSyncStatusUI();
+        } else {
+          updateHeaderAuthUI();
+          updateSyncStatusUI();
+        }
+      }).catch(() => {});
+    } else {
+      await loadState();
+      document.getElementById('authModal').style.display = 'none';
+      document.getElementById('formLogin').reset();
+      updateHeaderAuthUI();
+      updateSyncStatusUI();
+      triggerAppRender();
+      showToast(t('auth_login_success', 'Đăng nhập thành công. Chào @{username}.').replace('{username}', username));
+    }
   } catch (err) {
     errorEl.textContent = `${t('auth_err_conn_prefix', 'Lỗi kết nối: ')}${err.message}`;
     errorEl.style.display = 'block';
@@ -1549,6 +1625,8 @@ export const handleRegisterSubmit = async (e) => {
     return;
   }
 
+  errorEl.style.display = 'none';
+
   const agreeTermsEl = document.getElementById('regAgreeTerms');
   if (agreeTermsEl && !agreeTermsEl.checked) {
     const agreeBox = document.getElementById('authTermsAgreeBox');
@@ -1557,8 +1635,6 @@ export const handleRegisterSubmit = async (e) => {
       void agreeBox.offsetWidth;
       agreeBox.classList.add('terms-error-shake');
     }
-    errorEl.textContent = t('auth_err_agree_terms', 'Vui lòng đọc và đồng ý với Điều khoản dịch vụ và Chính sách bảo mật.');
-    errorEl.style.display = 'block';
     triggerHaptic('medium');
     agreeTermsEl.focus();
     return;
@@ -1570,7 +1646,7 @@ export const handleRegisterSubmit = async (e) => {
     return;
   }
 
-  const submitBtn = document.getElementById('btnSubmitRegister');
+  const submitBtn = document.getElementById('btnFormRegisterSubmit');
   if (submitBtn) submitBtn.disabled = true;
 
   try {
@@ -1620,11 +1696,10 @@ export const handleRegisterSubmit = async (e) => {
     }
 
     const u = data.user;
+    const preservedTheme = state.settings?.theme || localStorage.getItem('salary_tracker_theme') || 'light';
     state.currentUser = { id: u.id, email: u.email, username, identities: u.identities, app_metadata: u.app_metadata, user_metadata: u.user_metadata, avatar: avatarId };
-    if (!state.settings) state.settings = {};
-    state.settings.avatar = avatarId;
 
-    let initialWeeks = [{ id: 'week-1', name: 'Tuần 1', rate: 35000, shifts: [] }];
+    let initialWeeks = [{ id: 'week-1', name: 'Tuần 1', rate: 40000, startDate: getMondayDate(new Date()), shifts: [] }];
     const guestRaw = localStorage.getItem(GUEST_WEEKS_KEY);
     if (guestRaw) {
       try {
@@ -1635,30 +1710,52 @@ export const handleRegisterSubmit = async (e) => {
       initialWeeks = state.weeks;
     }
 
+    let parsedGuestSettings = null;
     const guestSettingsRaw = localStorage.getItem(GUEST_SETTINGS_KEY);
     if (guestSettingsRaw) {
       try {
-        const parsedSettings = JSON.parse(guestSettingsRaw);
-        if (parsedSettings && typeof parsedSettings === 'object') {
-          state.settings = { ...state.settings, ...parsedSettings };
+        const parsed = JSON.parse(guestSettingsRaw);
+        if (parsed && typeof parsed === 'object') {
+          parsedGuestSettings = parsed;
         }
       } catch (_) {}
+    } else if (state.settings && typeof state.settings === 'object') {
+      parsedGuestSettings = { ...state.settings };
     }
+
+    state.settings = {
+      workplaces: ['Mặc định'],
+      workplaceRates: { 'Mặc định': 40000 },
+      defaultWorkplace: 'Mặc định',
+      theme: preservedTheme,
+      ...(parsedGuestSettings || {}),
+      avatar: avatarId
+    };
 
     try {
       localStorage.removeItem(GUEST_WEEKS_KEY);
       localStorage.removeItem(GUEST_SETTINGS_KEY);
+      localStorage.removeItem('salary_tracker_vault_backup');
     } catch (_) {}
 
     state.weeks = initialWeeks;
-    state.currentWeekId = state.weeks[state.weeks.length - 1].id;
-    saveWeeks();
-    saveSettings();
-    if (u.email) {
-      setLocalEmailForUsername(username, u.email);
-      setLocalEmailForUsername(rawInput, u.email);
-    }
+    normalizeWorkplacesAndRates();
+    state.weeks.forEach((w, idx) => ensureWeekStartDate(w, idx));
+    syncShiftsTypeConsistency(state.weeks);
+    const latest = getLatestWeek() || state.weeks[state.weeks.length - 1];
+    state.currentWeekId = latest.id;
+
     try {
+      localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
+      localStorage.setItem(getWeeksStorageKey(), JSON.stringify(state.weeks));
+      localStorage.setItem(getSettingsStorageKey(), JSON.stringify(state.settings));
+      if (hasValidShifts(state.weeks)) {
+        localStorage.setItem('salary_tracker_vault_backup', JSON.stringify(state.weeks));
+      }
+      if (u.email) {
+        setLocalEmailForUsername(username, u.email);
+        setLocalEmailForUsername(rawInput, u.email);
+      }
       localStorage.setItem('salary_tracker_cached_user', JSON.stringify({
         id: u.id,
         email: u.email,
@@ -1666,21 +1763,29 @@ export const handleRegisterSubmit = async (e) => {
         avatar: avatarId
       }));
     } catch (_) {}
-    try {
-      await supabaseClient.from('user_salary_data').upsert({
-        user_id: u.id,
-        username: username,
-        weeks: initialWeeks,
-        settings: state.settings,
-        updated_at: new Date().toISOString()
-      });
-    } catch (_) {}
-    updateHeaderAuthUI();
-    triggerAppRender();
 
     document.getElementById('authModal').style.display = 'none';
     document.getElementById('formRegister').reset();
+    updateHeaderAuthUI();
+    updateSyncStatusUI();
+    triggerAppRender();
     showToast(t('auth_login_success', 'Đăng nhập thành công. Chào @{username}.').replace('{username}', username));
+
+    supabaseClient.from('user_salary_data').upsert({
+      user_id: u.id,
+      username: username,
+      weeks: state.weeks,
+      settings: state.settings,
+      updated_at: new Date().toISOString()
+    }).then(({ error: upsertErr }) => {
+      if (upsertErr) {
+        markPendingSync();
+      } else {
+        clearPendingSync();
+      }
+    }).catch(() => {
+      markPendingSync();
+    });
   } catch (err) {
     errorEl.textContent = `${t('auth_err_conn_prefix', 'Lỗi: ')}${err.message}`;
     errorEl.style.display = 'block';
@@ -1700,33 +1805,42 @@ export const handleLogout = async () => {
     iconType: 'logout'
   });
   if (confirmed) {
+    const currentTheme = localStorage.getItem('salary_tracker_theme') || (document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    clearTimeout(cloudSyncTimer);
     if (supabaseClient) {
-      try { await supabaseClient.auth.signOut(); } catch (_) {}
+      supabaseClient.auth.signOut().catch(() => {});
     }
     try {
       localStorage.clear();
+      localStorage.setItem('salary_tracker_theme', currentTheme);
     } catch (_) {}
     state.currentUser = null;
     state.settings = {
       workplaces: ['Mặc định'],
-      workplaceRates: { 'Mặc định': 35000 },
+      workplaceRates: { 'Mặc định': 40000 },
       defaultWorkplace: 'Mặc định',
       avatar: getRandomAvatar().id,
-      theme: 'light'
+      theme: currentTheme
     };
     state.weeks = [{
       id: 'week-1',
       name: 'Tuần 1',
-      rate: 35000,
+      rate: 40000,
       startDate: getMondayDate(new Date()),
       shifts: []
     }];
     state.currentWeekId = 'week-1';
-    saveWeeks();
-    saveSettings();
+    try {
+      localStorage.setItem(GUEST_WEEKS_KEY, JSON.stringify(state.weeks));
+      localStorage.setItem(GUEST_SETTINGS_KEY, JSON.stringify(state.settings));
+      localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
+    } catch (_) {}
+    clearPendingSync();
     updateHeaderAuthUI();
+    updateSyncStatusUI();
     triggerAppRender();
-    document.getElementById('userProfileModal').style.display = 'none';
+    const profileModal = document.getElementById('userProfileModal');
+    if (profileModal) profileModal.style.display = 'none';
     showToast(t('toast_logged_out', 'Đã đăng xuất tài khoản.'));
   }
 };
@@ -1764,12 +1878,14 @@ export const handleDeleteAccount = async () => {
         await supabaseClient.auth.signOut();
       } catch (_) {}
     }
+    const currentTheme = localStorage.getItem('salary_tracker_theme') || (document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    clearTimeout(cloudSyncTimer);
     state.currentUser = null;
     try {
       const keysToRemove = [];
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
-        if (k && (k.startsWith('salary_') || k.startsWith('shift_tracker_'))) {
+        if (k && k !== 'salary_tracker_theme' && (k.startsWith('salary_') || k.startsWith('shift_tracker_'))) {
           keysToRemove.push(k);
         }
       }
@@ -1778,16 +1894,29 @@ export const handleDeleteAccount = async () => {
       localStorage.removeItem('salary_tracker_cached_user');
       localStorage.removeItem('salary_tracker_current_week');
       localStorage.removeItem('salary_tracker_pending_sync');
-      localStorage.setItem(GUEST_WEEKS_KEY, JSON.stringify(GUEST_DEFAULT_DATA));
+      localStorage.setItem('salary_tracker_theme', currentTheme);
     } catch (_) {}
     clearPendingSync();
-    state.weeks = JSON.parse(JSON.stringify(GUEST_DEFAULT_DATA));
-    if (!state.settings) state.settings = {};
-    state.settings.workplaces = [];
-    state.settings.avatar = getRandomAvatar().id;
-    const latest = getLatestWeek() || state.weeks[state.weeks.length - 1];
-    state.currentWeekId = latest.id;
-    saveSettings();
+    state.weeks = [{
+      id: 'week-1',
+      name: 'Tuần 1',
+      rate: 40000,
+      startDate: getMondayDate(new Date()),
+      shifts: []
+    }];
+    state.settings = {
+      workplaces: ['Mặc định'],
+      workplaceRates: { 'Mặc định': 40000 },
+      defaultWorkplace: 'Mặc định',
+      avatar: getRandomAvatar().id,
+      theme: currentTheme
+    };
+    state.currentWeekId = 'week-1';
+    try {
+      localStorage.setItem(GUEST_WEEKS_KEY, JSON.stringify(state.weeks));
+      localStorage.setItem(GUEST_SETTINGS_KEY, JSON.stringify(state.settings));
+      localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
+    } catch (_) {}
     updateHeaderAuthUI();
     updateSyncStatusUI();
     triggerAppRender();
@@ -1824,7 +1953,7 @@ export const handleForgotPasswordSubmit = async (e) => {
   const emailInput = document.getElementById('forgotEmail').value.trim();
   const errorEl = document.getElementById('forgotError');
   const successEl = document.getElementById('forgotSuccess');
-  const submitBtn = document.getElementById('btnSubmitForgot');
+  const submitBtn = document.getElementById('btnFormForgotSubmit');
 
   if (!emailInput || !emailInput.includes('@')) {
     errorEl.textContent = t('auth_err_email_invalid', 'Email không hợp lệ.');

@@ -103,22 +103,32 @@ export const showConfirmDialog = (options = {}) => {
     }
 
     if (cancelBtn) {
-      cancelBtn.style.display = 'none';
+      cancelBtn.style.display = 'inline-flex';
+      cancelBtn.className = 'btn-morphic';
+      cancelBtn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="15" height="15">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+        <span>${opts.cancelText || t('btn_cancel', 'Hủy')}</span>
+      `;
+      cancelBtn.title = opts.cancelText || t('btn_cancel', 'Hủy');
+      cancelBtn.setAttribute('aria-label', opts.cancelText || t('btn_cancel', 'Hủy'));
     }
 
     if (confirmBtn) {
-      let confirmClass = 'btn-dialog-action-icon btn-action-primary';
+      let confirmClass = 'btn-morphic btn-morphic-primary';
       let confirmIcon = BTN_ICON_CHECK;
       if (isDanger) {
-        confirmClass = 'btn-dialog-action-icon btn-action-danger';
+        confirmClass = 'btn-morphic btn-morphic-danger';
         confirmIcon = iconKey === 'logout' ? BTN_ICON_LOGOUT : BTN_ICON_TRASH;
       } else if (isWarning) {
-        confirmClass = 'btn-dialog-action-icon btn-action-primary';
+        confirmClass = 'btn-morphic btn-morphic-primary';
         confirmIcon = BTN_ICON_CHECK;
       }
       const confirmLabel = opts.confirmText || (isDanger ? t('btn_delete', 'Xóa') : t('dialog_btn_ok', 'Đồng ý'));
       confirmBtn.className = confirmClass;
-      confirmBtn.innerHTML = confirmIcon;
+      confirmBtn.innerHTML = `${confirmIcon}<span>${confirmLabel}</span>`;
       confirmBtn.title = confirmLabel;
       confirmBtn.setAttribute('aria-label', confirmLabel);
     }
@@ -208,8 +218,8 @@ export const showAlertDialog = (options = {}) => {
 
     if (confirmBtn) {
       const okLabel = opts.okText || t('dialog_btn_understood', 'Đã hiểu');
-      confirmBtn.className = isError ? 'btn-dialog-action-icon btn-action-danger' : 'btn-dialog-action-icon btn-action-primary';
-      confirmBtn.innerHTML = BTN_ICON_CHECK;
+      confirmBtn.className = isError ? 'btn-morphic btn-morphic-danger' : 'btn-morphic btn-morphic-primary';
+      confirmBtn.innerHTML = `${BTN_ICON_CHECK}<span>${okLabel}</span>`;
       confirmBtn.title = okLabel;
       confirmBtn.setAttribute('aria-label', okLabel);
     }
