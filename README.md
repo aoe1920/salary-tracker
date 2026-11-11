@@ -7,7 +7,7 @@
 **Precision Shift Scheduling and Wage Tracking Progressive Web App**
 
 [![Live Demo](https://img.shields.io/badge/Demo-aoe1920.github.io%2Fsalary--tracker-3b82f6?style=flat-square&logo=googlechrome&logoColor=white)](https://aoe1920.github.io/salary-tracker/)
-[![Version](https://img.shields.io/badge/Release-v2.0.0-10b981?style=flat-square)](https://github.com/aoe1920/salary-tracker/releases)
+[![Version](https://img.shields.io/badge/Release-v1.29-10b981?style=flat-square)](https://github.com/aoe1920/salary-tracker/releases)
 [![Platform](https://img.shields.io/badge/Platform-PWA%20%7C%20iOS%20%7C%20Android%20%7C%20Web-6366f1?style=flat-square&logo=pwa&logoColor=white)](https://aoe1920.github.io/salary-tracker/)
 [![Database](https://img.shields.io/badge/Database-Supabase%20PostgreSQL-3ECF8E?style=flat-square&logo=supabase&logoColor=white)](https://supabase.com)
 [![Architecture](https://img.shields.io/badge/Architecture-Vanilla%20ESM-f59e0b?style=flat-square&logo=javascript&logoColor=black)](https://developer.mozilla.org/)
