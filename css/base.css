@@ -129,7 +129,6 @@ html {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  scroll-behavior: smooth;
   overscroll-behavior-x: none;
   overflow-x: clip;
 }
@@ -140,22 +139,27 @@ body {
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 5.75rem);
   line-height: 1.5;
   background-color: #8bb8f0;
-  background-image: url('../assets/backgrounds/bg-liquid-light.svg?v=20261111m');
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
-  background-attachment: fixed;
   color: var(--text-main);
   caret-color: var(--primary);
   overscroll-behavior-x: none;
   overflow-x: clip;
   max-width: 100vw;
+  position: relative;
 }
 
-@media (max-width: 768px), (pointer: coarse) {
-  body {
-    background-attachment: scroll !important;
-  }
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: #8bb8f0;
+  background-image: url('../assets/backgrounds/bg-liquid-light.svg?v=20261111m');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 html.dark-mode {
@@ -164,6 +168,11 @@ html.dark-mode {
 
 html.dark-mode body,
 body.dark-mode {
+  background-color: #05070d;
+}
+
+html.dark-mode body::before,
+body.dark-mode::before {
   background-color: #05070d;
   background-image: url('../assets/backgrounds/bg-liquid-dark.svg?v=20261111m');
 }
@@ -311,7 +320,7 @@ body::-webkit-scrollbar {
   }
   to {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
+    transform: none;
   }
 }
 
@@ -329,8 +338,8 @@ body::-webkit-scrollbar {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.76) 0%, rgba(255, 255, 255, 0.54) 100%);
   border: 1px solid rgba(255, 255, 255, 0.82);
   border-radius: var(--radius-lg);
-  backdrop-filter: blur(16px) saturate(180%) contrast(105%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%) contrast(105%);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
   box-shadow:
     0 8px 24px -4px rgba(15, 23, 42, 0.08),
     0 2px 6px rgba(15, 23, 42, 0.04),
@@ -346,8 +355,8 @@ body.dark-mode .app-header {
     0 10px 25px -4px rgba(0, 0, 0, 0.5),
     0 2px 8px rgba(0, 0, 0, 0.3),
     inset 0 1px 1px rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(16px) saturate(180%) contrast(105%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%) contrast(105%);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
   color: #f8fafc;
 }
 
