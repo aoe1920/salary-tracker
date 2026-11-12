@@ -254,7 +254,7 @@ const I18N_VI = {
     auth_or: 'hoặc',
     btn_google_signin: 'Đăng nhập bằng Google',
     auth_google_continue: 'Tiếp tục với Google',
-    auth_terms_agree_label: 'Tôi đã đọc và đồng ý với',
+    auth_terms_agree_label: 'Tôi đồng ý với',
     auth_terms_service: 'Điều khoản',
     auth_privacy_policy: 'Chính sách',
     legal_title: 'Điều khoản và Chính sách',
