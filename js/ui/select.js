@@ -1,5 +1,5 @@
 import { state, getWorkplaceColor } from '../state.js';
-import { escapeHtml, getShiftRate, fmtCurrency } from '../calculator.js';
+import { escapeHtml } from '../calculator.js';
 import { t } from '../i18n.js';
 export const setupCustomSelect = (selectId) => {
   const select = document.getElementById(selectId);
@@ -111,20 +111,16 @@ export const setupCustomSelect = (selectId) => {
 
     if (selectId === 'shiftWorkplace' && opt.value) {
       const wpCol = getWorkplaceColor(opt.value);
-      const rate = getShiftRate({ workplace: opt.value });
       item.innerHTML = `
         <div class="workplace-item-left">
           <span class="wb-color-dot" style="background:${wpCol.fill};"></span>
           <span>${escapeHtml(opt.value)}</span>
         </div>
-        <div class="workplace-item-right">
-          <span class="workplace-item-rate font-mono">${fmtCurrency(rate)}/h</span>
-          <span class="custom-select-check">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13">
-              <path d="M20 6 9 17l-5-5"></path>
-            </svg>
-          </span>
-        </div>
+        <span class="custom-select-check">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13">
+            <path d="M20 6 9 17l-5-5"></path>
+          </svg>
+        </span>
       `;
     } else {
       const textSpan = document.createElement('span');
