@@ -25,6 +25,11 @@ export const applyTheme = (theme, save = true, clickEvent = null) => {
   const performThemeChange = () => {
     document.documentElement.classList.toggle('dark-mode', isDark);
     document.body.classList.toggle('dark-mode', isDark);
+    document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) {
+      metaTheme.setAttribute('content', isDark ? '#05070d' : '#8bb8f0');
+    }
     const morphIcon = document.getElementById('themeMorphIcon');
     if (morphIcon) {
       morphIcon.setAttribute('icon', isDark ? MOON_PATH : SUN_PATH);

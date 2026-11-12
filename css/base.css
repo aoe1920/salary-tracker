@@ -129,8 +129,9 @@ html {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
   overscroll-behavior-x: none;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -147,7 +148,7 @@ body {
   color: var(--text-main);
   caret-color: var(--primary);
   overscroll-behavior-x: none;
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100vw;
 }
 
@@ -161,6 +162,7 @@ html.dark-mode {
   background-color: #05070d;
 }
 
+html.dark-mode body,
 body.dark-mode {
   background-color: #05070d;
   background-image: url('../assets/backgrounds/bg-liquid-dark.svg?v=20261111m');
@@ -193,12 +195,12 @@ html.theme-vt-active::view-transition-old(root) {
 
 html.theme-vt-active::view-transition-new(root) {
   z-index: 99999;
-  animation: vtThemeRipple 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+  animation: vtThemeRipple 0.78s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
 }
 
 @media (max-width: 768px) {
   html.theme-vt-active::view-transition-new(root) {
-    animation: vtThemeMobileFade 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    animation: vtThemeMobileFade 0.34s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
   }
 }
 
@@ -222,17 +224,19 @@ html.theme-vt-active::view-transition-new(root) {
 
 body.theme-transitioning,
 body.theme-transitioning .app-header,
-body.theme-transitioning .dashboard-card,
-body.theme-transitioning .card-base,
+body.theme-transitioning .dashboard-stats-card,
+body.theme-transitioning .kpi-card,
+body.theme-transitioning .shift-ledger-row,
+body.theme-transitioning .empty-shifts-box,
+body.theme-transitioning .week-wheel-container,
+body.theme-transitioning .floating-dock,
 body.theme-transitioning .btn-morphic,
-body.theme-transitioning .btn-morphic-sm,
 body.theme-transitioning .btn-action-secondary,
 body.theme-transitioning .btn-action-primary,
 body.theme-transitioning .btn-action-danger,
-body.theme-transitioning .modal-box,
-body.theme-transitioning .morphic-pill-capsule,
-body.theme-transitioning .theme-btn-toggle {
-  transition: background-color 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1), color 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
+body.theme-transitioning .modal-surface,
+body.theme-transitioning .toast-capsule {
+  transition: background-color 0.38s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.38s cubic-bezier(0.22, 1, 0.36, 1), color 0.38s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.38s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
 .font-mono {
@@ -296,16 +300,18 @@ body::-webkit-scrollbar {
   display: flex;
   flex-direction: column;
   gap: 1.15rem;
-  animation: appBootFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: appBootFadeIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
   overflow-x: clip;
 }
 
 @keyframes appBootFadeIn {
   from {
     opacity: 0;
+    transform: translate3d(0, 6px, 0);
   }
   to {
     opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
 }
 
