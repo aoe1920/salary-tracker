@@ -1,6 +1,16 @@
 import { state, getWorkplaceColor } from '../state.js';
 import { escapeHtml } from '../calculator.js';
 import { t } from '../i18n.js';
+const renderWorkplaceLabelHtml = (name) => {
+  const wpCol = getWorkplaceColor(name);
+  return `
+    <span class="workplace-item-left">
+      <span class="wb-color-dot" style="background:${wpCol.fill};"></span>
+      <span class="workplace-item-text">${escapeHtml(name)}</span>
+    </span>
+  `;
+};
+
 export const setupCustomSelect = (selectId) => {
   const select = document.getElementById(selectId);
   if (!select) return;
@@ -88,13 +98,7 @@ export const setupCustomSelect = (selectId) => {
       return;
     }
     if (selectId === 'shiftWorkplace' && curOpt.value) {
-      const wpCol = getWorkplaceColor(curOpt.value);
-      label.innerHTML = `
-        <span class="workplace-item-left">
-          <span class="wb-color-dot" style="background:${wpCol.fill};"></span>
-          <span>${escapeHtml(curOpt.value)}</span>
-        </span>
-      `;
+      label.innerHTML = renderWorkplaceLabelHtml(curOpt.value);
     } else {
       label.textContent = curOpt.textContent;
     }
@@ -114,7 +118,7 @@ export const setupCustomSelect = (selectId) => {
       item.innerHTML = `
         <div class="workplace-item-left">
           <span class="wb-color-dot" style="background:${wpCol.fill};"></span>
-          <span>${escapeHtml(opt.value)}</span>
+          <span class="workplace-item-text">${escapeHtml(opt.value)}</span>
         </div>
         <span class="custom-select-check">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="13" height="13">
@@ -163,13 +167,7 @@ export const syncCustomSelect = (selectId) => {
   const selectedOption = select.options[select.selectedIndex];
   if (label && selectedOption) {
     if (selectId === 'shiftWorkplace' && selectedOption.value) {
-      const wpCol = getWorkplaceColor(selectedOption.value);
-      label.innerHTML = `
-        <span class="workplace-item-left">
-          <span class="wb-color-dot" style="background:${wpCol.fill};"></span>
-          <span>${escapeHtml(selectedOption.value)}</span>
-        </span>
-      `;
+      label.innerHTML = renderWorkplaceLabelHtml(selectedOption.value);
     } else {
       label.textContent = selectedOption.textContent;
     }

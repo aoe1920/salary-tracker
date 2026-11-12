@@ -1220,8 +1220,17 @@ export const updateProfileWorkplacesBadge = () => {
   badge.textContent = `${count} ${t('unit_workplaces', 'nơi')}`;
 };
 
+const clearProfileWorkplaceMarquee = (container = document.getElementById('profileWpEditList')) => {
+  if (!container) return;
+  if (Array.isArray(container._wpMarqueeTimers)) {
+    container._wpMarqueeTimers.forEach(id => clearTimeout(id));
+  }
+  container._wpMarqueeTimers = [];
+};
+
 export const collapseProfileWorkplacesEdit = () => {
   isProfileWpEditMode = false;
+  clearProfileWorkplaceMarquee();
   const content = document.getElementById('profileWpContent');
   const chevron = document.getElementById('iconProfileWpChevron');
   if (content) {
@@ -1324,9 +1333,65 @@ export const renderProfileWorkplaces = () => {
   updateProfileWorkplacesBadge();
 };
 
+const scheduleProfileWorkplaceMarquee = (container) => {
+  if (!container) return;
+  clearProfileWorkplaceMarquee(container);
+
+  if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+    return;
+  }
+
+  const startTimer = setTimeout(() => {
+    if (!container.isConnected) return;
+    container.querySelectorAll('.profile-wp-edit-name').forEach((el) => {
+      const inner = el.querySelector('.profile-wp-edit-name-inner');
+      if (!inner) return;
+      const overflow = Math.ceil(el.scrollWidth - el.clientWidth);
+      if (overflow <= 2) return;
+
+      const durationMs = Math.min(6000, Math.max(1400, Math.round((overflow / 36) * 1000)));
+      el.style.setProperty('--wp-slide-ms', `${durationMs}ms`);
+
+      const runCycle = () => {
+        if (!el.isConnected) return;
+        el.classList.remove('is-marquee-sliding');
+        el.style.setProperty('--wp-slide-x', '0px');
+
+        const t1 = setTimeout(() => {
+          if (!el.isConnected) return;
+          el.classList.add('is-marquee-sliding');
+          void inner.offsetWidth;
+          requestAnimationFrame(() => {
+            if (!el.isConnected) return;
+            el.style.setProperty('--wp-slide-x', `-${overflow + 4}px`);
+          });
+
+          const t2 = setTimeout(() => {
+            if (!el.isConnected) return;
+            el.style.setProperty('--wp-slide-x', '0px');
+
+            const t3 = setTimeout(() => {
+              if (!el.isConnected) return;
+              el.classList.remove('is-marquee-sliding');
+              runCycle();
+            }, durationMs + 220);
+            container._wpMarqueeTimers.push(t3);
+          }, durationMs + 1200);
+          container._wpMarqueeTimers.push(t2);
+        }, 1800);
+        container._wpMarqueeTimers.push(t1);
+      };
+
+      runCycle();
+    });
+  }, 160);
+  container._wpMarqueeTimers.push(startTimer);
+};
+
 export const renderProfileWorkplacesEditList = () => {
   const container = document.getElementById('profileWpEditList');
   if (!container) return;
+  clearProfileWorkplaceMarquee(container);
   container.innerHTML = '';
   normalizeWorkplacesAndRates();
 
@@ -1357,7 +1422,7 @@ export const renderProfileWorkplacesEditList = () => {
       <div class="profile-wp-edit-top">
         <div class="profile-wp-edit-info">
           <span class="profile-wp-dot" style="background-color: ${wpCol.fill};"></span>
-          <span class="profile-wp-edit-name font-sans" title="${escapeHtml(wp)}">${escapeHtml(wp)}</span>
+          <span class="profile-wp-edit-name font-sans"><span class="profile-wp-edit-name-inner">${escapeHtml(wp)}</span></span>
           ${isDefault ? `<span class="profile-wp-tag-default font-mono">${t('tag_default_workplace', 'Mặc định')}</span>` : ''}
         </div>
         <div class="profile-wp-edit-actions">
@@ -1584,6 +1649,8 @@ export const renderProfileWorkplacesEditList = () => {
 
     container.appendChild(card);
   });
+
+  scheduleProfileWorkplaceMarquee(container);
 };
 
 export const addWorkplaceFromProfile = () => {

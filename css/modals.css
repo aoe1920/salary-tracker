@@ -303,6 +303,7 @@ select option {
 
 .custom-select-trigger {
   width: 100%;
+  min-width: 0;
   height: 38px;
   min-height: 38px;
   display: flex;
@@ -318,6 +319,7 @@ select option {
   font-family: inherit;
   cursor: pointer;
   text-align: left;
+  overflow: hidden;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
   transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
@@ -332,6 +334,7 @@ select option {
 
 .custom-select-label {
   flex: 1;
+  min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -394,12 +397,22 @@ select option {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.45rem;
+  min-width: 0;
   padding: 0.5rem 0.75rem;
   font-size: 0.85rem;
   color: var(--text-main);
   border-radius: var(--radius-xs);
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.custom-select-option > span:first-child {
+  min-width: 0;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .custom-select-option:hover {
@@ -458,6 +471,17 @@ select option {
   align-items: center;
   gap: 0.45rem;
   min-width: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.workplace-item-text {
+  display: block;
+  min-width: 0;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .workplace-item-right {
@@ -2721,6 +2745,9 @@ body.dark-mode .profile-wp-edit-item.is-default-item {
 }
 
 .profile-wp-edit-name {
+  display: block;
+  flex: 0 1 auto;
+  min-width: 0;
   font-size: 0.85rem;
   font-weight: 600;
   font-family: var(--font-sans);
@@ -2728,7 +2755,21 @@ body.dark-mode .profile-wp-edit-item.is-default-item {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 140px;
+}
+
+.profile-wp-edit-name.is-marquee-sliding {
+  text-overflow: clip;
+}
+
+.profile-wp-edit-name-inner {
+  display: inline;
+  will-change: transform;
+}
+
+.profile-wp-edit-name.is-marquee-sliding .profile-wp-edit-name-inner {
+  display: inline-block;
+  transform: translate3d(var(--wp-slide-x, 0px), 0, 0);
+  transition: transform var(--wp-slide-ms, 2200ms) linear;
 }
 
 .profile-wp-edit-actions {
