@@ -103,3 +103,44 @@ export const initGlobalHaptics = () => {
 if (typeof window !== 'undefined' && typeof document !== 'undefined') {
   initGlobalHaptics();
 }
+
+export const clearFieldErrors = (root = document) => {
+  if (!root || typeof root.querySelectorAll !== 'function') return;
+  root.querySelectorAll('.input-error-shake, .terms-error-shake').forEach((el) => {
+    el.classList.remove('input-error-shake', 'terms-error-shake');
+  });
+};
+
+export const triggerFieldError = (elOrId, { focus = true } = {}) => {
+  if (typeof document === 'undefined') return;
+  const el = typeof elOrId === 'string' ? document.getElementById(elOrId) : elOrId;
+  if (!el) return;
+
+  const isTermsBox = el.id === 'authTermsAgreeBox' || el.classList.contains('auth-terms-agree-box');
+  const cls = isTermsBox ? 'terms-error-shake' : 'input-error-shake';
+
+  let target = el;
+  if (el.tagName === 'SELECT') {
+    const customTrigger = el.parentElement?.querySelector('.custom-select-trigger');
+    if (customTrigger) target = customTrigger;
+  }
+
+  target.classList.remove(cls);
+  void target.offsetWidth;
+  target.classList.add(cls);
+  triggerHaptic('medium');
+
+  if (!target._errBound) {
+    target._errBound = true;
+    const clearSelf = () => target.classList.remove(cls);
+    el.addEventListener('input', clearSelf);
+    el.addEventListener('change', clearSelf);
+    if (target !== el) {
+      target.addEventListener('click', clearSelf);
+    }
+  }
+
+  if (focus && typeof el.focus === 'function') {
+    el.focus();
+  }
+};

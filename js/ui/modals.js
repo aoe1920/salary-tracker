@@ -4,7 +4,7 @@ import { t, getLocalizedWeekName, getLocalizedShiftType, getLocalizedDayName, fo
 import { saveWeeks, saveSettings, updateSyncStatusUI, updateHeaderAuthUI, supabaseClient, handleLinkGoogleAccount, setLocalEmailForUsername } from '../services/supabase.js';
 import { showToast, showToastWithAction } from './toast.js';
 import { showConfirmDialog, showAlertDialog } from './dialog.js';
-import { triggerHaptic } from './haptic.js';
+import { triggerHaptic, triggerFieldError, clearFieldErrors } from './haptic.js';
 import { setupCustomSelect, syncCustomSelect } from './select.js';
 import { renderAnalyticsDashboard } from './chart.js';
 import { EYE_OPEN_SVG, EYE_OFF_SVG, EYE_OPEN_PATH, EYE_OFF_PATH } from '../config.js';
@@ -63,6 +63,56 @@ export const formatWpRateDisplay = (num) => {
   return new Intl.NumberFormat('vi-VN').format(val);
 };
 
+export const bindNumericFormatInput = (elOrId, { emptyOnZeroBlur = false, maxDigits = 12, onValueChange = null, onBlurChange = null } = {}) => {
+  const el = typeof elOrId === 'string' ? document.getElementById(elOrId) : elOrId;
+  if (!el || el._numericFormatBound) return;
+  el._numericFormatBound = true;
+
+  el.addEventListener('focus', () => {
+    el.select();
+  });
+
+  el.addEventListener('input', () => {
+    const raw = el.value;
+    const selStart = el.selectionStart ?? raw.length;
+    const digitsBefore = raw.slice(0, selStart).replace(/[^\d]/g, '').length;
+    const digitsOnly = raw.replace(/[^\d]/g, '').slice(0, maxDigits);
+    const num = digitsOnly ? Number(digitsOnly) : 0;
+    const formatted = digitsOnly ? (num > 0 ? formatWpRateDisplay(num) : '0') : '';
+
+    if (el.value !== formatted) {
+      el.value = formatted;
+      if (document.activeElement === el && typeof el.setSelectionRange === 'function') {
+        let nextPos = formatted.length;
+        if (digitsBefore === 0) {
+          nextPos = 0;
+        } else {
+          let seenDigits = 0;
+          for (let i = 0; i < formatted.length; i++) {
+            if (/\d/.test(formatted[i])) seenDigits++;
+            if (seenDigits >= digitsBefore) {
+              nextPos = i + 1;
+              break;
+            }
+          }
+        }
+        try {
+          el.setSelectionRange(nextPos, nextPos);
+        } catch (_) {}
+      }
+    }
+
+    if (typeof onValueChange === 'function') onValueChange(num, formatted);
+  });
+
+  el.addEventListener('blur', () => {
+    const num = parseWpRate(el.value);
+    const formatted = num > 0 ? formatWpRateDisplay(num) : (emptyOnZeroBlur ? '' : '0');
+    el.value = formatted;
+    if (typeof onBlurChange === 'function') onBlurChange(num, formatted);
+  });
+};
+
 export const syncShiftRateInput = (workplace = '') => {
   const rateInput = document.getElementById('shiftRateInput');
   if (!rateInput) return;
@@ -112,6 +162,7 @@ export const openAddShiftModal = (prefill = null) => {
   const modal = document.getElementById('shiftModal');
   const form = document.getElementById('shiftForm');
   form.reset();
+  clearFieldErrors(modal);
 
   document.getElementById('shiftModalTitle').textContent = t('modal_add_shift', 'Thêm ca');
   const shiftSubAdd = document.getElementById('shiftModalSubtitle');
@@ -167,6 +218,7 @@ export const openEditShiftModal = (shift) => {
     return;
   }
   const modal = document.getElementById('shiftModal');
+  clearFieldErrors(modal);
   document.getElementById('shiftModalTitle').textContent = t('modal_edit_shift', 'Sửa ca');
   const shiftSubEdit = document.getElementById('shiftModalSubtitle');
   if (shiftSubEdit) shiftSubEdit.textContent = 'Thời gian và nơi làm';
@@ -203,9 +255,15 @@ export const openEditShiftModal = (shift) => {
     otInput.value = clamped % 1 === 0 ? String(Math.round(clamped)) : String(Number(clamped.toFixed(2)));
   }
   const allowanceInput = document.getElementById('shiftAllowance');
-  if (allowanceInput) allowanceInput.value = String(shift.allowance || '0');
+  if (allowanceInput) {
+    const alw = Number(shift.allowance || 0);
+    allowanceInput.value = alw > 0 ? formatWpRateDisplay(alw) : '0';
+  }
   const deductionInput = document.getElementById('shiftDeduction');
-  if (deductionInput) deductionInput.value = String(shift.deduction || '0');
+  if (deductionInput) {
+    const ded = Number(shift.deduction || 0);
+    deductionInput.value = ded > 0 ? formatWpRateDisplay(ded) : '0';
+  }
   document.getElementById('shiftNote').value = shift.note || '';
 
   updateModalComputedPreview();
@@ -218,8 +276,8 @@ export const updateModalComputedPreview = () => {
   const breakMins = Number(document.getElementById('shiftBreak')?.value || 0);
   const rawOt = parseFloat(document.getElementById('shiftOtRate')?.value || '1');
   const otRate = (!isNaN(rawOt) && rawOt >= 1) ? Math.min(10, Math.round(rawOt * 100) / 100) : 1;
-  const allowance = Number(document.getElementById('shiftAllowance')?.value || 0);
-  const deduction = Number(document.getElementById('shiftDeduction')?.value || 0);
+  const allowance = parseWpRate(document.getElementById('shiftAllowance')?.value || '');
+  const deduction = parseWpRate(document.getElementById('shiftDeduction')?.value || '');
   const workplace = (document.getElementById('shiftWorkplace')?.value || '').trim();
 
   const prevDur = document.getElementById('previewDuration');
@@ -286,9 +344,9 @@ export const saveShiftFromModal = async (e) => {
   const end = parseSmartTime(rawEnd);
 
   if (!start || !end) {
+    if (!start) triggerFieldError('shiftStart', { focus: true });
+    if (!end) triggerFieldError('shiftEnd', { focus: Boolean(start) });
     showToast(t('warn_invalid_time', 'Giờ làm không hợp lệ.'));
-    if (!start) document.getElementById('shiftStart')?.focus();
-    else document.getElementById('shiftEnd')?.focus();
     return;
   }
 
@@ -298,8 +356,8 @@ export const saveShiftFromModal = async (e) => {
   const breakMinutes = Math.max(0, Number(document.getElementById('shiftBreak')?.value || 0));
   const rawOt = parseFloat(document.getElementById('shiftOtRate')?.value || '1');
   const otRate = (!isNaN(rawOt) && rawOt >= 1) ? Math.min(10, Math.round(rawOt * 100) / 100) : 1;
-  const allowance = Math.max(0, Number(document.getElementById('shiftAllowance')?.value || 0));
-  const deduction = Math.max(0, Number(document.getElementById('shiftDeduction')?.value || 0));
+  const allowance = parseWpRate(document.getElementById('shiftAllowance')?.value || '');
+  const deduction = parseWpRate(document.getElementById('shiftDeduction')?.value || '');
   const workplace = (document.getElementById('shiftWorkplace')?.value || '').trim();
   const note = document.getElementById('shiftNote').value.trim();
   const hours = calculateHoursDiff(start, end, breakMinutes);
@@ -470,6 +528,8 @@ export const createNewWeek = () => {
 export const openEditWeekModal = () => {
   const week = getCurrentWeek();
   if (!week) return;
+  const modal = document.getElementById('editWeekModal');
+  clearFieldErrors(modal);
 
   document.getElementById('editWeekNameInput').value = week.name;
   const curStart = week.startDate || getMondayDate(new Date());
@@ -498,9 +558,14 @@ export const saveWeekMeta = (e) => {
   const newName = document.getElementById('editWeekNameInput').value.trim();
   const rawStartDate = document.getElementById('editWeekStartDateInput').value.trim();
   const parsedStart = parseSmartDate(rawStartDate);
+  if (!newName) {
+    triggerFieldError('editWeekNameInput');
+    showToast('Vui lòng nhập tên tuần');
+    return;
+  }
   if (!parsedStart) {
+    triggerFieldError('editWeekStartDateInput');
     showToast('Ngày bắt đầu không hợp lệ');
-    document.getElementById('editWeekStartDateInput').focus();
     return;
   }
   const editRateInput = document.getElementById('editWeekRateInput');
@@ -991,6 +1056,7 @@ export const openAuthModal = (defaultTab = 'login') => {
 export const openResetPasswordModal = () => {
   const modal = document.getElementById('resetPasswordModal');
   if (!modal) return;
+  clearFieldErrors(modal);
   const form = document.getElementById('formResetPassword');
   if (form) form.reset();
   const errorEl = document.getElementById('resetPasswordError');
@@ -1072,6 +1138,7 @@ export const clearAuthErrors = () => {
   if (forgotErr) { forgotErr.style.display = 'none'; forgotErr.textContent = ''; }
   if (forgotSuccess) { forgotSuccess.style.display = 'none'; forgotSuccess.textContent = ''; }
   if (agreeBox) { agreeBox.classList.remove('terms-error-shake'); }
+  clearFieldErrors(document.getElementById('authModal'));
 };
 
 export const renderAvatarPickerGrid = () => {
@@ -1355,8 +1422,8 @@ export const renderProfileWorkplacesEditList = () => {
         const handleSaveRename = () => {
           const newName = (renameInput?.value || '').trim();
           if (!newName) {
+            triggerFieldError(renameInput);
             showToast(t('warn_wp_name_empty', 'Chưa nhập tên nơi làm việc.'));
-            renameInput?.focus();
             return;
           }
           if (newName === wp) {
@@ -1364,8 +1431,8 @@ export const renderProfileWorkplacesEditList = () => {
             return;
           }
           if (state.settings.workplaces.some(w => w.toLowerCase() === newName.toLowerCase() && w !== wp)) {
+            triggerFieldError(renameInput);
             showToast(t('warn_wp_exists', 'Tên nơi làm việc này đã tồn tại.'));
-            renameInput?.focus();
             return;
           }
 
@@ -1481,32 +1548,29 @@ export const renderProfileWorkplacesEditList = () => {
 
     const rateInput = card.querySelector('.profile-wp-rate-input');
     if (rateInput) {
-      rateInput.addEventListener('input', (e) => {
-        const val = parseWpRate(e.target.value);
-        if (!state.settings.workplaceRates) state.settings.workplaceRates = {};
-        state.settings.workplaceRates[wp] = val;
-        saveSettings();
-        updateModalComputedPreview();
-        triggerAppRender();
-      });
-
       let prevRateVal = '';
       rateInput.addEventListener('focus', (e) => {
         prevRateVal = e.target.value.trim();
-        e.target.select();
       });
 
-      rateInput.addEventListener('blur', (e) => {
-        const val = parseWpRate(e.target.value);
-        if (!state.settings.workplaceRates) state.settings.workplaceRates = {};
-        state.settings.workplaceRates[wp] = val;
-        const formatted = formatWpRateDisplay(val);
-        e.target.value = formatted;
-        saveSettings();
-        updateModalComputedPreview();
-        triggerAppRender();
-        if (formatted !== prevRateVal && prevRateVal !== '') {
-          showToast(`Đã cập nhật đơn giá "${wp}": ${formatted} đ/h`);
+      bindNumericFormatInput(rateInput, {
+        emptyOnZeroBlur: false,
+        onValueChange: (val) => {
+          if (!state.settings.workplaceRates) state.settings.workplaceRates = {};
+          state.settings.workplaceRates[wp] = val;
+          saveSettings();
+          updateModalComputedPreview();
+          triggerAppRender();
+        },
+        onBlurChange: (val, formatted) => {
+          if (!state.settings.workplaceRates) state.settings.workplaceRates = {};
+          state.settings.workplaceRates[wp] = val;
+          saveSettings();
+          updateModalComputedPreview();
+          triggerAppRender();
+          if (formatted !== prevRateVal && prevRateVal !== '') {
+            showToast(`Đã cập nhật đơn giá "${wp}": ${formatted} đ/h`);
+          }
         }
       });
 
@@ -1534,14 +1598,14 @@ export const addWorkplaceFromProfile = () => {
   if (!nameInput) return;
   const val = nameInput.value.trim();
   if (!val) {
+    triggerFieldError(nameInput);
     showToast(t('warn_wp_name_empty', 'Chưa nhập tên nơi làm việc.'));
-    nameInput.focus();
     return;
   }
   normalizeWorkplacesAndRates();
   if (state.settings.workplaces.some(w => w.toLowerCase() === val.toLowerCase())) {
+    triggerFieldError(nameInput);
     showToast(t('warn_wp_exists', 'Tên nơi làm việc này đã tồn tại.'));
-    nameInput.focus();
     return;
   }
 
@@ -1840,16 +1904,11 @@ export const openUserProfileModal = () => {
 
   const pNewWpRate = document.getElementById('profileNewWpRate');
   if (pNewWpRate) {
+    bindNumericFormatInput(pNewWpRate, { emptyOnZeroBlur: true });
     pNewWpRate.onkeydown = (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
         addWorkplaceFromProfile();
-      }
-    };
-    pNewWpRate.onblur = (e) => {
-      const num = parseWpRate(e.target.value);
-      if (num > 0) {
-        pNewWpRate.value = formatWpRateDisplay(num);
       }
     };
   }

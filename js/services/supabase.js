@@ -5,7 +5,7 @@ import { ensureWeekStartDate, syncShiftsTypeConsistency, getMondayDate } from '.
 import { showToast } from '../ui/toast.js';
 import { showConfirmDialog } from '../ui/dialog.js';
 import { applyTheme } from '../theme.js';
-import { triggerHaptic } from '../ui/haptic.js';
+import { triggerHaptic, triggerFieldError, clearFieldErrors } from '../ui/haptic.js';
 import { AVATARS, getAvatarSvg, getRandomAvatar } from '../ui/avatars.js';
 
 let appRenderer = null;
@@ -1441,11 +1441,15 @@ const attemptSignIn = async (email, password) => {
 
 export const handleLoginSubmit = async (e) => {
   e.preventDefault();
+  const loginForm = document.getElementById('formLogin');
+  clearFieldErrors(loginForm);
   const rawInput = document.getElementById('loginUsername').value.trim();
   const password = document.getElementById('loginPassword').value;
   const errorEl = document.getElementById('loginError');
 
   if (!rawInput || !password) {
+    if (!rawInput) triggerFieldError('loginUsername', { focus: true });
+    if (!password) triggerFieldError('loginPassword', { focus: Boolean(rawInput) });
     errorEl.textContent = t('auth_err_missing_fields', 'Vui lòng nhập tài khoản và mật khẩu.');
     errorEl.style.display = 'block';
     return;
@@ -1509,6 +1513,8 @@ export const handleLoginSubmit = async (e) => {
     }
 
     if (res.error) {
+      triggerFieldError('loginUsername', { focus: false });
+      triggerFieldError('loginPassword', { focus: true });
       errorEl.textContent = translateAuthError(res.error);
       errorEl.style.display = 'block';
       if (submitBtn) submitBtn.disabled = false;
@@ -1586,12 +1592,26 @@ export const handleLoginSubmit = async (e) => {
 
 export const handleRegisterSubmit = async (e) => {
   e.preventDefault();
+  const regForm = document.getElementById('formRegister');
+  clearFieldErrors(regForm);
   const rawInput = document.getElementById('regUsername').value.trim();
   const password = document.getElementById('regPassword').value;
   const passwordConfirm = document.getElementById('regPasswordConfirm').value;
   const errorEl = document.getElementById('regError');
 
   if (!rawInput || !password || !passwordConfirm) {
+    let focusedFirst = false;
+    if (!rawInput) {
+      triggerFieldError('regUsername', { focus: true });
+      focusedFirst = true;
+    }
+    if (!password) {
+      triggerFieldError('regPassword', { focus: !focusedFirst });
+      focusedFirst = true;
+    }
+    if (!passwordConfirm) {
+      triggerFieldError('regPasswordConfirm', { focus: !focusedFirst });
+    }
     errorEl.textContent = t('auth_err_all_fields', 'Vui lòng điền đầy đủ tất cả các trường.');
     errorEl.style.display = 'block';
     return;
@@ -1601,12 +1621,14 @@ export const handleRegisterSubmit = async (e) => {
   if (isEmail) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(rawInput)) {
+      triggerFieldError('regUsername');
       errorEl.textContent = t('auth_err_email_invalid', 'Vui lòng nhập đúng định dạng email hợp lệ.');
       errorEl.style.display = 'block';
       return;
     }
   } else {
     if (rawInput.length < 3) {
+      triggerFieldError('regUsername');
       errorEl.textContent = t('auth_err_min_user', 'Tên đăng nhập phải có ít nhất 3 ký tự.');
       errorEl.style.display = 'block';
       return;
@@ -1614,12 +1636,14 @@ export const handleRegisterSubmit = async (e) => {
   }
 
   if (password.length < 6) {
+    triggerFieldError('regPassword');
     errorEl.textContent = t('auth_err_min_pass', 'Mật khẩu tối thiểu 6 ký tự.');
     errorEl.style.display = 'block';
     return;
   }
 
   if (password !== passwordConfirm) {
+    triggerFieldError('regPasswordConfirm');
     errorEl.textContent = t('auth_err_pass_mismatch', 'Mật khẩu xác nhận không khớp.');
     errorEl.style.display = 'block';
     return;
@@ -1629,13 +1653,7 @@ export const handleRegisterSubmit = async (e) => {
 
   const agreeTermsEl = document.getElementById('regAgreeTerms');
   if (agreeTermsEl && !agreeTermsEl.checked) {
-    const agreeBox = document.getElementById('authTermsAgreeBox');
-    if (agreeBox) {
-      agreeBox.classList.remove('terms-error-shake');
-      void agreeBox.offsetWidth;
-      agreeBox.classList.add('terms-error-shake');
-    }
-    triggerHaptic('medium');
+    triggerFieldError('authTermsAgreeBox', { focus: false });
     agreeTermsEl.focus();
     return;
   }
@@ -1950,12 +1968,14 @@ export const handleGoogleSignIn = async () => {
 
 export const handleForgotPasswordSubmit = async (e) => {
   e.preventDefault();
+  clearFieldErrors(document.getElementById('formForgotPassword'));
   const emailInput = document.getElementById('forgotEmail').value.trim();
   const errorEl = document.getElementById('forgotError');
   const successEl = document.getElementById('forgotSuccess');
   const submitBtn = document.getElementById('btnFormForgotSubmit');
 
-  if (!emailInput || !emailInput.includes('@')) {
+  if (!emailInput || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput)) {
+    triggerFieldError('forgotEmail');
     errorEl.textContent = t('auth_err_email_invalid', 'Email không hợp lệ.');
     errorEl.style.display = 'block';
     if (successEl) successEl.style.display = 'none';
@@ -1991,12 +2011,14 @@ export const handleForgotPasswordSubmit = async (e) => {
 
 export const handleResetPasswordSubmit = async (e) => {
   e.preventDefault();
+  clearFieldErrors(document.getElementById('formResetPassword'));
   const newPass = document.getElementById('resetNewPassword').value;
   const confirmPass = document.getElementById('resetConfirmPassword').value;
   const errorEl = document.getElementById('resetPasswordError');
   const submitBtn = document.getElementById('btnSubmitResetPassword');
 
   if (!newPass || newPass.length < 6) {
+    triggerFieldError('resetNewPassword');
     if (errorEl) {
       errorEl.textContent = t('auth_err_min_pass', 'Mật khẩu tối thiểu 6 ký tự.');
       errorEl.style.display = 'block';
@@ -2005,6 +2027,7 @@ export const handleResetPasswordSubmit = async (e) => {
   }
 
   if (newPass !== confirmPass) {
+    triggerFieldError('resetConfirmPassword');
     if (errorEl) {
       errorEl.textContent = t('auth_err_pass_mismatch', 'Mật khẩu xác nhận không khớp.');
       errorEl.style.display = 'block';
@@ -2069,12 +2092,14 @@ export const handleLinkGoogleAccount = async () => {
 
 export const handleChangePasswordSubmit = async (e) => {
   e.preventDefault();
+  clearFieldErrors(document.getElementById('formChangePassword'));
   const newPassword = document.getElementById('changeNewPassword').value;
   const confirmPassword = document.getElementById('changeConfirmPassword').value;
   const errorEl = document.getElementById('changePasswordMsg');
   const submitBtn = document.getElementById('btnSubmitChangePassword');
 
   if (!newPassword || newPassword.length < 6) {
+    triggerFieldError('changeNewPassword');
     const lenMsg = t('auth_err_min_pass', 'Mật khẩu tối thiểu 6 ký tự.');
     if (errorEl) {
       errorEl.textContent = lenMsg;
@@ -2085,6 +2110,7 @@ export const handleChangePasswordSubmit = async (e) => {
   }
 
   if (newPassword !== confirmPassword) {
+    triggerFieldError('changeConfirmPassword');
     const misMsg = t('auth_err_pass_mismatch', 'Mật khẩu xác nhận không khớp.');
     if (errorEl) {
       errorEl.textContent = misMsg;

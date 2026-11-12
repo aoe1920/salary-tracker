@@ -10,7 +10,7 @@ import { drawDashboardWeekChart, setAllWeeksModalOpener, renderAnalyticsDashboar
 import { renderSlipCanvas, openShareSlipModal, downloadSlipImage, copySlipImageToClipboard } from './ui/canvas-slip.js';
 import { exportCurrentWeekCSV, exportAllWeeksCSV, backupJSON, restoreJSON, setExportAppRenderer } from './ui/export.js';
 import { showConfirmDialog, showAlertDialog, initDialogHandlers } from './ui/dialog.js';
-import { closeModal, openLegalModal, openAddShiftModal, openEditShiftModal, updateModalComputedPreview, saveShiftFromModal, deleteShift, undoLastDeleteShift, createNewWeek, openEditWeekModal, saveWeekMeta, deleteCurrentWeek, undoLastDeleteWeek, navigateWeek, renderMonthlyReport, switchSummaryTab, openAllWeeksModal, openAuthModal, switchAuthTab, clearAuthErrors, openUserProfileModal, collapsePasswordSection, collapseAvatarPicker, setupPasswordToggles, setModalAppRenderer, openResetPasswordModal, initSlimeSegmentedBars, syncSlimeGlider, parseWpRate, formatWpRateDisplay, syncShiftRateInput } from './ui/modals.js';
+import { closeModal, openLegalModal, openAddShiftModal, openEditShiftModal, updateModalComputedPreview, saveShiftFromModal, deleteShift, undoLastDeleteShift, createNewWeek, openEditWeekModal, saveWeekMeta, deleteCurrentWeek, undoLastDeleteWeek, navigateWeek, renderMonthlyReport, switchSummaryTab, openAllWeeksModal, openAuthModal, switchAuthTab, clearAuthErrors, openUserProfileModal, collapsePasswordSection, collapseAvatarPicker, setupPasswordToggles, setModalAppRenderer, openResetPasswordModal, initSlimeSegmentedBars, syncSlimeGlider, parseWpRate, formatWpRateDisplay, syncShiftRateInput, bindNumericFormatInput } from './ui/modals.js';
 
 const updateWheelIndicator = () => {};
 
@@ -698,16 +698,16 @@ const bindEvents = () => {
       updateModalComputedPreview();
     });
   }
-  const shiftAllowanceInput = document.getElementById('shiftAllowance');
-  if (shiftAllowanceInput) {
-    shiftAllowanceInput.addEventListener('input', updateModalComputedPreview);
-    shiftAllowanceInput.addEventListener('change', updateModalComputedPreview);
-  }
-  const shiftDeductionInput = document.getElementById('shiftDeduction');
-  if (shiftDeductionInput) {
-    shiftDeductionInput.addEventListener('input', updateModalComputedPreview);
-    shiftDeductionInput.addEventListener('change', updateModalComputedPreview);
-  }
+  bindNumericFormatInput('shiftAllowance', {
+    emptyOnZeroBlur: false,
+    onValueChange: updateModalComputedPreview,
+    onBlurChange: updateModalComputedPreview
+  });
+  bindNumericFormatInput('shiftDeduction', {
+    emptyOnZeroBlur: false,
+    onValueChange: updateModalComputedPreview,
+    onBlurChange: updateModalComputedPreview
+  });
   const shiftWorkplaceInput = document.getElementById('shiftWorkplace');
   if (shiftWorkplaceInput) shiftWorkplaceInput.addEventListener('input', updateModalComputedPreview);
 
@@ -932,18 +932,15 @@ const bindEvents = () => {
     });
   }
 
-  const shiftRateInput = document.getElementById('shiftRateInput');
-  if (shiftRateInput) {
-    shiftRateInput.addEventListener('focus', () => {
-      shiftRateInput.select();
-    });
-    shiftRateInput.addEventListener('input', updateModalComputedPreview);
-    shiftRateInput.addEventListener('blur', () => {
-      const val = parseWpRate(shiftRateInput.value);
-      shiftRateInput.value = val > 0 ? formatWpRateDisplay(val) : '0';
-      updateModalComputedPreview();
-    });
-  }
+  bindNumericFormatInput('shiftRateInput', {
+    emptyOnZeroBlur: false,
+    onValueChange: updateModalComputedPreview,
+    onBlurChange: updateModalComputedPreview
+  });
+
+  document.addEventListener('invalid', (e) => {
+    e.preventDefault();
+  }, true);
 
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.custom-select-wrapper')) {
