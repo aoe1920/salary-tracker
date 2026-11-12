@@ -76,9 +76,15 @@
 .modal-backdrop[style*="display: flex"] .modal-surface,
 .modal-backdrop.is-open .modal-surface {
   animation: modalSurfaceEnter 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
 }
 
 @media (max-width: 640px) {
+  .modal-backdrop {
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+
   @keyframes modalSurfaceMobileSlide {
     from {
       opacity: 0;

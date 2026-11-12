@@ -138,7 +138,7 @@ body {
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 5.75rem);
   line-height: 1.5;
-  background-color: #8bb8f0;
+  background-color: transparent;
   color: var(--text-main);
   caret-color: var(--primary);
   overscroll-behavior-x: none;
@@ -151,14 +151,17 @@ body::before {
   content: '';
   position: fixed;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
   background-color: #8bb8f0;
   background-image: url('../assets/backgrounds/bg-liquid-light.svg?v=20261111m');
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
-  transform: translateZ(0);
+  contain: layout style paint;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
   will-change: transform;
 }
 
@@ -168,7 +171,7 @@ html.dark-mode {
 
 html.dark-mode body,
 body.dark-mode {
-  background-color: #05070d;
+  background-color: transparent;
 }
 
 html.dark-mode body::before,
@@ -303,13 +306,15 @@ body::-webkit-scrollbar {
 }
 
 .app-layout {
+  position: relative;
+  z-index: 1;
   max-width: 780px;
   margin: 0 auto;
   padding: 1.25rem 1.25rem 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 1.15rem;
-  animation: appBootFadeIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: appBootFadeIn 0.24s cubic-bezier(0.22, 1, 0.36, 1) both;
   overflow-x: clip;
 }
 
@@ -358,6 +363,11 @@ body.dark-mode .app-header {
   backdrop-filter: blur(12px) saturate(160%);
   -webkit-backdrop-filter: blur(12px) saturate(160%);
   color: #f8fafc;
+}
+
+.app-header .btn-morphic {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .header-left {
