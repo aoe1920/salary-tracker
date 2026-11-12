@@ -44,6 +44,33 @@ const getUniqueWorkplacesList = () => {
   return Array.from(set);
 };
 
+export const parseWpRate = (raw) => {
+  if (raw === null || raw === undefined) return 0;
+  const str = String(raw).trim().toLowerCase();
+  if (!str) return 0;
+  if (str.endsWith('k')) {
+    const n = parseFloat(str.replace(/,/g, '.'));
+    return !isNaN(n) && n >= 0 ? Math.round(n * 1000) : 0;
+  }
+  const cleaned = str.replace(/[^\d]/g, '');
+  const num = Number(cleaned);
+  return !isNaN(num) && num >= 0 ? num : 0;
+};
+
+export const formatWpRateDisplay = (num) => {
+  const val = Number(num);
+  if (!val || isNaN(val) || val <= 0) return '';
+  return new Intl.NumberFormat('vi-VN').format(val);
+};
+
+export const syncShiftRateInput = (workplace = '') => {
+  const rateInput = document.getElementById('shiftRateInput');
+  if (!rateInput) return;
+  const wp = (workplace || document.getElementById('shiftWorkplace')?.value || getDefaultWorkplace() || '').trim();
+  const currentRate = getShiftRate({ workplace: wp });
+  rateInput.value = currentRate > 0 ? formatWpRateDisplay(currentRate) : '0';
+};
+
 const updateWorkplaceInputOptions = (currentVal = '') => {
   const select = document.getElementById('shiftWorkplace');
   if (!select) return;
@@ -92,7 +119,10 @@ export const openAddShiftModal = (prefill = null) => {
   document.getElementById('editShiftId').value = '';
 
   const btnDel = document.getElementById('btnDeleteShiftModal');
-  if (btnDel) btnDel.style.display = 'none';
+  if (btnDel) {
+    btnDel.style.display = 'none';
+    btnDel.hidden = true;
+  }
 
   const week = getCurrentWeek();
   updateShiftDayOptions(week);
@@ -109,6 +139,7 @@ export const openAddShiftModal = (prefill = null) => {
   syncCustomSelect('shiftDay');
   syncCustomSelect('shiftType');
   syncCustomSelect('shiftWorkplace');
+  syncShiftRateInput(document.getElementById('shiftWorkplace')?.value || defaultWp);
 
   const startEl = document.getElementById('shiftStart');
   const endEl = document.getElementById('shiftEnd');
@@ -142,7 +173,10 @@ export const openEditShiftModal = (shift) => {
   document.getElementById('editShiftId').value = shift.id;
 
   const btnDel = document.getElementById('btnDeleteShiftModal');
-  if (btnDel) btnDel.style.display = 'inline-flex';
+  if (btnDel) {
+    btnDel.hidden = false;
+    btnDel.style.display = 'inline-flex';
+  }
 
   const week = getCurrentWeek();
   updateShiftDayOptions(week);
@@ -156,6 +190,7 @@ export const openEditShiftModal = (shift) => {
   syncCustomSelect('shiftDay');
   syncCustomSelect('shiftType');
   syncCustomSelect('shiftWorkplace');
+  syncShiftRateInput(document.getElementById('shiftWorkplace')?.value || shift.workplace || '');
 
   document.getElementById('shiftStart').value = shift.start;
   document.getElementById('shiftEnd').value = shift.end;
@@ -206,7 +241,8 @@ export const updateModalComputedPreview = () => {
   }
 
   const hours = calculateHoursDiff(start, end, breakMins);
-  const rate = getShiftRate({ workplace });
+  const rateInput = document.getElementById('shiftRateInput');
+  const rate = (rateInput && rateInput.value.trim()) ? parseWpRate(rateInput.value) : getShiftRate({ workplace });
   const rawWage = hours * rate * otRate + allowance - deduction;
   const wage = Math.max(0, Math.round(Number.isFinite(rawWage) ? rawWage : 0));
   const effectiveHours = Math.max(0, Math.round(hours * otRate * 100) / 100);
@@ -299,8 +335,23 @@ export const saveShiftFromModal = async (e) => {
 
   if (workplace) {
     if (!Array.isArray(state.settings.workplaces)) state.settings.workplaces = [];
+    let settingsChanged = false;
     if (!state.settings.workplaces.includes(workplace)) {
       state.settings.workplaces.push(workplace);
+      settingsChanged = true;
+    }
+    const rateInput = document.getElementById('shiftRateInput');
+    if (rateInput && rateInput.value.trim()) {
+      const nextRate = parseWpRate(rateInput.value);
+      if (!state.settings.workplaceRates || typeof state.settings.workplaceRates !== 'object') {
+        state.settings.workplaceRates = {};
+      }
+      if (state.settings.workplaceRates[workplace] !== nextRate) {
+        state.settings.workplaceRates[workplace] = nextRate;
+        settingsChanged = true;
+      }
+    }
+    if (settingsChanged) {
       saveSettings();
     }
   }
@@ -914,25 +965,6 @@ export const openAllWeeksModal = (initialTab = 'analytics') => {
   });
 };
 
-const parseWpRate = (raw) => {
-  if (raw === null || raw === undefined) return 0;
-  const str = String(raw).trim().toLowerCase();
-  if (!str) return 0;
-  if (str.endsWith('k')) {
-    const n = parseFloat(str.replace(/,/g, '.'));
-    return !isNaN(n) && n >= 0 ? Math.round(n * 1000) : 0;
-  }
-  const cleaned = str.replace(/[^\d]/g, '');
-  const num = Number(cleaned);
-  return !isNaN(num) && num >= 0 ? num : 0;
-};
-
-const formatWpRateDisplay = (num) => {
-  const val = Number(num);
-  if (!val || isNaN(val) || val <= 0) return '';
-  return new Intl.NumberFormat('vi-VN').format(val);
-};
-
 export const renderShiftWorkplacesList = () => {};
 
 export const addWorkplaceFromShiftModal = () => {};
@@ -1493,6 +1525,7 @@ export const renderProfileWorkplacesEditList = () => {
 export const addWorkplaceFromProfile = () => {
   if (!state.currentUser && state.settings.workplaces && state.settings.workplaces.length >= 1) {
     showToast('Vui lòng đăng nhập để thêm từ 2 cơ sở làm việc');
+    closeModal('userProfileModal');
     openAuthModal('login');
     return;
   }
@@ -1542,33 +1575,48 @@ export const addWorkplaceFromProfile = () => {
 };
 
 export const openUserProfileModal = () => {
-  if (!state.currentUser) {
-    openAuthModal('login');
-    return;
-  }
-
   const modal = document.getElementById('userProfileModal');
   if (!modal) return;
 
-  let username = state.currentUser.username || 'user';
-  if (username.includes(' ') || !username.match(/^[a-zA-Z0-9_.-]+$/)) {
-    if (state.currentUser?.email) {
-      username = state.currentUser.email.split('@')[0].trim().replace(/\s+/g, '').toLowerCase();
-      state.currentUser.username = username;
-    }
-  }
-  const currentAvatarId = state.currentUser?.avatar || state.settings?.avatar || 'default';
+  const isGuest = !state.currentUser;
+  const headerTitle = modal.querySelector('.modal-title');
+  const headerSubtitle = modal.querySelector('.modal-subtitle');
+  const headerCard = modal.querySelector('.profile-header-card');
+  const statsCard = modal.querySelector('.profile-stats-card');
+  const pwdBox = modal.querySelector('.profile-change-pwd-box');
+  const modalFooter = modal.querySelector('.modal-footer');
 
-  const avatarContent = document.getElementById('profileAvatarContent');
-  if (avatarContent) {
-    avatarContent.innerHTML = getAvatarSvg(currentAvatarId);
+  if (headerTitle) {
+    headerTitle.textContent = isGuest ? 'Cơ sở và Đơn giá' : t('profile_title', 'Hồ sơ người dùng');
   }
+  if (headerSubtitle) {
+    headerSubtitle.textContent = isGuest ? 'Tùy chỉnh tên nơi làm và đơn giá theo giờ' : 'Tài khoản và đổi mật khẩu';
+  }
+  if (headerCard) headerCard.style.display = isGuest ? 'none' : '';
+  if (statsCard) statsCard.style.display = isGuest ? 'none' : '';
+  if (modalFooter) modalFooter.style.display = isGuest ? 'none' : '';
 
   collapseAvatarPicker();
   collapsePasswordSection();
   collapseProfileWorkplacesEdit();
 
-  document.getElementById('profileUsername').textContent = `@${username}`;
+  if (!isGuest) {
+    let username = state.currentUser.username || 'user';
+    if (username.includes(' ') || !username.match(/^[a-zA-Z0-9_.-]+$/)) {
+      if (state.currentUser?.email) {
+        username = state.currentUser.email.split('@')[0].trim().replace(/\s+/g, '').toLowerCase();
+        state.currentUser.username = username;
+      }
+    }
+    const currentAvatarId = state.currentUser?.avatar || state.settings?.avatar || 'default';
+
+    const avatarContent = document.getElementById('profileAvatarContent');
+    if (avatarContent) {
+      avatarContent.innerHTML = getAvatarSvg(currentAvatarId);
+    }
+
+    document.getElementById('profileUsername').textContent = `@${username}`;
+  }
 
   const viewWrap = document.getElementById('profileUsernameView');
   const editWrap = document.getElementById('profileUsernameEdit');
@@ -1806,43 +1854,47 @@ export const openUserProfileModal = () => {
     };
   }
 
-  const pwdBox = document.querySelector('.profile-change-pwd-box');
   if (pwdBox) {
-    pwdBox.style.display = 'block';
+    pwdBox.style.display = isGuest ? 'none' : 'block';
   }
-  const hasPassword = Boolean(
-    (state.currentUser?.email && state.currentUser.email.endsWith('@salary.app')) ||
-    state.currentUser?.has_password ||
-    state.currentUser?.user_metadata?.has_password ||
-    (Array.isArray(state.currentUser?.identities) && state.currentUser.identities.some(i => i.provider === 'email')) ||
-    (Array.isArray(state.currentUser?.app_metadata?.providers) && state.currentUser.app_metadata.providers.includes('email'))
-  );
-  const pwdTitle = document.getElementById('profileChangePwdTitle');
-  if (pwdTitle) {
-    pwdTitle.textContent = hasPassword ? t('profile_change_pw', 'Đổi mật khẩu') : t('profile_create_pw', 'Tạo mật khẩu');
-  }
-  const btnSubmitPwd = document.getElementById('btnSubmitChangePassword');
-  if (btnSubmitPwd) {
-    const lbl = hasPassword ? t('profile_change_pw', 'Đổi mật khẩu') : t('profile_create_pw', 'Tạo mật khẩu');
-    btnSubmitPwd.title = lbl;
-    btnSubmitPwd.setAttribute('aria-label', lbl);
-  }
+  if (!isGuest) {
+    const hasPassword = Boolean(
+      (state.currentUser?.email && state.currentUser.email.endsWith('@salary.app')) ||
+      state.currentUser?.has_password ||
+      state.currentUser?.user_metadata?.has_password ||
+      (Array.isArray(state.currentUser?.identities) && state.currentUser.identities.some(i => i.provider === 'email')) ||
+      (Array.isArray(state.currentUser?.app_metadata?.providers) && state.currentUser.app_metadata.providers.includes('email'))
+    );
+    const pwdTitle = document.getElementById('profileChangePwdTitle');
+    if (pwdTitle) {
+      pwdTitle.textContent = hasPassword ? t('profile_change_pw', 'Đổi mật khẩu') : t('profile_create_pw', 'Tạo mật khẩu');
+    }
+    const btnSubmitPwd = document.getElementById('btnSubmitChangePassword');
+    if (btnSubmitPwd) {
+      const lbl = hasPassword ? t('profile_change_pw', 'Đổi mật khẩu') : t('profile_create_pw', 'Tạo mật khẩu');
+      btnSubmitPwd.title = lbl;
+      btnSubmitPwd.setAttribute('aria-label', lbl);
+    }
 
-  const btnLinkGoogle = document.getElementById('btnLinkGoogleAccount');
-  const badgeGoogle = document.getElementById('badgeGoogleLinked');
-  const isGoogle = Boolean(state.currentUser?.email && !state.currentUser.email.endsWith('@salary.app'));
-  const isGoogleLinked = isGoogle || (Array.isArray(state.currentUser?.identities) && state.currentUser.identities.some(i => i.provider === 'google'));
-  if (btnLinkGoogle) {
-    btnLinkGoogle.style.display = isGoogleLinked ? 'none' : 'inline-flex';
-    btnLinkGoogle.onclick = (e) => {
-      e.preventDefault();
-      triggerHaptic('medium');
-      handleLinkGoogleAccount();
-    };
+    const btnLinkGoogle = document.getElementById('btnLinkGoogleAccount');
+    const badgeGoogle = document.getElementById('badgeGoogleLinked');
+    const isGoogle = Boolean(state.currentUser?.email && !state.currentUser.email.endsWith('@salary.app'));
+    const isGoogleLinked = isGoogle || (Array.isArray(state.currentUser?.identities) && state.currentUser.identities.some(i => i.provider === 'google'));
+    if (btnLinkGoogle) {
+      btnLinkGoogle.style.display = isGoogleLinked ? 'none' : 'inline-flex';
+      btnLinkGoogle.onclick = (e) => {
+        e.preventDefault();
+        triggerHaptic('medium');
+        handleLinkGoogleAccount();
+      };
+    }
+    if (badgeGoogle) badgeGoogle.style.display = isGoogleLinked ? 'inline-flex' : 'none';
   }
-  if (badgeGoogle) badgeGoogle.style.display = isGoogleLinked ? 'inline-flex' : 'none';
 
   modal.style.display = 'flex';
+  if (isGuest) {
+    expandProfileWorkplacesEdit();
+  }
 };
 
 export const setupPasswordToggles = () => {

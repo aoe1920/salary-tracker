@@ -39,22 +39,29 @@
     href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
     rel="stylesheet">
 
-  <link rel="stylesheet" href="./css/base.css?v=20261111y">
-  <link rel="stylesheet" href="./css/components.css?v=20261111y">
-  <link rel="stylesheet" href="./css/modals.css?v=20261111y">
+  <link rel="stylesheet" href="./css/base.css?v=20261111ab">
+  <link rel="stylesheet" href="./css/components.css?v=20261111ab">
+  <link rel="stylesheet" href="./css/modals.css?v=20261111ab">
   <script>
     (function() {
       try {
         var t = localStorage.getItem('salary_tracker_theme');
-        if (t === 'dark' || (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-          document.documentElement.classList.add('dark-mode');
-        }
+        var isDark = t === 'dark' || (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('dark-mode', isDark);
+        document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', isDark ? '#05070d' : '#8bb8f0');
       } catch (e) {}
     })();
   </script>
 </head>
 
 <body>
+  <script>
+    if (document.documentElement.classList.contains('dark-mode')) {
+      document.body.classList.add('dark-mode');
+    }
+  </script>
 
   <div class="app-layout">
 
@@ -76,6 +83,12 @@
           <morph-icon id="themeMorphIcon" size="18" color="currentColor" stroke-width="1.75" spring="smooth"
             icon="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></morph-icon>
         </button>
+        <script>
+          if (document.documentElement.classList.contains('dark-mode')) {
+            var _ti = document.getElementById('themeMorphIcon');
+            if (_ti) _ti.setAttribute('icon', 'M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z');
+          }
+        </script>
         <button id="btnUserAuth" class="btn-morphic" data-i18n-title="nav_account" title="Tài khoản"
           aria-label="Tài khoản">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"
@@ -280,9 +293,19 @@
       <div class="modal-body shift-modal-body">
         <input type="hidden" id="editShiftId">
 
-        <div class="form-item">
-          <label class="form-label" for="shiftWorkplace" data-i18n="modal_workplace">Nơi làm việc</label>
-          <select id="shiftWorkplace" class="form-select" required></select>
+        <div class="form-grid-2">
+          <div class="form-item">
+            <label class="form-label" for="shiftWorkplace" data-i18n="modal_workplace">Nơi làm việc</label>
+            <select id="shiftWorkplace" class="form-select" required></select>
+          </div>
+
+          <div class="form-item">
+            <label class="form-label" for="shiftRateInput">Đơn giá (đ/h)</label>
+            <div class="input-with-tag">
+              <input type="text" inputmode="numeric" id="shiftRateInput" class="form-input font-mono" placeholder="40.000" autocomplete="off">
+              <span class="tag">đ/h</span>
+            </div>
+          </div>
         </div>
 
         <div class="form-grid-2">
@@ -366,7 +389,7 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn-action-danger btn-icon-only" id="btnDeleteShiftModal" style="display: none;"
+        <button type="button" class="btn-action-danger btn-icon-only" id="btnDeleteShiftModal" style="display: none;" hidden
           data-i18n-title="btn_delete_shift" title="Xóa ca" aria-label="Xóa ca">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"
             stroke-linejoin="round" width="16" height="16">
@@ -623,10 +646,17 @@
         </div>
 
 
-        <div class="slip-options-row">
-          <label class="slip-toggle-label">
-            <input type="checkbox" id="slipIncludeMoney">
-            <span data-i18n="slip_toggle_wage">Hiển thị cả tiền lương</span>
+        <div class="auth-terms-agree-box slip-agree-box">
+          <label class="auth-terms-checkbox-label" for="slipIncludeMoney">
+            <div class="custom-checkbox-wrapper">
+              <input type="checkbox" id="slipIncludeMoney" class="custom-checkbox-input">
+              <div class="custom-checkbox-box" aria-hidden="true">
+                <svg class="custom-checkbox-check" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <polyline points="4.5 12 9.5 17 19.5 7"></polyline>
+                </svg>
+              </div>
+            </div>
+            <span class="auth-terms-caption font-sans" data-i18n="slip_toggle_wage">Hiển thị cả tiền lương</span>
           </label>
         </div>
       </div>
@@ -778,7 +808,7 @@
                 </div>
               </div>
               <span class="auth-terms-caption font-sans">
-                <span data-i18n="auth_terms_agree_label">Tôi đã đọc và đồng ý với</span>
+                <span data-i18n="auth_terms_agree_label">Tôi đồng ý với</span>
                 <button type="button" class="auth-terms-link" data-open-legal="terms" data-i18n="auth_terms_service">Điều khoản</button>
                 <span data-i18n="word_and">và</span>
                 <button type="button" class="auth-terms-link" data-open-legal="privacy" data-i18n="auth_privacy_policy">Chính sách</button>.
@@ -1316,18 +1346,10 @@
       </div>
 
       <div class="modal-footer app-dialog-footer" id="appDialogFooter">
-        <button type="button" class="btn-morphic" id="appDialogCancelBtn" aria-label="Hủy" title="Hủy">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="15" height="15">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-          <span>Hủy</span>
-        </button>
-        <button type="button" class="btn-morphic btn-morphic-primary" id="appDialogConfirmBtn" aria-label="Đồng ý" title="Đồng ý">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15">
+        <button type="button" class="btn-action-primary btn-icon-only" id="appDialogConfirmBtn" aria-label="Đồng ý" title="Đồng ý">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
-          <span>Đồng ý</span>
         </button>
       </div>
     </div>
@@ -1338,7 +1360,7 @@
 
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="./js/app.js?v=20261111y"></script>
+  <script type="module" src="./js/app.js?v=20261111ab"></script>
 </body>
 
 </html>

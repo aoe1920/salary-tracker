@@ -13,9 +13,9 @@ const ICONS = {
   info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>'
 };
 
-const BTN_ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-const BTN_ICON_TRASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>';
-const BTN_ICON_LOGOUT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>';
+const BTN_ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+const BTN_ICON_TRASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>';
+const BTN_ICON_LOGOUT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>';
 
 const closeDialog = (result) => {
   triggerHaptic(result ? 'medium' : 'light');
@@ -103,32 +103,19 @@ export const showConfirmDialog = (options = {}) => {
     }
 
     if (cancelBtn) {
-      cancelBtn.style.display = 'inline-flex';
-      cancelBtn.className = 'btn-morphic';
-      cancelBtn.innerHTML = `
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="15" height="15">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-        <span>${opts.cancelText || t('btn_cancel', 'Hủy')}</span>
-      `;
-      cancelBtn.title = opts.cancelText || t('btn_cancel', 'Hủy');
-      cancelBtn.setAttribute('aria-label', opts.cancelText || t('btn_cancel', 'Hủy'));
+      cancelBtn.style.display = 'none';
     }
 
     if (confirmBtn) {
-      let confirmClass = 'btn-morphic btn-morphic-primary';
+      let confirmClass = 'btn-action-primary btn-icon-only';
       let confirmIcon = BTN_ICON_CHECK;
       if (isDanger) {
-        confirmClass = 'btn-morphic btn-morphic-danger';
+        confirmClass = 'btn-action-danger btn-icon-only';
         confirmIcon = iconKey === 'logout' ? BTN_ICON_LOGOUT : BTN_ICON_TRASH;
-      } else if (isWarning) {
-        confirmClass = 'btn-morphic btn-morphic-primary';
-        confirmIcon = BTN_ICON_CHECK;
       }
       const confirmLabel = opts.confirmText || (isDanger ? t('btn_delete', 'Xóa') : t('dialog_btn_ok', 'Đồng ý'));
       confirmBtn.className = confirmClass;
-      confirmBtn.innerHTML = `${confirmIcon}<span>${confirmLabel}</span>`;
+      confirmBtn.innerHTML = confirmIcon;
       confirmBtn.title = confirmLabel;
       confirmBtn.setAttribute('aria-label', confirmLabel);
     }
@@ -218,8 +205,8 @@ export const showAlertDialog = (options = {}) => {
 
     if (confirmBtn) {
       const okLabel = opts.okText || t('dialog_btn_understood', 'Đã hiểu');
-      confirmBtn.className = isError ? 'btn-morphic btn-morphic-danger' : 'btn-morphic btn-morphic-primary';
-      confirmBtn.innerHTML = `${BTN_ICON_CHECK}<span>${okLabel}</span>`;
+      confirmBtn.className = isError ? 'btn-action-danger btn-icon-only' : 'btn-action-primary btn-icon-only';
+      confirmBtn.innerHTML = BTN_ICON_CHECK;
       confirmBtn.title = okLabel;
       confirmBtn.setAttribute('aria-label', okLabel);
     }

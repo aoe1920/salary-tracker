@@ -10,7 +10,7 @@ import { drawDashboardWeekChart, setAllWeeksModalOpener, renderAnalyticsDashboar
 import { renderSlipCanvas, openShareSlipModal, downloadSlipImage, copySlipImageToClipboard } from './ui/canvas-slip.js';
 import { exportCurrentWeekCSV, exportAllWeeksCSV, backupJSON, restoreJSON, setExportAppRenderer } from './ui/export.js';
 import { showConfirmDialog, showAlertDialog, initDialogHandlers } from './ui/dialog.js';
-import { closeModal, openLegalModal, openAddShiftModal, openEditShiftModal, updateModalComputedPreview, saveShiftFromModal, deleteShift, undoLastDeleteShift, createNewWeek, openEditWeekModal, saveWeekMeta, deleteCurrentWeek, undoLastDeleteWeek, navigateWeek, renderMonthlyReport, switchSummaryTab, openAllWeeksModal, openAuthModal, switchAuthTab, clearAuthErrors, openUserProfileModal, collapsePasswordSection, collapseAvatarPicker, setupPasswordToggles, setModalAppRenderer, openResetPasswordModal, initSlimeSegmentedBars, syncSlimeGlider } from './ui/modals.js';
+import { closeModal, openLegalModal, openAddShiftModal, openEditShiftModal, updateModalComputedPreview, saveShiftFromModal, deleteShift, undoLastDeleteShift, createNewWeek, openEditWeekModal, saveWeekMeta, deleteCurrentWeek, undoLastDeleteWeek, navigateWeek, renderMonthlyReport, switchSummaryTab, openAllWeeksModal, openAuthModal, switchAuthTab, clearAuthErrors, openUserProfileModal, collapsePasswordSection, collapseAvatarPicker, setupPasswordToggles, setModalAppRenderer, openResetPasswordModal, initSlimeSegmentedBars, syncSlimeGlider, parseWpRate, formatWpRateDisplay, syncShiftRateInput } from './ui/modals.js';
 
 const updateWheelIndicator = () => {};
 
@@ -403,7 +403,6 @@ const renderShiftsList = () => {
                 <path d="M5 12h14"></path>
                 <path d="M12 5v14"></path>
               </svg>
-              <span>${t('btn_add_shift', 'Thêm ca')}</span>
             </button>
           ` : `
             <button type="button" class="btn-morphic btn-morphic-primary" id="btnEmptyAddWp" data-i18n-title="btn_add_workplace" title="${t('btn_add_workplace', 'Thêm nơi làm')}" aria-label="${t('btn_add_workplace', 'Thêm nơi làm')}">
@@ -411,19 +410,17 @@ const renderShiftsList = () => {
                 <path d="M5 12h14"></path>
                 <path d="M12 5v14"></path>
               </svg>
-              <span>${t('btn_add_workplace', 'Thêm nơi làm')}</span>
             </button>
           `}
           ${!isOnlyWeek ? `
             <button type="button" class="btn-morphic" id="btnEmptyDeleteWeek" data-i18n-title="btn_delete_week" title="${t('btn_delete_week', 'Xóa tuần')}" aria-label="${t('btn_delete_week', 'Xóa tuần')}">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="15" height="15">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
                 <path d="M3 6h18"></path>
                 <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
                 <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
                 <line x1="10" x2="10" y1="11" y2="17"></line>
                 <line x1="14" x2="14" y1="11" y2="17"></line>
               </svg>
-              <span>${t('btn_delete_week', 'Xóa tuần')}</span>
             </button>
           ` : ''}
         </div>
@@ -929,7 +926,23 @@ const bindEvents = () => {
 
   const shiftWpSelect = document.getElementById('shiftWorkplace');
   if (shiftWpSelect) {
-    shiftWpSelect.addEventListener('change', updateModalComputedPreview);
+    shiftWpSelect.addEventListener('change', () => {
+      syncShiftRateInput(shiftWpSelect.value);
+      updateModalComputedPreview();
+    });
+  }
+
+  const shiftRateInput = document.getElementById('shiftRateInput');
+  if (shiftRateInput) {
+    shiftRateInput.addEventListener('focus', () => {
+      shiftRateInput.select();
+    });
+    shiftRateInput.addEventListener('input', updateModalComputedPreview);
+    shiftRateInput.addEventListener('blur', () => {
+      const val = parseWpRate(shiftRateInput.value);
+      shiftRateInput.value = val > 0 ? formatWpRateDisplay(val) : '0';
+      updateModalComputedPreview();
+    });
   }
 
   document.addEventListener('click', (e) => {
