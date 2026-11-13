@@ -2070,6 +2070,95 @@ export const openUserProfileModal = () => {
 };
 
 export const setupPasswordToggles = () => {
+  const PASSWORD_PAIRS = [
+    ['regPassword', 'regPasswordConfirm'],
+    ['resetNewPassword', 'resetConfirmPassword'],
+    ['changeNewPassword', 'changeConfirmPassword']
+  ];
+
+  const copyPasswordText = async (inp) => {
+    if (!inp) return;
+    const start = inp.selectionStart;
+    const end = inp.selectionEnd;
+    const text = (start !== null && end !== null && start !== end) ? inp.value.slice(start, end) : inp.value;
+    if (!text) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return;
+      } catch (_) {}
+    }
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    ta.style.top = '0';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try {
+      document.execCommand('copy');
+    } catch (_) {}
+    document.body.removeChild(ta);
+    inp.focus();
+    if (start !== null && end !== null) {
+      try {
+        inp.setSelectionRange(start, end);
+      } catch (_) {}
+    }
+  };
+
+  document.querySelectorAll('input.input-has-eye, input[type="password"]').forEach(inp => {
+    inp.addEventListener('copy', (e) => {
+      const start = inp.selectionStart;
+      const end = inp.selectionEnd;
+      const text = (start !== null && end !== null && start !== end) ? inp.value.slice(start, end) : inp.value;
+      if (text) {
+        if (e.clipboardData) {
+          e.preventDefault();
+          e.clipboardData.setData('text/plain', text);
+        }
+        copyPasswordText(inp);
+      }
+    });
+    inp.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'C')) {
+        copyPasswordText(inp);
+      }
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'x' || e.key === 'X')) {
+        const start = inp.selectionStart;
+        const end = inp.selectionEnd;
+        const text = (start !== null && end !== null && start !== end) ? inp.value.slice(start, end) : inp.value;
+        if (text) {
+          copyPasswordText(inp);
+          if (start !== null && end !== null && start !== end) {
+            e.preventDefault();
+            inp.value = inp.value.slice(0, start) + inp.value.slice(end);
+            inp.setSelectionRange(start, start);
+            inp.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+        }
+      }
+    });
+  });
+
+  document.addEventListener('copy', (e) => {
+    const active = document.activeElement;
+    if (active && (active.type === 'password' || active.classList?.contains('input-has-eye'))) {
+      const start = active.selectionStart;
+      const end = active.selectionEnd;
+      const text = (start !== null && end !== null && start !== end) ? active.value.slice(start, end) : active.value;
+      if (text) {
+        if (e.clipboardData) {
+          e.preventDefault();
+          e.clipboardData.setData('text/plain', text);
+        }
+        copyPasswordText(active);
+      }
+    }
+  });
+
   document.querySelectorAll('.btn-toggle-pwd').forEach(btn => {
     btn.addEventListener('mousedown', (e) => {
       e.preventDefault();
@@ -2084,39 +2173,54 @@ export const setupPasswordToggles = () => {
       const input = document.getElementById(targetId);
       if (!input) return;
       triggerHaptic('light');
-      const start = (input.selectionStart !== null && input.selectionStart !== undefined) ? input.selectionStart : input.value.length;
-      const end = (input.selectionEnd !== null && input.selectionEnd !== undefined) ? input.selectionEnd : input.value.length;
-      const morph = btn.querySelector('morph-icon');
+
+      const pair = PASSWORD_PAIRS.find(p => p.includes(targetId));
+      const targetIds = pair ? pair : [targetId];
       const willBeText = input.type === 'password';
 
-      input.classList.remove('input-reveal-active');
-      input.classList.add('input-reveal-dissolve');
-
-      if (morph && typeof morph.morphTo === 'function') {
-        morph.morphTo(willBeText ? EYE_OFF_PATH : EYE_OPEN_PATH);
-      } else if (morph) {
-        morph.setAttribute('icon', willBeText ? EYE_OFF_PATH : EYE_OPEN_PATH);
-      } else {
-        btn.innerHTML = willBeText ? EYE_OFF_SVG : EYE_OPEN_SVG;
-      }
-
-      const newTitle = willBeText ? t('pwd_hide', 'Ẩn mật khẩu') : t('pwd_show', 'Hiện mật khẩu');
-      btn.setAttribute('title', newTitle);
-      btn.setAttribute('aria-label', newTitle);
+      targetIds.forEach(id => {
+        const inp = document.getElementById(id);
+        const b = document.querySelector(`.btn-toggle-pwd[data-target="${id}"]`);
+        if (b) {
+          const morph = b.querySelector('morph-icon');
+          if (morph && typeof morph.morphTo === 'function') {
+            morph.morphTo(willBeText ? EYE_OFF_PATH : EYE_OPEN_PATH);
+          } else if (morph) {
+            morph.setAttribute('icon', willBeText ? EYE_OFF_PATH : EYE_OPEN_PATH);
+          } else {
+            b.innerHTML = willBeText ? EYE_OFF_SVG : EYE_OPEN_SVG;
+          }
+          const newTitle = willBeText ? t('pwd_hide', 'Ẩn mật khẩu') : t('pwd_show', 'Hiện mật khẩu');
+          b.setAttribute('title', newTitle);
+          b.setAttribute('aria-label', newTitle);
+        }
+        if (inp) {
+          inp.classList.remove('input-reveal-active');
+          inp.classList.add('input-reveal-dissolve');
+        }
+      });
 
       setTimeout(() => {
-        input.type = willBeText ? 'text' : 'password';
-        input.focus();
-        try {
-          if (start !== null && end !== null) {
-            input.setSelectionRange(start, end);
+        targetIds.forEach(id => {
+          const inp = document.getElementById(id);
+          if (!inp) return;
+          const start = (inp.selectionStart !== null && inp.selectionStart !== undefined) ? inp.selectionStart : inp.value.length;
+          const end = (inp.selectionEnd !== null && inp.selectionEnd !== undefined) ? inp.selectionEnd : inp.value.length;
+          inp.type = willBeText ? 'text' : 'password';
+          if (inp.id === targetId) {
+            inp.focus();
+            try {
+              if (start !== null && end !== null) {
+                inp.setSelectionRange(start, end);
+              }
+            } catch (_) {}
           }
-        } catch (_) {}
-        input.classList.remove('input-reveal-dissolve');
-        input.classList.add('input-reveal-active');
-        setTimeout(() => {
-          input.classList.remove('input-reveal-active');
-        }, 160);
+          inp.classList.remove('input-reveal-dissolve');
+          inp.classList.add('input-reveal-active');
+          setTimeout(() => {
+            inp.classList.remove('input-reveal-active');
+          }, 160);
+        });
       }, 70);
     });
   });

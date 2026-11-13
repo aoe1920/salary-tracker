@@ -1223,7 +1223,6 @@ body.dark-mode .app-footer-dot {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  overflow-x: clip;
 }
 
 .shifts-header {
@@ -1289,7 +1288,6 @@ body.dark-mode .badge-count {
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
-  overflow-x: clip;
 }
 
 .shifts-list-fade {

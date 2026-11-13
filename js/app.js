@@ -1076,7 +1076,18 @@ const bindEvents = () => {
   const slipIncludeMoney = document.getElementById('slipIncludeMoney');
   if (slipIncludeMoney) {
     slipIncludeMoney.addEventListener('change', () => {
+      triggerHaptic('selection');
       renderSlipCanvas();
+    });
+  }
+
+  const slipAgreeBox = document.querySelector('.slip-agree-box');
+  if (slipAgreeBox && slipIncludeMoney) {
+    slipAgreeBox.addEventListener('click', (e) => {
+      if (e.target === slipAgreeBox) {
+        slipIncludeMoney.checked = !slipIncludeMoney.checked;
+        slipIncludeMoney.dispatchEvent(new Event('change', { bubbles: true }));
+      }
     });
   }
 
