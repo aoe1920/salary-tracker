@@ -20,3 +20,5 @@ desktop.ini
 .idea/
 *.swp
 *.swo
+*.tmp
+.temp/

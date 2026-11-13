@@ -4,45 +4,93 @@
 
 # Salary Tracker
 
-**Precision Shift Scheduling and Wage Tracking Progressive Web App**
+**Precision Shift Scheduling, Real-Time Wage Analytics & Instant Payslips**
+
+A modern, offline-first Progressive Web App designed for shift workers, freelancers, and multi-workplace professionals to track hours accurately, automate wage calculations, and generate client-side payslips.
 
 [![Live Demo](https://img.shields.io/badge/Demo-aoe1920.github.io%2Fsalary--tracker-3b82f6?style=flat-square&logo=googlechrome&logoColor=white)](https://aoe1920.github.io/salary-tracker/)
 [![Version](https://img.shields.io/badge/Release-v1.29-10b981?style=flat-square)](https://github.com/aoe1920/salary-tracker/releases)
-[![Platform](https://img.shields.io/badge/Platform-PWA%20%7C%20iOS%20%7C%20Android%20%7C%20Web-6366f1?style=flat-square&logo=pwa&logoColor=white)](https://aoe1920.github.io/salary-tracker/)
+[![Platform](https://img.shields.io/badge/Platform-PWA%20%7C%20iOS%20%7C%20Android%20%7C%20Desktop-6366f1?style=flat-square&logo=pwa&logoColor=white)](https://aoe1920.github.io/salary-tracker/)
 [![Database](https://img.shields.io/badge/Database-Supabase%20PostgreSQL-3ECF8E?style=flat-square&logo=supabase&logoColor=white)](https://supabase.com)
 [![Architecture](https://img.shields.io/badge/Architecture-Vanilla%20ESM-f59e0b?style=flat-square&logo=javascript&logoColor=black)](https://developer.mozilla.org/)
 [![License](https://img.shields.io/badge/License-MIT-gray?style=flat-square)](LICENSE)
 
-<p align="center">
-  <a href="https://aoe1920.github.io/salary-tracker/"><strong>Live Demo</strong></a>
-</p>
+<br/>
+
+<a href="https://aoe1920.github.io/salary-tracker/">
+  <img src="https://img.shields.io/badge/%E2%96%B6_Launch_App-aoe1920.github.io%2Fsalary--tracker-2563eb?style=for-the-badge" alt="Launch Web App">
+</a>
 
 </div>
 
 ---
 
-Salary Tracker is an offline-first Progressive Web App designed for shift workers, freelancers, and multi-workplace staff to log hours accurately, automate wage calculations, and generate client-side payslips.
+## Overview
 
-## Key Features
+**Salary Tracker** replaces messy notebooks and complex spreadsheets with a streamlined, elegant, and private workspace. Built with an offline-first architecture, it empowers part-time employees, freelancers, and multi-job shift workers to manage unpredictable work hours, calculate accurate gross salaries, and generate professional payslips with a single tap.
 
-- **Smart Shift Detection:** Automatically classifies shifts into Morning, Noon, or Night based on time overlap.
-- **Precision Wage Calculations:** Exact net hours with unpaid break deductions, seamless overnight shifts spanning past midnight, configurable overtime multipliers (1.5x, 2.0x, 3.0x), and shift allowances.
-- **Multi-Workplace Management:** Manage multiple employers with independent hourly wages, distinct color tags, and aggregated hours and earnings breakdown.
-- **Instant Canvas Payslips:** Renders high-DPI payslips client-side with one-click clipboard copying and high-resolution PNG export.
-- **Cloud Synchronization and Security:** Supabase Cloud authentication (Email, Password, Google OAuth PKCE) protected by PostgreSQL Row Level Security (RLS) for complete privacy and tenant isolation.
-- **Offline-First PWA Architecture:** Operates seamlessly without network connectivity via Service Worker Cache Storage, with native-like haptic feedback on mobile.
-- **Abstract Acrylic Liquid Glass UI:** Translucent layered panels, specular rim highlights, balanced light and dark modes, and mobile-friendly floating dock navigation.
+---
 
-## Tech Stack
+## Key App Features
 
-- **Frontend:** Vanilla JavaScript (ES2022 Modules), Modern CSS3 (Variables, Flexbox, Grid, Backdrop Filters)
-- **Backend and Cloud:** Supabase (PostgreSQL 15, GoTrue Auth, Row Level Security)
-- **Offline and Storage:** Service Worker API, Cache Storage, Web App Manifest
-- **Rendering:** HTML5 Canvas API, Inline Vector SVG
+### Smart Shift Detection & Time Engine
+- **Automatic Shift Classification:** Automatically identifies Morning, Noon, or Night shifts based on shift time overlap without manual selection.
+- **Precision Hour Calculations:** Deducts unpaid break times and calculates exact billable decimal hours (e.g. `5.33h`).
+- **Overnight Shift Handling:** Seamlessly supports shifts crossing past midnight into the next day (e.g. `22:00` to `06:00`).
+- **Overtime Multipliers & Extras:** Flexible OT multiplier configuration (`1.0x` to `3.0x`), shift allowances, and deductions.
+
+### Multi-Workplace Management & Independent Rates
+- **Multiple Employers & Branches:** Manage multiple workplaces with individual custom color palettes and badges.
+- **Isolated Per-Shift Rates:** Editing an hourly rate inside a shift modal applies strictly to that specific shift, keeping the global workplace rate intact.
+- **Historical Rate Integrity:** Updating a workplace's default rate freezes all existing historical shifts at their original rates. Only new shifts created forward calculate with the updated rate.
+- **Dynamic Workplace Select:** Truncates long workplace names cleanly in selection dropdowns and animates smooth marquee sliding in profile settings.
+
+### Weekly Income Trends & Analytics
+- **Authentic Day-by-Day Graph:** Smooth cubic bezier line chart visualizing daily earnings from Monday through Sunday (`T2` - `CN`).
+- **Active Day Anchors:** Workdays with active shifts are highlighted with emerald dots and bold accent labels, while days off rest at baseline.
+- **Real-Time KPI Dashboard:** Instant metrics for Weekly Gross Income, Total Billable Hours, Average Hours per Shift, and Workplace Breakdown.
+
+### Instant Canvas Payslips
+- **High-DPI Client-Side Rendering:** Generates clean, high-resolution payslips on an HTML5 Canvas directly in the browser.
+- **One-Click Clipboard Copying:** Copy payslip images directly to the system clipboard for immediate sharing via chat applications (Zalo, Messenger, Telegram).
+- **Multi-Format Export:** Export complete records to high-resolution PNG images, CSV spreadsheets, or portable JSON backups.
+
+### Acrylic Liquid Glass Design
+- **3D Acrylic Aesthetics:** Translucent layered panels, specular rim highlights, and ambient liquid ribbon background graphics.
+- **Adaptive Theme Switching:** Seamless Dark and Light modes synchronized with morphing system icons.
+- **Mobile Floating Dock:** Thumb-friendly floating navigation dock equipped with native-feel haptic feedback on mobile devices.
+- **Fluid Cross-Platform Scrolling:** Hardware-accelerated smooth scrolling optimized across both mobile touchscreens and desktop mice.
+
+### Offline-First PWA & Cloud Synchronization
+- **100% Offline Capability:** Full guest functionality stored locally via Service Worker Cache Storage; zero network connection required.
+- **Encrypted Cloud Sync:** Backed by Supabase PostgreSQL protected by Row Level Security (RLS) policies for complete data privacy.
+- **Flexible Authentication:** Sign in with Email/Password or one-click Google OAuth PKCE.
+
+---
+
+## PWA Installation
+
+Salary Tracker can be installed on your device as a standalone native-like app:
+
+- **iOS (Safari):** Tap the **Share** button in Safari -> select **Add to Home Screen** -> tap **Add**.
+- **Android (Chrome):** Tap the **three-dot menu** -> select **Install app** or **Add to Home screen**.
+- **Desktop (Chrome / Edge / Brave):** Click the **Install** button located on the right side of the address bar.
+
+---
+
+## Tech Stack & Architecture
+
+- **Frontend:** Vanilla JavaScript (ES2022 Modules), Modern CSS3 (CSS Variables, Flexbox, CSS Grid, Backdrop Filters).
+- **Zero Build Tools:** No Webpack, Vite, or Babel required; native ES module imports run directly in modern browsers.
+- **Backend & Cloud:** Supabase (PostgreSQL 15, GoTrue Auth, Row Level Security).
+- **Storage & Offline:** Service Worker API, Cache Storage, Web App Manifest, LocalStorage.
+- **Graphics & Rendering:** HTML5 Canvas API, Inline Vector SVG, CSS3 Liquid Glass shaders.
+
+---
 
 ## Quickstart
 
-Run locally without build steps:
+Run Salary Tracker locally without any build steps or package installations:
 
 ```bash
 git clone https://github.com/aoe1920/salary-tracker.git
@@ -50,17 +98,13 @@ cd salary-tracker
 npx serve .
 ```
 
-Open `http://localhost:3000` or `http://localhost:8080` in any modern web browser.
+Open `http://localhost:3000` or `http://localhost:8080` in your web browser.
 
-## PWA Installation
+---
 
-- **iOS (Safari):** Tap the Share button -> select Add to Home Screen -> tap Add.
-- **Android (Chrome):** Tap the three-dot Menu -> select Install app.
-- **Desktop (Chrome / Edge):** Click the Install button in the address bar.
+## Database Setup (Optional for Self-Hosters)
 
-## Database Setup
-
-Run the following SQL migration in your Supabase SQL Editor to initialize the schema and security policies:
+If connecting your own Supabase instance, execute the following SQL migration in your Supabase SQL Editor:
 
 ```sql
 create table if not exists public.user_salary_data (
@@ -112,6 +156,8 @@ $$;
 
 grant execute on function public.get_login_email(text) to anon, authenticated;
 ```
+
+---
 
 ## License
 

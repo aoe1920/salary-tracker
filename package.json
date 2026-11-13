@@ -1,6 +1,6 @@
 {
   "name": "salary-tracker",
-  "version": "1.0.0",
+  "version": "1.29.0",
   "description": "An offline-first, zero-build Progressive Web App (PWA) for personal shift and salary tracking with Supabase PostgreSQL cloud sync.",
   "type": "module",
   "homepage": "https://aoe1920.github.io/salary-tracker/",

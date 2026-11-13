@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 
+Host: https://aoe1920.github.io
 Sitemap: https://aoe1920.github.io/salary-tracker/sitemap.xml
