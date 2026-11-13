@@ -880,7 +880,7 @@ body.dark-mode .table-week-title {
   align-items: center;
   justify-content: center;
   user-select: none;
-  transition: all 0.15s ease;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
   box-sizing: border-box;
 }
 
@@ -890,78 +890,80 @@ body.dark-mode .table-week-title {
 }
 
 .btn-table-current {
-  background: var(--primary);
-  border: 1px solid var(--primary);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.95) 0%, rgba(37, 99, 235, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   color: #ffffff;
   cursor: default;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 12px -1px rgba(37, 99, 235, 0.42), inset 0 1px 1.5px rgba(255, 255, 255, 0.6), inset 0 -1px 2px rgba(0, 0, 0, 0.2);
 }
 
 body.dark-mode .btn-table-current {
-  background: var(--primary);
-  border-color: var(--primary);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.8) 0%, rgba(37, 99, 235, 0.9) 100%);
+  border-color: rgba(255, 255, 255, 0.25);
   color: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 16px -2px rgba(37, 99, 235, 0.5), inset 0 1px 1.5px rgba(255, 255, 255, 0.4), inset 0 -1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .btn-table-view {
-  background: var(--bg-card);
-  border: 1px solid var(--border-default);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.95) 100%);
+  border: 1px solid rgba(203, 213, 225, 0.8);
   color: var(--text-muted);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06), inset 0 1px 1.5px #ffffff;
   cursor: pointer;
 }
 
 .btn-table-view:hover {
-  background: var(--primary-subtle);
-  border-color: var(--primary-border);
+  background: #ffffff;
+  border-color: var(--primary);
   color: var(--primary);
   transform: translateY(-1px);
-}
-
-.btn-table-view:active {
-  transform: scale(0.96);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.18), inset 0 1px 1.5px #ffffff;
 }
 
 body.dark-mode .btn-table-view {
-  background: #171822;
-  border-color: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
+  border-color: rgba(255, 255, 255, 0.12);
   color: #94a3b8;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
 body.dark-mode .btn-table-view:hover {
-  background: rgba(59, 130, 246, 0.15);
-  border-color: rgba(59, 130, 246, 0.35);
+  background: rgba(59, 130, 246, 0.18);
+  border-color: rgba(59, 130, 246, 0.45);
   color: #60a5fa;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.25);
 }
 
 .btn-table-delete {
-  background: var(--danger-subtle);
-  border: 1px solid var(--danger-border);
+  background: linear-gradient(135deg, rgba(254, 226, 226, 0.9) 0%, rgba(254, 202, 202, 0.9) 100%);
+  border: 1px solid rgba(239, 68, 68, 0.4);
   color: #b91c1c;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.12), inset 0 1px 1.5px #ffffff;
   cursor: pointer;
 }
 
 .btn-table-delete:hover {
-  background: rgba(239, 68, 68, 0.15);
-  border-color: rgba(239, 68, 68, 0.4);
-  color: #991b1b;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.95) 0%, rgba(220, 38, 38, 0.95) 100%);
+  border-color: rgba(239, 68, 68, 0.6);
+  color: #ffffff;
   transform: translateY(-1px);
-}
-
-.btn-table-delete:active {
-  transform: scale(0.96);
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3), inset 0 1px 1.5px rgba(255, 255, 255, 0.6);
 }
 
 body.dark-mode .btn-table-delete {
-  background: rgba(239, 68, 68, 0.12);
-  border-color: rgba(239, 68, 68, 0.25);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(185, 28, 28, 0.15) 100%);
+  border-color: rgba(239, 68, 68, 0.35);
   color: #fca5a5;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.15);
 }
 
 body.dark-mode .btn-table-delete:hover {
-  background: rgba(239, 68, 68, 0.22);
-  border-color: rgba(239, 68, 68, 0.45);
-  color: #fecaca;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.3) 0%, rgba(185, 28, 28, 0.25) 100%);
+  border-color: rgba(248, 113, 113, 0.5);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.25);
 }
 
 .backup-actions-morphic {
@@ -1008,7 +1010,7 @@ body.dark-mode .btn-table-delete:hover {
   justify-content: center;
   padding: 4px;
   border-radius: var(--radius-xs);
-  transition: color 0.15s ease, background 0.15s ease;
+  transition: color 0.15s ease, background 0.15s ease, transform 0.12s ease;
   z-index: 2;
 }
 
@@ -1048,7 +1050,7 @@ body.dark-mode .btn-table-delete:hover {
   color: var(--text-main);
   cursor: pointer;
   padding: 0;
-  transition: color 0.15s ease;
+  transition: color 0.15s ease, opacity 0.12s ease, transform 0.12s ease;
 }
 
 .btn-toggle-change-pwd:hover {
@@ -1259,24 +1261,23 @@ body.dark-mode .auth-tab-btn.active {
   width: 100%;
   height: 42px;
   min-height: 42px;
-  background: var(--primary);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.95) 0%, rgba(37, 99, 235, 0.95) 100%);
   color: #ffffff;
-  border: 1px solid var(--primary);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: var(--radius-md);
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
-  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 8px 20px -2px rgba(37, 99, 235, 0.42), inset 0 1px 1.5px rgba(255, 255, 255, 0.6), inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
   margin-top: 0.5rem;
 }
 
 .btn-primary-auth:hover {
-  background: var(--primary-hover);
-}
-
-.btn-primary-auth:active {
-  transform: scale(0.985);
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.98) 0%, rgba(37, 99, 235, 1) 100%);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-1.5px);
+  box-shadow: 0 12px 26px -2px rgba(37, 99, 235, 0.55), inset 0 1px 1.5px rgba(255, 255, 255, 0.8);
 }
 
 .btn-secondary-auth {
@@ -1287,21 +1288,23 @@ body.dark-mode .auth-tab-btn.active {
   width: 100%;
   height: 38px;
   min-height: 38px;
-  background: #ffffff;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.95) 100%);
   color: var(--text-main);
-  border: 1px solid rgba(15, 23, 42, 0.18);
+  border: 1px solid rgba(203, 213, 225, 0.8);
   border-radius: var(--radius-md);
   font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08), inset 0 1px 1.5px #ffffff, inset 0 -1px 2px rgba(0, 0, 0, 0.04);
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
   margin-top: 0;
 }
 
 .btn-secondary-auth:hover {
-  background: #f8fafc;
-  border-color: rgba(15, 23, 42, 0.28);
+  background: #ffffff;
+  border-color: rgba(148, 163, 184, 0.9);
+  transform: translateY(-1.5px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12), inset 0 1px 1.5px #ffffff;
 }
 
 .auth-panel-desc {
@@ -1509,21 +1512,23 @@ body.dark-mode .profile-wp-badge {
   min-height: 32px;
   padding: 0 0.75rem;
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(15, 23, 42, 0.16);
-  background: #ffffff;
+  border: 1px solid rgba(203, 213, 225, 0.8);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.95) 100%);
   color: var(--text-main);
   font-family: var(--font-sans);
   font-size: 0.775rem;
   font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
-  transition: all 0.15s ease;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.08), inset 0 1px 1.5px #ffffff, inset 0 -1px 2px rgba(0, 0, 0, 0.04);
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
   white-space: nowrap;
 }
 
 .btn-profile-google:hover {
-  background: #f8fafc;
-  border-color: rgba(15, 23, 42, 0.28);
+  background: #ffffff;
+  border-color: rgba(148, 163, 184, 0.9);
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12), inset 0 1px 1.5px #ffffff;
 }
 
 .google-linked-badge {
@@ -1598,24 +1603,22 @@ body.dark-mode .profile-wp-badge {
   width: 100%;
   height: 38px;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(15, 23, 42, 0.18);
-  background: #ffffff;
+  border: 1px solid rgba(203, 213, 225, 0.8);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.95) 100%);
   color: var(--text-main);
   font-family: var(--font-sans);
   font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08), inset 0 1px 1.5px #ffffff, inset 0 -1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .btn-oauth-google:hover {
-  background: #f8fafc;
-  border-color: rgba(15, 23, 42, 0.3);
-}
-
-.btn-oauth-google:active {
-  transform: scale(0.99);
+  background: #ffffff;
+  border-color: rgba(148, 163, 184, 0.9);
+  transform: translateY(-1.5px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12), inset 0 1px 1.5px #ffffff;
 }
 
 .auth-terms-note {
@@ -2418,37 +2421,34 @@ body.dark-mode .profile-name:hover {
 }
 
 .btn-inline-save {
-  background: var(--primary);
-  border-color: var(--primary);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.95) 0%, rgba(37, 99, 235, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   color: #ffffff;
+  box-shadow: 0 4px 12px -1px rgba(37, 99, 235, 0.42), inset 0 1px 1.5px rgba(255, 255, 255, 0.6), inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease;
 }
 
 .btn-inline-save:hover {
-  background: var(--primary-hover);
-  border-color: var(--primary-hover);
-  transform: scale(1.06);
-}
-
-.btn-inline-save:active {
-  transform: scale(0.94);
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.98) 0%, rgba(37, 99, 235, 1) 100%);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px -1px rgba(37, 99, 235, 0.55), inset 0 1px 1.5px rgba(255, 255, 255, 0.8);
 }
 
 .btn-inline-cancel {
-  background: #ffffff;
-  border-color: rgba(15, 23, 42, 0.16);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.95) 100%);
+  border: 1px solid rgba(203, 213, 225, 0.8);
   color: var(--text-muted);
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08), inset 0 1px 1px #ffffff;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
 }
 
 .btn-inline-cancel:hover {
-  background: var(--bg-subtle);
+  background: #ffffff;
   color: var(--text-main);
-  border-color: rgba(15, 23, 42, 0.26);
-  transform: scale(1.06);
-}
-
-.btn-inline-cancel:active {
-  transform: scale(0.94);
+  border-color: rgba(148, 163, 184, 0.9);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12), inset 0 1px 1.5px #ffffff;
 }
 
 body.dark-mode .profile-inline-input-group {
@@ -2466,16 +2466,33 @@ body.dark-mode .profile-inline-input {
   color: #ffffff;
 }
 
+body.dark-mode .btn-inline-save {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.8) 0%, rgba(37, 99, 235, 0.9) 100%);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  box-shadow: 0 6px 16px -2px rgba(37, 99, 235, 0.5), inset 0 1px 1.5px rgba(255, 255, 255, 0.4), inset 0 -1px 2px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .btn-inline-save:hover {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.9) 0%, rgba(37, 99, 235, 1) 100%);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 20px -2px rgba(37, 99, 235, 0.65), inset 0 1px 1.5px rgba(255, 255, 255, 0.6);
+  transform: translateY(-1px);
+}
+
 body.dark-mode .btn-inline-cancel {
-  background: #171821;
-  border-color: rgba(255, 255, 255, 0.1);
-  color: #94a3b8;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.04) 100%);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #f1f5f9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
 body.dark-mode .btn-inline-cancel:hover {
-  background: #1e202c;
-  color: #f1f5f9;
-  border-color: rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.07) 100%);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 1px 1.5px rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
 }
 
 .btn-profile-edit-name {
@@ -2488,8 +2505,8 @@ body.dark-mode .btn-inline-cancel:hover {
   box-sizing: border-box;
   align-self: center;
   border-radius: 50%;
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-card);
+  border: 1px solid rgba(203, 213, 225, 0.8);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.95) 100%);
   color: var(--text-muted);
   display: inline-flex;
   align-items: center;
@@ -2498,31 +2515,32 @@ body.dark-mode .btn-inline-cancel:hover {
   padding: 0;
   margin: 0 1px;
   flex-shrink: 0;
-  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.14s ease, border-color 0.14s ease, color 0.14s ease;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08), inset 0 1px 1px #ffffff;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
   overflow: visible;
 }
 
 .btn-profile-edit-name:hover {
-  background: var(--bg-subtle);
+  background: #ffffff;
   color: var(--primary);
   border-color: var(--primary);
-  transform: scale(1.08);
-}
-
-.btn-profile-edit-name:active {
-  transform: scale(0.92);
+  transform: translateY(-1px) scale(1.04);
+  box-shadow: 0 3px 8px rgba(37, 99, 235, 0.18), inset 0 1px 1px #ffffff;
 }
 
 body.dark-mode .btn-profile-edit-name {
-  background: #181922;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
   border-color: rgba(255, 255, 255, 0.12);
   color: #94a3b8;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
 body.dark-mode .btn-profile-edit-name:hover {
-  background: #232534;
+  background: rgba(59, 130, 246, 0.15);
   color: #60a5fa;
   border-color: #3b82f6;
+  transform: translateY(-1px) scale(1.04);
+  box-shadow: 0 3px 8px rgba(59, 130, 246, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.25);
 }
 
 .profile-username {
@@ -2707,23 +2725,32 @@ body.dark-mode .btn-profile-wp-manage.is-active {
   cursor: pointer;
   position: relative;
   box-sizing: border-box;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  border: 1px solid #2563eb;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.95) 0%, rgba(37, 99, 235, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   color: #ffffff;
-  box-shadow: 0 2px 5px rgba(37, 99, 235, 0.28);
-  transform: none;
-  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
+  box-shadow: 0 4px 12px -1px rgba(37, 99, 235, 0.42), inset 0 1px 1.5px rgba(255, 255, 255, 0.6), inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
 }
 
 .profile-wp-add-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(37, 99, 235, 0.36);
-  background: #1d4ed8;
-  border-color: #1d4ed8;
+  box-shadow: 0 6px 16px -1px rgba(37, 99, 235, 0.55), inset 0 1px 1.5px rgba(255, 255, 255, 0.8);
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.98) 0%, rgba(37, 99, 235, 1) 100%);
+  border-color: rgba(255, 255, 255, 0.6);
 }
 
-.profile-wp-add-btn:active {
-  transform: scale(0.94);
+body.dark-mode .profile-wp-add-btn {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.8) 0%, rgba(37, 99, 235, 0.9) 100%);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  box-shadow: 0 6px 16px -2px rgba(37, 99, 235, 0.5), inset 0 1px 1.5px rgba(255, 255, 255, 0.4), inset 0 -1px 2px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .profile-wp-add-btn:hover {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.9) 0%, rgba(37, 99, 235, 1) 100%);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 20px -2px rgba(37, 99, 235, 0.65), inset 0 1px 1.5px rgba(255, 255, 255, 0.6);
+  transform: translateY(-1px);
 }
 
 .profile-wp-edit-list {
@@ -2824,12 +2851,12 @@ body.dark-mode .profile-wp-edit-item.is-default-item {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.16);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.95) 100%);
+  border: 1px solid rgba(203, 213, 225, 0.8);
   color: var(--text-muted);
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06), inset 0 1px 1.5px #ffffff;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
 }
 
 .profile-wp-icon-btn svg {
@@ -2838,21 +2865,26 @@ body.dark-mode .profile-wp-edit-item.is-default-item {
 }
 
 .profile-wp-icon-btn:hover {
-  background: #f8fafc;
-  border-color: rgba(15, 23, 42, 0.28);
+  background: #ffffff;
+  border-color: rgba(148, 163, 184, 0.9);
   color: var(--text-main);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1), inset 0 1px 1.5px #ffffff;
 }
 
 body.dark-mode .profile-wp-icon-btn {
-  background: #181924;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
   border-color: rgba(255, 255, 255, 0.12);
   color: #94a3b8;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
 body.dark-mode .profile-wp-icon-btn:hover {
-  background: #232534;
-  border-color: rgba(255, 255, 255, 0.22);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.07) 100%);
+  border-color: rgba(255, 255, 255, 0.25);
   color: #f1f5f9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), inset 0 1px 1.5px rgba(255, 255, 255, 0.3);
 }
 
 .profile-wp-edit-actions .btn-set-default-wp {
@@ -2860,33 +2892,48 @@ body.dark-mode .profile-wp-icon-btn:hover {
   height: 28px;
   min-width: 28px;
   min-height: 28px;
-  border: 1px solid rgba(15, 23, 42, 0.16);
-  background: #ffffff;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  border: 1px solid rgba(203, 213, 225, 0.8);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.95) 100%);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06), inset 0 1px 1.5px #ffffff;
 }
 
 .profile-wp-edit-actions .btn-set-default-wp:hover {
-  background: rgba(245, 158, 11, 0.1);
-  border-color: rgba(245, 158, 11, 0.3);
+  background: linear-gradient(135deg, rgba(254, 243, 199, 0.9) 0%, rgba(253, 230, 138, 0.9) 100%);
+  border-color: rgba(245, 158, 11, 0.5);
   color: #d97706;
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.2), inset 0 1px 1.5px #ffffff;
+  transform: translateY(-1px);
 }
 
 body.dark-mode .profile-wp-edit-actions .btn-set-default-wp {
-  background: #181924;
-  border-color: rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
+  border-color: rgba(255, 255, 255, 0.12);
   color: #94a3b8;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
 body.dark-mode .profile-wp-edit-actions .btn-set-default-wp:hover {
-  background: rgba(245, 158, 11, 0.18);
-  border-color: rgba(251, 191, 36, 0.4);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(217, 119, 6, 0.2) 100%);
+  border-color: rgba(251, 191, 36, 0.45);
   color: #fbbf24;
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
 }
 
 .profile-wp-icon-btn.is-danger:hover {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.3);
-  color: #ef4444;
+  background: linear-gradient(135deg, rgba(254, 226, 226, 0.9) 0%, rgba(254, 202, 202, 0.9) 100%);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #dc2626;
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2), inset 0 1px 1.5px #ffffff;
+  transform: translateY(-1px);
+}
+
+body.dark-mode .profile-wp-icon-btn.is-danger:hover {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(185, 28, 28, 0.2) 100%);
+  border-color: rgba(248, 113, 113, 0.45);
+  color: #f87171;
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
 }
 
 .profile-wp-icon-btn.is-disabled {
@@ -2991,6 +3038,11 @@ body.dark-mode .profile-wp-rename-input {
   justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+}
+
+.profile-wp-rename-btn:hover {
+  transform: translateY(-1px);
 }
 
 .profile-workplaces-chip-list {
@@ -3136,18 +3188,22 @@ body.dark-mode .profile-wp-item:hover {
   align-items: center;
   gap: 0.4rem;
   cursor: pointer;
-  transition: all 0.15s ease;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.12);
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
   user-select: none;
 }
 
 body.dark-mode .btn-logout-action {
   color: #fca5a5;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
 .btn-logout-action:hover {
   color: #ffffff;
   background: var(--danger);
   border-color: var(--danger);
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35);
 }
 
 .app-footer {
@@ -5034,16 +5090,21 @@ body.dark-mode .auth-divider::after {
   border-color: rgba(255, 255, 255, 0.08);
 }
 
-body.dark-mode .btn-oauth-google {
-  background: #181924;
-  border-color: rgba(255, 255, 255, 0.12);
-  color: #ededef;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+body.dark-mode .btn-oauth-google,
+body.dark-mode .btn-profile-google {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.04) 100%);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #f1f5f9;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4), inset 0 1px 1.5px rgba(255, 255, 255, 0.2), inset 0 -1px 2px rgba(0, 0, 0, 0.4);
 }
 
-body.dark-mode .btn-oauth-google:hover {
-  background: #232536;
-  border-color: rgba(255, 255, 255, 0.2);
+body.dark-mode .btn-oauth-google:hover,
+body.dark-mode .btn-profile-google:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.07) 100%);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 1px 1.5px rgba(255, 255, 255, 0.3);
+  transform: translateY(-1.5px);
 }
 
 body.dark-mode .auth-success-msg {
@@ -5067,19 +5128,32 @@ body.dark-mode .btn-link-subtle:hover {
 }
 
 body.dark-mode .btn-primary-auth {
-  background: var(--primary);
-  border-color: var(--primary);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.8) 0%, rgba(37, 99, 235, 0.9) 100%);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  box-shadow: 0 10px 24px -2px rgba(37, 99, 235, 0.5), inset 0 1px 1.5px rgba(255, 255, 255, 0.4), inset 0 -1px 2px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .btn-primary-auth:hover {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.9) 0%, rgba(37, 99, 235, 1) 100%);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 14px 28px -2px rgba(37, 99, 235, 0.65), inset 0 1px 1.5px rgba(255, 255, 255, 0.6);
+  transform: translateY(-1.5px);
 }
 
 body.dark-mode .btn-secondary-auth {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.12);
-  color: var(--text-main);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.04) 100%);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #f1f5f9;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4), inset 0 1px 1.5px rgba(255, 255, 255, 0.2), inset 0 -1px 2px rgba(0, 0, 0, 0.4);
 }
 
 body.dark-mode .btn-secondary-auth:hover {
-  background: rgba(255, 255, 255, 0.09);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.07) 100%);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 1px 1.5px rgba(255, 255, 255, 0.3);
+  transform: translateY(-1.5px);
 }
 
 body.dark-mode .monthly-report-card {

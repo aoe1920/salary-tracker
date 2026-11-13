@@ -375,9 +375,37 @@ body.dark-mode .btn-morphic-danger:hover {
 .btn-action-primary:active,
 .btn-action-secondary:active,
 .btn-action-danger:active,
-.btn-morphic:active {
+.btn-morphic:active,
+.btn-primary-auth:active,
+.btn-secondary-auth:active,
+.btn-oauth-google:active,
+.btn-profile-google:active,
+.profile-wp-add-btn:active,
+.profile-wp-icon-btn:active:not(.is-disabled),
+.profile-wp-rename-btn:active,
+.btn-inline-action:active,
+.btn-inline-save:active,
+.btn-inline-cancel:active,
+.btn-profile-edit-name:active,
+.btn-table-action:active,
+.week-nav-step-btn:active,
+.toast-action-btn:active,
+.avatar-choice-btn:active,
+.btn-logout-action:active,
+.segmented-btn-3d:active {
   transform: scale(0.93) translateY(0) !important;
   transition-duration: 0.06s !important;
+}
+
+.btn-toggle-pwd:active {
+  transform: translateY(-50%) scale(0.88) !important;
+  transition-duration: 0.06s !important;
+}
+
+.btn-toggle-change-pwd:active {
+  transform: scale(0.99);
+  opacity: 0.82;
+  transition-duration: 0.06s;
 }
 
 .btn-action-danger {

@@ -31,43 +31,6 @@ A modern, offline-first Progressive Web App designed for shift workers, freelanc
 
 ---
 
-## Key App Features
-
-### Smart Shift Detection & Time Engine
-- **Automatic Shift Classification:** Automatically identifies Morning, Noon, or Night shifts based on shift time overlap without manual selection.
-- **Precision Hour Calculations:** Deducts unpaid break times and calculates exact billable decimal hours (e.g. `5.33h`).
-- **Overnight Shift Handling:** Seamlessly supports shifts crossing past midnight into the next day (e.g. `22:00` to `06:00`).
-- **Overtime Multipliers & Extras:** Flexible OT multiplier configuration (`1.0x` to `3.0x`), shift allowances, and deductions.
-
-### Multi-Workplace Management & Independent Rates
-- **Multiple Employers & Branches:** Manage multiple workplaces with individual custom color palettes and badges.
-- **Isolated Per-Shift Rates:** Editing an hourly rate inside a shift modal applies strictly to that specific shift, keeping the global workplace rate intact.
-- **Historical Rate Integrity:** Updating a workplace's default rate freezes all existing historical shifts at their original rates. Only new shifts created forward calculate with the updated rate.
-- **Dynamic Workplace Select:** Truncates long workplace names cleanly in selection dropdowns and animates smooth marquee sliding in profile settings.
-
-### Weekly Income Trends & Analytics
-- **Authentic Day-by-Day Graph:** Smooth cubic bezier line chart visualizing daily earnings from Monday through Sunday (`T2` - `CN`).
-- **Active Day Anchors:** Workdays with active shifts are highlighted with emerald dots and bold accent labels, while days off rest at baseline.
-- **Real-Time KPI Dashboard:** Instant metrics for Weekly Gross Income, Total Billable Hours, Average Hours per Shift, and Workplace Breakdown.
-
-### Instant Canvas Payslips
-- **High-DPI Client-Side Rendering:** Generates clean, high-resolution payslips on an HTML5 Canvas directly in the browser.
-- **One-Click Clipboard Copying:** Copy payslip images directly to the system clipboard for immediate sharing via chat applications (Zalo, Messenger, Telegram).
-- **Multi-Format Export:** Export complete records to high-resolution PNG images, CSV spreadsheets, or portable JSON backups.
-
-### Acrylic Liquid Glass Design
-- **3D Acrylic Aesthetics:** Translucent layered panels, specular rim highlights, and ambient liquid ribbon background graphics.
-- **Adaptive Theme Switching:** Seamless Dark and Light modes synchronized with morphing system icons.
-- **Mobile Floating Dock:** Thumb-friendly floating navigation dock equipped with native-feel haptic feedback on mobile devices.
-- **Fluid Cross-Platform Scrolling:** Hardware-accelerated smooth scrolling optimized across both mobile touchscreens and desktop mice.
-
-### Offline-First PWA & Cloud Synchronization
-- **100% Offline Capability:** Full guest functionality stored locally via Service Worker Cache Storage; zero network connection required.
-- **Encrypted Cloud Sync:** Backed by Supabase PostgreSQL protected by Row Level Security (RLS) policies for complete data privacy.
-- **Flexible Authentication:** Sign in with Email/Password or one-click Google OAuth PKCE.
-
----
-
 ## PWA Installation
 
 Salary Tracker can be installed on your device as a standalone native-like app:
@@ -102,7 +65,7 @@ Open `http://localhost:3000` or `http://localhost:8080` in your web browser.
 
 ---
 
-## Database Setup (Optional for Self-Hosters)
+## Database Setup
 
 If connecting your own Supabase instance, execute the following SQL migration in your Supabase SQL Editor:
 
