@@ -2,6 +2,7 @@ import { getCurrentWeek } from '../state.js';
 import { fmtCurrency, getShiftEarnings, hoursToColonFormat, slugify } from '../calculator.js';
 import { t, getLocalizedWeekName, getLocalizedDayName, getLocalizedShiftType } from '../i18n.js';
 import { showToast } from './toast.js';
+import { triggerHaptic } from './haptic.js';
 
 const drawRoundedRect = (ctx, x, y, width, height, radius) => {
   const r = typeof radius === 'number'
@@ -227,11 +228,13 @@ export const downloadSlipImage = () => {
   a.download = fileName;
   a.href = canvas.toDataURL('image/png');
   a.click();
+  triggerHaptic('success');
   showToast(t('toast_slip_downloaded', 'Đã tải ảnh bảng chấm công.'));
 };
 
 export const copySlipImageToClipboard = async () => {
   const canvas = document.getElementById('slipCanvas');
+  const btn = document.getElementById('btnCopySlipImage');
   if (!canvas) return;
 
   canvas.toBlob(async (blob) => {
@@ -241,6 +244,16 @@ export const copySlipImageToClipboard = async () => {
         await navigator.clipboard.write([
           new ClipboardItem({ 'image/png': blob })
         ]);
+        triggerHaptic('success');
+        if (btn) {
+          const originalSvg = btn.innerHTML;
+          btn.classList.add('is-copied');
+          btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+          setTimeout(() => {
+            btn.innerHTML = originalSvg;
+            btn.classList.remove('is-copied');
+          }, 1500);
+        }
         showToast(t('toast_slip_copied', 'Đã lưu hình ảnh vào khay nhớ tạm.'));
       } else {
         downloadSlipImage();

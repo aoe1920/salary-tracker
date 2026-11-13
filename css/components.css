@@ -349,6 +349,14 @@ body.dark-mode .btn-morphic-danger:hover {
   box-shadow: 0 12px 26px -2px rgba(37, 99, 235, 0.55), inset 0 1px 1.5px rgba(255, 255, 255, 0.8);
 }
 
+.btn-action-primary.is-copied {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.95) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.65) !important;
+  box-shadow: 0 10px 24px -2px rgba(16, 185, 129, 0.55), inset 0 1px 1.5px rgba(255, 255, 255, 0.8) !important;
+  color: #ffffff !important;
+  transform: scale(1.06) !important;
+}
+
 .btn-action-secondary {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.95) 100%);
   color: var(--text-main);
@@ -433,6 +441,14 @@ body.dark-mode .btn-action-primary:hover {
   border-color: rgba(255, 255, 255, 0.4);
   box-shadow: 0 14px 28px -2px rgba(37, 99, 235, 0.65), inset 0 1px 1.5px rgba(255, 255, 255, 0.6);
   transform: translateY(-1.5px);
+}
+
+body.dark-mode .btn-action-primary.is-copied {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.85) 0%, rgba(5, 150, 105, 0.95) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
+  box-shadow: 0 12px 28px -2px rgba(16, 185, 129, 0.65), inset 0 1px 1.5px rgba(255, 255, 255, 0.5) !important;
+  color: #ffffff !important;
+  transform: scale(1.06) !important;
 }
 
 body.dark-mode .btn-action-secondary {

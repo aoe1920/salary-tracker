@@ -1,4 +1,4 @@
-const CACHE_NAME = 'salary-tracker-v235';
+const CACHE_NAME = 'salary-tracker-v236';
 const CORE_ASSETS = [
   './',
   './index.html',
