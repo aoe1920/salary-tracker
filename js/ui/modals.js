@@ -118,7 +118,7 @@ export const syncShiftRateInput = (workplace = '') => {
   if (!rateInput) return;
   const wp = (workplace || document.getElementById('shiftWorkplace')?.value || getDefaultWorkplace() || '').trim();
   const currentRate = getShiftRate({ workplace: wp });
-  rateInput.value = currentRate > 0 ? formatWpRateDisplay(currentRate) : '0';
+  rateInput.value = formatWpRateDisplay(currentRate);
 };
 
 const updateWorkplaceInputOptions = (currentVal = '') => {
@@ -242,7 +242,11 @@ export const openEditShiftModal = (shift) => {
   syncCustomSelect('shiftDay');
   syncCustomSelect('shiftType');
   syncCustomSelect('shiftWorkplace');
-  syncShiftRateInput(document.getElementById('shiftWorkplace')?.value || shift.workplace || '');
+  const rateInput = document.getElementById('shiftRateInput');
+  if (rateInput) {
+    const shiftRate = getShiftRate(shift);
+    rateInput.value = formatWpRateDisplay(shiftRate);
+  }
 
   document.getElementById('shiftStart').value = shift.start;
   document.getElementById('shiftEnd').value = shift.end;
@@ -393,31 +397,35 @@ export const saveShiftFromModal = async (e) => {
 
   if (workplace) {
     if (!Array.isArray(state.settings.workplaces)) state.settings.workplaces = [];
-    let settingsChanged = false;
     if (!state.settings.workplaces.includes(workplace)) {
       state.settings.workplaces.push(workplace);
-      settingsChanged = true;
-    }
-    const rateInput = document.getElementById('shiftRateInput');
-    if (rateInput && rateInput.value.trim()) {
-      const nextRate = parseWpRate(rateInput.value);
-      if (!state.settings.workplaceRates || typeof state.settings.workplaceRates !== 'object') {
-        state.settings.workplaceRates = {};
-      }
-      if (state.settings.workplaceRates[workplace] !== nextRate) {
-        state.settings.workplaceRates[workplace] = nextRate;
-        settingsChanged = true;
-      }
-    }
-    if (settingsChanged) {
       saveSettings();
     }
   }
 
+  const rateInput = document.getElementById('shiftRateInput');
+  const shiftRate = (rateInput && rateInput.value.trim())
+    ? parseWpRate(rateInput.value)
+    : getShiftRate({ workplace });
+
   if (editId) {
     const index = week.shifts.findIndex(s => s.id === editId);
     if (index !== -1) {
-      week.shifts[index] = { ...week.shifts[index], day, type, start, end, breakMinutes, otRate, allowance, deduction, hours, workplace, note };
+      week.shifts[index] = {
+        ...week.shifts[index],
+        day,
+        type,
+        start,
+        end,
+        breakMinutes,
+        otRate,
+        allowance,
+        deduction,
+        hours,
+        workplace,
+        rate: shiftRate,
+        note
+      };
       showToast(t('toast_shift_updated', 'Đã cập nhật ca làm'));
     }
   } else {
@@ -433,6 +441,7 @@ export const saveShiftFromModal = async (e) => {
       deduction,
       hours,
       workplace,
+      rate: shiftRate,
       note
     };
     week.shifts.push(newShift);
@@ -1388,6 +1397,30 @@ const scheduleProfileWorkplaceMarquee = (container) => {
   container._wpMarqueeTimers.push(startTimer);
 };
 
+export const freezePastShiftsRate = (workplaceName, rateToFreeze) => {
+  if (!workplaceName || rateToFreeze == null) return;
+  const numRate = Number(rateToFreeze);
+  if (isNaN(numRate) || numRate < 0) return;
+  let changed = false;
+  if (Array.isArray(state.weeks)) {
+    state.weeks.forEach(w => {
+      if (Array.isArray(w.shifts)) {
+        w.shifts.forEach(s => {
+          if (s.workplace === workplaceName) {
+            if (s.rate === undefined || s.rate === null || s.rate === '') {
+              s.rate = numRate;
+              changed = true;
+            }
+          }
+        });
+      }
+    });
+  }
+  if (changed) {
+    saveWeeks();
+  }
+};
+
 export const renderProfileWorkplacesEditList = () => {
   const container = document.getElementById('profileWpEditList');
   if (!container) return;
@@ -1451,7 +1484,7 @@ export const renderProfileWorkplacesEditList = () => {
       <div class="profile-wp-edit-bottom">
         <span class="profile-wp-rate-label font-sans">Đơn giá theo giờ:</span>
         <div class="profile-wp-rate-input-wrap">
-          <input type="text" inputmode="numeric" class="form-input profile-wp-rate-input font-mono" data-p-rate="${escapeHtml(wp)}" value="${formatWpRateDisplay(rate)}" placeholder="0" autocomplete="off">
+          <input type="text" inputmode="numeric" class="form-input profile-wp-rate-input font-mono" data-p-rate="${escapeHtml(wp)}" value="${formatWpRateDisplay(rate)}" placeholder="25.000" autocomplete="off">
           <span class="profile-wp-rate-tag font-mono">đ/h</span>
         </div>
       </div>
@@ -1501,8 +1534,9 @@ export const renderProfileWorkplacesEditList = () => {
             return;
           }
 
+          const currentRate = state.settings.workplaceRates?.[wp] ?? 25000;
+          freezePastShiftsRate(wp, currentRate);
           state.settings.workplaces[idx] = newName;
-          const currentRate = state.settings.workplaceRates?.[wp] ?? 0;
           if (!state.settings.workplaceRates) state.settings.workplaceRates = {};
           state.settings.workplaceRates[newName] = currentRate;
           delete state.settings.workplaceRates[wp];
@@ -1614,13 +1648,21 @@ export const renderProfileWorkplacesEditList = () => {
     const rateInput = card.querySelector('.profile-wp-rate-input');
     if (rateInput) {
       let prevRateVal = '';
+      let baselineRate = state.settings.workplaceRates?.[wp] ?? 25000;
+      let hasFrozen = false;
       rateInput.addEventListener('focus', (e) => {
         prevRateVal = e.target.value.trim();
+        baselineRate = state.settings.workplaceRates?.[wp] ?? 25000;
+        hasFrozen = false;
       });
 
       bindNumericFormatInput(rateInput, {
         emptyOnZeroBlur: false,
         onValueChange: (val) => {
+          if (!hasFrozen && val !== baselineRate) {
+            freezePastShiftsRate(wp, baselineRate);
+            hasFrozen = true;
+          }
           if (!state.settings.workplaceRates) state.settings.workplaceRates = {};
           state.settings.workplaceRates[wp] = val;
           saveSettings();
@@ -1628,6 +1670,10 @@ export const renderProfileWorkplacesEditList = () => {
           triggerAppRender();
         },
         onBlurChange: (val, formatted) => {
+          if (!hasFrozen && val !== baselineRate) {
+            freezePastShiftsRate(wp, baselineRate);
+            hasFrozen = true;
+          }
           if (!state.settings.workplaceRates) state.settings.workplaceRates = {};
           state.settings.workplaceRates[wp] = val;
           saveSettings();
@@ -1682,7 +1728,7 @@ export const addWorkplaceFromProfile = () => {
     state.settings.defaultWorkplace = val;
   }
 
-  const customRate = rateInput ? parseWpRate(rateInput.value) : 0;
+  const customRate = (rateInput && rateInput.value.trim()) ? parseWpRate(rateInput.value) : 25000;
   if (!state.settings.workplaceRates) state.settings.workplaceRates = {};
   state.settings.workplaceRates[val] = customRate;
 

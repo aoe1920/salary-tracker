@@ -46,7 +46,7 @@ export const normalizeWorkplacesAndRates = () => {
   if (!state.settings.workplaceRates || typeof state.settings.workplaceRates !== 'object') {
     state.settings.workplaceRates = {};
   }
-  const fallbackRate = Number(state.settings.defaultRate) || (state.weeks?.[0]?.rate) || 40000;
+  const fallbackRate = Number(state.settings.defaultRate) || (state.weeks?.[0]?.rate) || 25000;
   state.settings.workplaces.forEach(wp => {
     if (state.settings.workplaceRates[wp] === undefined || state.settings.workplaceRates[wp] === null) {
       state.settings.workplaceRates[wp] = fallbackRate;

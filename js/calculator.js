@@ -121,6 +121,10 @@ export const calculateHoursDiff = (startStr, endStr, breakMinutes = 0) => {
 };
 
 export const getShiftRate = (shift) => {
+  if (shift && shift.rate !== undefined && shift.rate !== null && shift.rate !== '') {
+    const r = Number(shift.rate);
+    if (!isNaN(r) && r >= 0) return r;
+  }
   const wp = (shift && shift.workplace && shift.workplace.trim()) ? shift.workplace.trim() : getDefaultWorkplace();
   if (state.settings && state.settings.workplaceRates && state.settings.workplaceRates[wp] !== undefined) {
     const customRate = Number(state.settings.workplaceRates[wp]);
@@ -131,7 +135,7 @@ export const getShiftRate = (shift) => {
     const defRate = Number(state.settings.workplaceRates[defWp]);
     if (!isNaN(defRate) && defRate >= 0) return defRate;
   }
-  return 0;
+  return 25000;
 };
 
 export const getShiftEarnings = (shift, week) => {

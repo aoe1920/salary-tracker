@@ -724,9 +724,9 @@ export const VERIFIED_USER_WEEKS = [
 
 export const VERIFIED_USER_SETTINGS = {
   workplaces: ['Mặc định'],
-  workplaceRates: { 'Mặc định': 40000 },
+  workplaceRates: { 'Mặc định': 25000 },
   workplaceColors: { 'Mặc định': '#6366f1' },
-  defaultRate: 40000,
+  defaultRate: 25000,
   avatar: 'vibrent_1'
 };
 
@@ -741,9 +741,9 @@ export const restoreVerifiedUserData = () => {
   state.weeks = JSON.parse(JSON.stringify(VERIFIED_USER_WEEKS));
   if (!state.settings) state.settings = {};
   state.settings.workplaces = ['Mặc định'];
-  state.settings.workplaceRates = { 'Mặc định': 40000 };
+  state.settings.workplaceRates = { 'Mặc định': 25000 };
   state.settings.workplaceColors = { 'Mặc định': '#6366f1' };
-  state.settings.defaultRate = 40000;
+  state.settings.defaultRate = 25000;
   state.currentWeekId = state.weeks[state.weeks.length - 1].id;
   localStorage.setItem(getWeeksStorageKey(), JSON.stringify(state.weeks));
   localStorage.setItem(getSettingsStorageKey(), JSON.stringify(state.settings));
@@ -978,7 +978,7 @@ export const loadState = async () => {
     if (loadedSettings && typeof loadedSettings === 'object') {
       state.settings = {
         workplaces: ['Mặc định'],
-        workplaceRates: { 'Mặc định': 40000 },
+        workplaceRates: { 'Mặc định': 25000 },
         defaultWorkplace: 'Mặc định',
         theme: preservedTheme,
         ...loadedSettings
@@ -986,7 +986,7 @@ export const loadState = async () => {
     } else {
       state.settings = {
         workplaces: ['Mặc định'],
-        workplaceRates: { 'Mặc định': 40000 },
+        workplaceRates: { 'Mặc định': 25000 },
         defaultWorkplace: 'Mặc định',
         theme: preservedTheme
       };
@@ -1209,7 +1209,7 @@ export const restoreCachedStateSync = () => {
     if (loadedSettings && typeof loadedSettings === 'object') {
       state.settings = {
         workplaces: ['Mặc định'],
-        workplaceRates: { 'Mặc định': 40000 },
+        workplaceRates: { 'Mặc định': 25000 },
         defaultWorkplace: 'Mặc định',
         theme: baseTheme,
         ...loadedSettings
@@ -1217,7 +1217,7 @@ export const restoreCachedStateSync = () => {
     } else {
       state.settings = {
         workplaces: ['Mặc định'],
-        workplaceRates: { 'Mặc định': 40000 },
+        workplaceRates: { 'Mặc định': 25000 },
         defaultWorkplace: 'Mặc định',
         theme: baseTheme,
         ...(state.currentUser?.avatar && state.currentUser.avatar !== 'default' ? { avatar: state.currentUser.avatar } : {})
@@ -1717,7 +1717,7 @@ export const handleRegisterSubmit = async (e) => {
     const preservedTheme = state.settings?.theme || localStorage.getItem('salary_tracker_theme') || 'light';
     state.currentUser = { id: u.id, email: u.email, username, identities: u.identities, app_metadata: u.app_metadata, user_metadata: u.user_metadata, avatar: avatarId };
 
-    let initialWeeks = [{ id: 'week-1', name: 'Tuần 1', rate: 40000, startDate: getMondayDate(new Date()), shifts: [] }];
+    let initialWeeks = [{ id: 'week-1', name: 'Tuần 1', rate: 25000, startDate: getMondayDate(new Date()), shifts: [] }];
     const guestRaw = localStorage.getItem(GUEST_WEEKS_KEY);
     if (guestRaw) {
       try {
@@ -1743,7 +1743,7 @@ export const handleRegisterSubmit = async (e) => {
 
     state.settings = {
       workplaces: ['Mặc định'],
-      workplaceRates: { 'Mặc định': 40000 },
+      workplaceRates: { 'Mặc định': 25000 },
       defaultWorkplace: 'Mặc định',
       theme: preservedTheme,
       ...(parsedGuestSettings || {}),
@@ -1835,7 +1835,7 @@ export const handleLogout = async () => {
     state.currentUser = null;
     state.settings = {
       workplaces: ['Mặc định'],
-      workplaceRates: { 'Mặc định': 40000 },
+      workplaceRates: { 'Mặc định': 25000 },
       defaultWorkplace: 'Mặc định',
       avatar: getRandomAvatar().id,
       theme: currentTheme
@@ -1843,7 +1843,7 @@ export const handleLogout = async () => {
     state.weeks = [{
       id: 'week-1',
       name: 'Tuần 1',
-      rate: 40000,
+      rate: 25000,
       startDate: getMondayDate(new Date()),
       shifts: []
     }];
@@ -1918,13 +1918,13 @@ export const handleDeleteAccount = async () => {
     state.weeks = [{
       id: 'week-1',
       name: 'Tuần 1',
-      rate: 40000,
+      rate: 25000,
       startDate: getMondayDate(new Date()),
       shifts: []
     }];
     state.settings = {
       workplaces: ['Mặc định'],
-      workplaceRates: { 'Mặc định': 40000 },
+      workplaceRates: { 'Mặc định': 25000 },
       defaultWorkplace: 'Mặc định',
       avatar: getRandomAvatar().id,
       theme: currentTheme
