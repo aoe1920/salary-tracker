@@ -633,51 +633,78 @@ const bindEvents = () => {
     }
   };
 
-  const onShiftStartInput = () => {
-    updateAutoShiftType();
-    updateModalComputedPreview();
-  };
+  const scaleAndFormatTimeValue = (raw) => {
+    if (!raw) return '';
+    const digits = String(raw).replace(/\D/g, '').slice(0, 4);
+    if (!digits) return '';
+    const num = parseInt(digits, 10);
+    if (num > 2400) return '24:00';
+    if (num < 0) return '00:00';
 
-  const onShiftStartBlur = () => {
-    const input = document.getElementById('shiftStart');
-    if (!input) return;
-    const parsed = parseSmartTime(input.value);
-    if (parsed) {
-      input.value = parsed;
+    if (digits.length === 1 || digits.length === 2) {
+      const h = Math.min(24, Math.max(0, parseInt(digits, 10)));
+      return String(h).padStart(2, '0') + ':00';
     }
-    updateAutoShiftType();
-    updateModalComputedPreview();
-  };
 
-  const onShiftEndInput = () => {
-    updateAutoShiftType();
-    updateModalComputedPreview();
-  };
-
-  const onShiftEndBlur = () => {
-    const input = document.getElementById('shiftEnd');
-    if (!input) return;
-    const parsed = parseSmartTime(input.value);
-    if (parsed) {
-      input.value = parsed;
+    if (digits.length === 3) {
+      const h = Math.min(24, Math.max(0, parseInt(digits[0], 10)));
+      let m = parseInt(digits.slice(1), 10);
+      if (m > 59) m = 59;
+      return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
     }
-    updateAutoShiftType();
-    updateModalComputedPreview();
+
+    if (digits.length === 4) {
+      let h = parseInt(digits.slice(0, 2), 10);
+      let m = parseInt(digits.slice(2, 4), 10);
+      if (h > 24 || (h === 24 && m > 0)) {
+        return '24:00';
+      }
+      if (m > 59) m = 59;
+      return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+    }
+
+    return '00:00';
   };
 
-  const shiftStartEl = document.getElementById('shiftStart');
-  if (shiftStartEl) {
-    shiftStartEl.addEventListener('input', onShiftStartInput);
-    shiftStartEl.addEventListener('change', onShiftStartInput);
-    shiftStartEl.addEventListener('blur', onShiftStartBlur);
-  }
+  const bindTimeInputField = (inputEl) => {
+    if (!inputEl) return;
+    inputEl.setAttribute('maxlength', '5');
+    inputEl.setAttribute('inputmode', 'numeric');
 
-  const shiftEndEl = document.getElementById('shiftEnd');
-  if (shiftEndEl) {
-    shiftEndEl.addEventListener('input', onShiftEndInput);
-    shiftEndEl.addEventListener('change', onShiftEndInput);
-    shiftEndEl.addEventListener('blur', onShiftEndBlur);
-  }
+    inputEl.addEventListener('input', () => {
+      let val = inputEl.value;
+      const digits = val.replace(/\D/g, '');
+      if (digits.length > 4) {
+        val = digits.slice(0, 4);
+      }
+      const num = parseInt(digits, 10);
+      if (!isNaN(num) && num > 2400) {
+        val = '24:00';
+      } else if (!isNaN(num) && digits.length === 2 && num > 24) {
+        val = '24:00';
+      }
+      if (val !== inputEl.value) {
+        inputEl.value = val;
+      }
+      updateAutoShiftType();
+      updateModalComputedPreview();
+    });
+
+    const handleFormat = () => {
+      if (inputEl.value.trim()) {
+        const formatted = scaleAndFormatTimeValue(inputEl.value);
+        if (formatted) inputEl.value = formatted;
+      }
+      updateAutoShiftType();
+      updateModalComputedPreview();
+    };
+
+    inputEl.addEventListener('blur', handleFormat);
+    inputEl.addEventListener('change', handleFormat);
+  };
+
+  bindTimeInputField(document.getElementById('shiftStart'));
+  bindTimeInputField(document.getElementById('shiftEnd'));
   const shiftBreakInput = document.getElementById('shiftBreak');
   if (shiftBreakInput) shiftBreakInput.addEventListener('input', updateModalComputedPreview);
   const shiftOtRateInput = document.getElementById('shiftOtRate');

@@ -4689,7 +4689,6 @@ body.dark-mode .summary-tab-btn.active {
 
 @media (max-width: 540px) {
   .summary-tab-btn {
-    font-size: 0.75rem;
     padding: 0 0.4rem;
   }
 }
@@ -4715,6 +4714,8 @@ body.dark-mode .summary-tab-btn.active {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 120px;
 }
 
 .monthly-card-header {
@@ -5171,9 +5172,11 @@ body.dark-mode .shift-allowance-badge {
 .segmented-btn-3d {
   flex: 1;
   text-align: center;
-  padding: 0.4rem 0.5rem;
-  font-size: 0.775rem;
-  font-weight: 600;
+  padding: 0 0.5rem;
+  height: 28px;
+  min-height: 28px;
+  font-size: 0.8125rem;
+  font-weight: 500;
   border-radius: var(--radius-sm);
   border: 1px solid transparent;
   background: transparent;
@@ -5185,6 +5188,29 @@ body.dark-mode .shift-allowance-badge {
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
+}
+
+.auth-tab-btn,
+.summary-tab-btn,
+.legal-tab-btn,
+.stats-time-pills .filter-pill-btn,
+.segmented-btn-3d {
+  font-size: 0.8125rem !important;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.auth-tab-btn.active,
+.summary-tab-btn.active,
+.legal-tab-btn.active,
+.stats-time-pills .filter-pill-btn.active,
+.segmented-btn-3d.active,
+body.dark-mode .auth-tab-btn.active,
+body.dark-mode .summary-tab-btn.active,
+body.dark-mode .legal-tab-btn.active,
+body.dark-mode .stats-time-pills .filter-pill-btn.active,
+body.dark-mode .segmented-btn-3d.active {
+  font-weight: 600;
 }
 
 .segmented-btn-3d:hover {

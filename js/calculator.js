@@ -25,24 +25,40 @@ export const parseSmartTime = (raw) => {
   const str = String(raw).trim().toLowerCase();
   if (!str) return null;
 
+  const rawDigits = str.replace(/\D/g, '');
+  if (rawDigits.length > 4) {
+    return parseSmartTime(rawDigits.slice(0, 4));
+  }
+
   if (/^\d{1,2}:\d{1,2}$/.test(str)) {
     const [hStr, mStr] = str.split(':');
-    const h = parseInt(hStr, 10);
-    const m = mStr.length === 1 ? parseInt(mStr, 10) * 10 : parseInt(mStr, 10);
-    if (h >= 0 && h < 24 && m >= 0 && m < 60) {
+    let h = parseInt(hStr, 10);
+    let m = mStr.length === 1 ? parseInt(mStr, 10) * 10 : parseInt(mStr, 10);
+    if (h > 24 || (h === 24 && m > 0)) {
+      return '24:00';
+    }
+    if (h >= 0 && h <= 24 && m >= 0 && m < 60) {
+      if (h === 24) return '24:00';
       return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+    }
+    if (m >= 60) {
+      m = 59;
+      return String(Math.min(24, Math.max(0, h))).padStart(2, '0') + ':59';
     }
     return null;
   }
 
   const hMatch = str.match(/^(\d{1,2})h(?:(\d{1,2}))?$/);
   if (hMatch) {
-    const h = parseInt(hMatch[1], 10);
+    let h = parseInt(hMatch[1], 10);
     let m = 0;
     if (hMatch[2]) {
       m = hMatch[2].length === 1 ? parseInt(hMatch[2], 10) * 10 : parseInt(hMatch[2], 10);
     }
-    if (h >= 0 && h < 24 && m >= 0 && m < 60) {
+    if (h > 24 || (h === 24 && m > 0)) return '24:00';
+    if (m > 59) m = 59;
+    if (h >= 0 && h <= 24 && m >= 0 && m < 60) {
+      if (h === 24) return '24:00';
       return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
     }
     return null;
@@ -50,10 +66,13 @@ export const parseSmartTime = (raw) => {
 
   const dotMatch = str.match(/^(\d{1,2})[.,](\d{1,2})$/);
   if (dotMatch) {
-    const h = parseInt(dotMatch[1], 10);
+    let h = parseInt(dotMatch[1], 10);
     const rawM = dotMatch[2];
     let m = (rawM === '5') ? 30 : (rawM.length === 1 ? parseInt(rawM, 10) * 10 : parseInt(rawM, 10));
-    if (h >= 0 && h < 24 && m >= 0 && m < 60) {
+    if (h > 24 || (h === 24 && m > 0)) return '24:00';
+    if (m > 59) m = 59;
+    if (h >= 0 && h <= 24 && m >= 0 && m < 60) {
+      if (h === 24) return '24:00';
       return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
     }
     return null;
@@ -61,42 +80,52 @@ export const parseSmartTime = (raw) => {
 
   const spaceMatch = str.match(/^(\d{1,2})[\s\-](\d{1,2})$/);
   if (spaceMatch) {
-    const h = parseInt(spaceMatch[1], 10);
-    const m = spaceMatch[2].length === 1 ? parseInt(spaceMatch[2], 10) * 10 : parseInt(spaceMatch[2], 10);
-    if (h >= 0 && h < 24 && m >= 0 && m < 60) {
+    let h = parseInt(spaceMatch[1], 10);
+    let m = spaceMatch[2].length === 1 ? parseInt(spaceMatch[2], 10) * 10 : parseInt(spaceMatch[2], 10);
+    if (h > 24 || (h === 24 && m > 0)) return '24:00';
+    if (m > 59) m = 59;
+    if (h >= 0 && h <= 24 && m >= 0 && m < 60) {
+      if (h === 24) return '24:00';
       return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
     }
     return null;
   }
 
   if (/^\d{1,4}$/.test(str)) {
+    const num = parseInt(str, 10);
+    if (num > 2400) return '24:00';
+    if (num <= 0) return '00:00';
     if (str.length === 1 || str.length === 2) {
       const h = parseInt(str, 10);
-      if (h === 24) return '00:00';
+      if (h >= 24) return '24:00';
       if (h >= 0 && h < 24) return String(h).padStart(2, '0') + ':00';
       return null;
     }
     if (str.length === 3) {
       const h1 = parseInt(str.slice(0, 1), 10);
-      const m1 = parseInt(str.slice(1), 10);
-      if (h1 >= 0 && h1 < 24 && m1 >= 0 && m1 < 60) {
+      let m1 = parseInt(str.slice(1), 10);
+      if (m1 > 59) m1 = 59;
+      if (h1 >= 0 && h1 <= 24) {
+        if (h1 === 24) return '24:00';
         return String(h1).padStart(2, '0') + ':' + String(m1).padStart(2, '0');
       }
-      const h2 = parseInt(str.slice(0, 2), 10);
-      const m2 = parseInt(str.slice(2), 10) * 10;
-      if (h2 >= 0 && h2 < 24 && m2 >= 0 && m2 < 60) {
+      let h2 = parseInt(str.slice(0, 2), 10);
+      let m2 = parseInt(str.slice(2), 10) * 10;
+      if (m2 > 59) m2 = 59;
+      if (h2 > 24) return '24:00';
+      if (h2 >= 0 && h2 <= 24) {
+        if (h2 === 24) return '24:00';
         return String(h2).padStart(2, '0') + ':' + String(m2).padStart(2, '0');
       }
       return null;
     }
     if (str.length === 4) {
-      const h = parseInt(str.slice(0, 2), 10);
-      const m = parseInt(str.slice(2), 10);
-      if (h === 24 && m === 0) return '00:00';
-      if (h >= 0 && h < 24 && m >= 0 && m < 60) {
-        return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
-      }
-      return null;
+      let h = parseInt(str.slice(0, 2), 10);
+      let m = parseInt(str.slice(2), 10);
+      if (h > 24 || (h === 24 && m > 0)) return '24:00';
+      if (m > 59) m = 59;
+      if (h === 24) return '24:00';
+      return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
     }
   }
 
