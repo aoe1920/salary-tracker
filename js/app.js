@@ -118,49 +118,86 @@ const updateWeekNavButtons = () => {
 let isProgrammaticWheelScroll = false;
 let programmaticScrollTimer = null;
 let isUserInteractingWithWheel = false;
-let userWheelEndTimer = null;
 let wheelScrollEndTimer = null;
+let wheelRafId = null;
+let wheelHasDragged = false;
+let wheelPointerStartX = 0;
+let isWheelPointerDown = false;
+let wheelScrollStartX = 0;
+let wheelVelocityHistory = [];
+let wheelMomentumAnimId = null;
 
-const onWheelTrackScroll = () => {
-  if (isProgrammaticWheelScroll || !isUserInteractingWithWheel) return;
+const getClosestWheelItem = (container) => {
+  if (!container) return null;
+  const trackCenter = container.scrollLeft + (container.clientWidth / 2);
+  let closestItem = null;
+  let minDiff = Infinity;
+  const items = container.querySelectorAll('.week-wheel-item');
+  items.forEach(item => {
+    const itemCenter = item.offsetLeft + (item.offsetWidth / 2);
+    const diff = Math.abs(itemCenter - trackCenter);
+    if (diff < minDiff) {
+      minDiff = diff;
+      closestItem = item;
+    }
+  });
+  return closestItem;
+};
+
+const updateWheelActivePillsRealtime = () => {
+  const container = document.getElementById('weekPillsList');
+  if (!container) return;
+  const closestItem = getClosestWheelItem(container);
+  if (!closestItem) return;
+  const activeId = closestItem.getAttribute('data-week-id');
+  if (!activeId) return;
+  const items = container.querySelectorAll('.week-wheel-item');
+  items.forEach(it => {
+    it.classList.toggle('active', it.getAttribute('data-week-id') === activeId);
+  });
+};
+
+const settleWheelSelection = () => {
+  if (isProgrammaticWheelScroll) return;
   const container = document.getElementById('weekPillsList');
   if (!container || !state.weeks || !state.weeks.length) return;
 
+  const closestItem = getClosestWheelItem(container);
+  if (!closestItem) return;
+
+  const targetWeekId = closestItem.getAttribute('data-week-id');
+  if (targetWeekId && targetWeekId !== state.currentWeekId) {
+    triggerHaptic('light');
+    const oldIdx = state.weeks.findIndex(w => w.id === state.currentWeekId);
+    const newIdx = state.weeks.findIndex(w => w.id === targetWeekId);
+    currentSlideClass = newIdx > oldIdx ? 'shifts-slide-next' : 'shifts-slide-prev';
+    state.currentWeekId = targetWeekId;
+    localStorage.setItem('salary_tracker_current_week', targetWeekId);
+    renderWeekDetails();
+    renderShiftsList();
+  }
+
+  container.classList.remove('is-user-scrolling');
+  isUserInteractingWithWheel = false;
+  scrollWheelToActive('smooth');
+  updateWeekNavButtons();
+};
+
+const onWheelTrackScroll = () => {
+  if (isProgrammaticWheelScroll) return;
+  const container = document.getElementById('weekPillsList');
+  if (!container) return;
+
+  container.classList.add('is-user-scrolling');
+  isUserInteractingWithWheel = true;
+
+  if (wheelRafId) cancelAnimationFrame(wheelRafId);
+  wheelRafId = requestAnimationFrame(updateWheelActivePillsRealtime);
+
   clearTimeout(wheelScrollEndTimer);
   wheelScrollEndTimer = setTimeout(() => {
-    if (isProgrammaticWheelScroll) return;
-    const trackCenter = container.scrollLeft + (container.clientWidth / 2);
-    let closestItem = null;
-    let minDiff = Infinity;
-
-    const items = container.querySelectorAll('.week-wheel-item');
-    items.forEach(item => {
-      const itemCenter = item.offsetLeft + (item.offsetWidth / 2);
-      const diff = Math.abs(itemCenter - trackCenter);
-      if (diff < minDiff) {
-        minDiff = diff;
-        closestItem = item;
-      }
-    });
-
-    if (!closestItem) return;
-    const targetWeekId = closestItem.getAttribute('data-week-id');
-    if (targetWeekId && targetWeekId !== state.currentWeekId) {
-      triggerHaptic('light');
-      const oldIdx = state.weeks.findIndex(w => w.id === state.currentWeekId);
-      const newIdx = state.weeks.findIndex(w => w.id === targetWeekId);
-      currentSlideClass = newIdx > oldIdx ? 'shifts-slide-next' : 'shifts-slide-prev';
-      state.currentWeekId = targetWeekId;
-      localStorage.setItem('salary_tracker_current_week', targetWeekId);
-      items.forEach(it => {
-        it.classList.toggle('active', it.getAttribute('data-week-id') === targetWeekId);
-      });
-      renderWeekDetails();
-      renderShiftsList();
-      updateWeekNavButtons();
-      scrollWheelToActive('smooth');
-    }
-  }, 100);
+    settleWheelSelection();
+  }, 160);
 };
 
 const scrollWheelToActive = (behavior = 'smooth') => {
@@ -171,6 +208,7 @@ const scrollWheelToActive = (behavior = 'smooth') => {
 
   isProgrammaticWheelScroll = true;
   container.classList.add('is-programmatic-scroll');
+  container.classList.remove('is-user-scrolling');
   clearTimeout(programmaticScrollTimer);
 
   const containerWidth = container.clientWidth;
@@ -211,6 +249,7 @@ const renderWeekPills = () => {
 
     item.addEventListener('click', (e) => {
       e.preventDefault();
+      if (wheelHasDragged) return;
       item.classList.remove('slime-pill-bounce');
       requestAnimationFrame(() => {
         item.classList.add('slime-pill-bounce');
@@ -1021,7 +1060,7 @@ const bindEvents = () => {
     touchStartX = t.clientX;
     touchStartY = t.clientY;
     touchStartTime = performance.now();
-    isEdgeSwipe = t.clientX < 28 || t.clientX > (window.innerWidth - 28);
+    isEdgeSwipe = t.clientX < 20 || t.clientX > (window.innerWidth - 20);
     touchStartedInWheel = Boolean(e.target.closest('#weekPillsList, .week-wheel-container, .modal-backdrop, .app-dialog-backdrop, button, input, select, textarea, .custom-select-menu'));
   }, { passive: true });
 
@@ -1036,16 +1075,16 @@ const bindEvents = () => {
     const t = e.changedTouches[0];
     const deltaX = t.clientX - touchStartX;
     const deltaY = t.clientY - touchStartY;
-    const deltaTime = performance.now() - touchStartTime;
+    const deltaTime = Math.max(1, performance.now() - touchStartTime);
+    const absX = Math.abs(deltaX);
+    const absY = Math.abs(deltaY);
+    const velocityX = absX / deltaTime;
 
-    if (deltaTime > 600) return;
+    const isFastFlick = velocityX >= 0.24 && absX >= 26 && absX > absY * 1.15;
+    const isStandardSwipe = absX >= 36 && absX > absY * 1.25 && deltaTime <= 650;
 
-    if (Math.abs(deltaX) >= 44 && Math.abs(deltaX) > Math.abs(deltaY) * 1.4) {
-      if (deltaX < 0) {
-        goToAdjacentWeek(1);
-      } else {
-        goToAdjacentWeek(-1);
-      }
+    if (isFastFlick || isStandardSwipe) {
+      goToAdjacentWeek(deltaX < 0 ? 1 : -1);
     }
   }, { passive: true });
 
@@ -1177,29 +1216,78 @@ const bindEvents = () => {
 
   const weekWheelTrack = document.getElementById('weekPillsList');
   if (weekWheelTrack) {
-    const startInteraction = () => {
+    weekWheelTrack.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      isWheelPointerDown = true;
+      wheelPointerStartX = e.clientX;
+      wheelScrollStartX = weekWheelTrack.scrollLeft;
+      wheelHasDragged = false;
+      wheelVelocityHistory = [{ time: performance.now(), x: e.clientX }];
+      if (wheelMomentumAnimId) {
+        cancelAnimationFrame(wheelMomentumAnimId);
+        wheelMomentumAnimId = null;
+      }
       isUserInteractingWithWheel = true;
-      clearTimeout(userWheelEndTimer);
-    };
-    const endInteraction = () => {
-      clearTimeout(userWheelEndTimer);
-      userWheelEndTimer = setTimeout(() => {
-        isUserInteractingWithWheel = false;
-      }, 150);
+      weekWheelTrack.classList.add('is-user-scrolling');
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (!isWheelPointerDown) return;
+      const deltaX = e.clientX - wheelPointerStartX;
+      if (Math.abs(deltaX) > 6) {
+        wheelHasDragged = true;
+      }
+      if (e.pointerType === 'mouse') {
+        weekWheelTrack.scrollLeft = wheelScrollStartX - deltaX;
+      }
+      const now = performance.now();
+      wheelVelocityHistory.push({ time: now, x: e.clientX });
+      if (wheelVelocityHistory.length > 5) {
+        wheelVelocityHistory.shift();
+      }
+    }, { passive: true });
+
+    const finishPointerInteraction = (e) => {
+      if (!isWheelPointerDown) return;
+      isWheelPointerDown = false;
+
+      if (e && e.pointerType === 'mouse' && wheelVelocityHistory.length >= 2) {
+        const last = wheelVelocityHistory[wheelVelocityHistory.length - 1];
+        const first = wheelVelocityHistory[0];
+        const dt = Math.max(1, last.time - first.time);
+        const dx = last.x - first.x;
+        let vx = -(dx / dt) * 16;
+        if (Math.abs(vx) > 1.5) {
+          const runMomentum = () => {
+            if (isWheelPointerDown) return;
+            weekWheelTrack.scrollLeft += vx;
+            vx *= 0.94;
+            if (Math.abs(vx) > 0.4) {
+              wheelMomentumAnimId = requestAnimationFrame(runMomentum);
+            } else {
+              wheelMomentumAnimId = null;
+              settleWheelSelection();
+            }
+          };
+          wheelMomentumAnimId = requestAnimationFrame(runMomentum);
+          return;
+        }
+      }
+
+      clearTimeout(wheelScrollEndTimer);
+      wheelScrollEndTimer = setTimeout(() => {
+        settleWheelSelection();
+      }, 160);
     };
 
-    weekWheelTrack.addEventListener('pointerdown', startInteraction);
-    weekWheelTrack.addEventListener('touchstart', startInteraction, { passive: true });
-    window.addEventListener('pointerup', endInteraction);
-    window.addEventListener('pointercancel', endInteraction);
-    window.addEventListener('touchend', endInteraction);
-    window.addEventListener('touchcancel', endInteraction);
+    window.addEventListener('pointerup', finishPointerInteraction, { passive: true });
+    window.addEventListener('pointercancel', finishPointerInteraction, { passive: true });
 
     weekWheelTrack.addEventListener('scroll', onWheelTrackScroll, { passive: true });
     if ('onscrollend' in window) {
       weekWheelTrack.addEventListener('scrollend', () => {
-        if (!isProgrammaticWheelScroll && isUserInteractingWithWheel) {
-          scrollWheelToActive('smooth');
+        if (!isProgrammaticWheelScroll && !isWheelPointerDown) {
+          settleWheelSelection();
         }
       }, { passive: true });
     }

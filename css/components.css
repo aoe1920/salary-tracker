@@ -677,6 +677,7 @@ body.dark-mode .week-wheel-container {
 }
 
 .week-wheel-track {
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -693,12 +694,15 @@ body.dark-mode .week-wheel-container {
   -webkit-overflow-scrolling: touch;
   touch-action: pan-x;
   scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: x proximity;
+  overscroll-behavior-x: contain;
+  will-change: scroll-position;
   mask-image: linear-gradient(to right, transparent 0%, black 12px, black calc(100% - 12px), transparent 100%);
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12px, black calc(100% - 12px), transparent 100%);
 }
 
-.week-wheel-track.is-programmatic-scroll {
+.week-wheel-track.is-programmatic-scroll,
+.week-wheel-track.is-user-scrolling {
   scroll-snap-type: none !important;
   scroll-behavior: auto !important;
 }
@@ -729,10 +733,10 @@ body.dark-mode .week-wheel-container {
   box-sizing: border-box;
   white-space: nowrap;
   scroll-snap-align: center;
-  scroll-snap-stop: always;
+  scroll-snap-stop: normal;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  touch-action: manipulation;
+  touch-action: pan-x;
 }
 
 .week-wheel-item:active {
@@ -1400,9 +1404,6 @@ body.dark-mode .badge-count {
     inset 0 1px 1px rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px) saturate(155%);
   -webkit-backdrop-filter: blur(12px) saturate(155%);
-  contain: layout style;
-  content-visibility: auto;
-  contain-intrinsic-size: auto 76px;
   position: relative;
 }
 
