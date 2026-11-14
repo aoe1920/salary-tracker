@@ -119,13 +119,10 @@ let isProgrammaticWheelScroll = false;
 let programmaticScrollTimer = null;
 let isUserInteractingWithWheel = false;
 let wheelScrollEndTimer = null;
-let wheelRafId = null;
 let wheelHasDragged = false;
 let wheelPointerStartX = 0;
 let isWheelPointerDown = false;
 let wheelScrollStartX = 0;
-let wheelVelocityHistory = [];
-let wheelMomentumAnimId = null;
 
 const getClosestWheelItem = (container) => {
   if (!container) return null;
@@ -144,23 +141,54 @@ const getClosestWheelItem = (container) => {
   return closestItem;
 };
 
-const updateWheelActivePillsRealtime = () => {
+const updateWheelSidePadding = (container) => {
+  if (!container) return;
+  const containerWidth = container.clientWidth;
+  if (!containerWidth) return;
+  const sidePad = Math.max(10, Math.round(containerWidth / 2 - 50));
+  const sidePadStr = `${sidePad}px`;
+  if (container.style.paddingLeft !== sidePadStr) {
+    container.style.paddingLeft = sidePadStr;
+    container.style.paddingRight = sidePadStr;
+  }
+};
+
+const scrollWheelToActive = (behavior = 'smooth') => {
   const container = document.getElementById('weekPillsList');
   if (!container) return;
-  const closestItem = getClosestWheelItem(container);
-  if (!closestItem) return;
-  const activeId = closestItem.getAttribute('data-week-id');
-  if (!activeId) return;
-  const items = container.querySelectorAll('.week-wheel-item');
-  items.forEach(it => {
-    it.classList.toggle('active', it.getAttribute('data-week-id') === activeId);
-  });
+  const activeItem = container.querySelector(`.week-wheel-item[data-week-id="${state.currentWeekId}"]`);
+  if (!activeItem) return;
+
+  updateWheelSidePadding(container);
+
+  const containerCenter = container.clientWidth / 2;
+  const itemCenter = activeItem.offsetLeft + (activeItem.offsetWidth / 2);
+  const targetLeft = Math.max(0, Math.round(itemCenter - containerCenter));
+
+  if (Math.abs(container.scrollLeft - targetLeft) < 3) {
+    updateWeekNavButtons();
+    return;
+  }
+
+  isProgrammaticWheelScroll = true;
+  container.classList.add('is-programmatic-scroll');
+  clearTimeout(programmaticScrollTimer);
+
+  container.scrollTo({ left: targetLeft, behavior });
+  updateWeekNavButtons();
+
+  programmaticScrollTimer = setTimeout(() => {
+    isProgrammaticWheelScroll = false;
+    container.classList.remove('is-programmatic-scroll');
+  }, behavior === 'smooth' ? 380 : 60);
 };
 
 const settleWheelSelection = () => {
-  if (isProgrammaticWheelScroll) return;
+  if (isProgrammaticWheelScroll || isWheelPointerDown) return;
   const container = document.getElementById('weekPillsList');
   if (!container || !state.weeks || !state.weeks.length) return;
+
+  isUserInteractingWithWheel = false;
 
   const closestItem = getClosestWheelItem(container);
   if (!closestItem) return;
@@ -173,61 +201,26 @@ const settleWheelSelection = () => {
     currentSlideClass = newIdx > oldIdx ? 'shifts-slide-next' : 'shifts-slide-prev';
     state.currentWeekId = targetWeekId;
     localStorage.setItem('salary_tracker_current_week', targetWeekId);
+    container.querySelectorAll('.week-wheel-item').forEach(it => {
+      it.classList.toggle('active', it.getAttribute('data-week-id') === targetWeekId);
+    });
     renderWeekDetails();
     renderShiftsList();
+    updateWeekNavButtons();
   }
 
-  container.classList.remove('is-user-scrolling');
-  isUserInteractingWithWheel = false;
   scrollWheelToActive('smooth');
-  updateWeekNavButtons();
 };
 
 const onWheelTrackScroll = () => {
   if (isProgrammaticWheelScroll) return;
   const container = document.getElementById('weekPillsList');
-  if (!container) return;
-
-  container.classList.add('is-user-scrolling');
-  isUserInteractingWithWheel = true;
-
-  if (wheelRafId) cancelAnimationFrame(wheelRafId);
-  wheelRafId = requestAnimationFrame(updateWheelActivePillsRealtime);
+  if (!container || !state.weeks || !state.weeks.length) return;
 
   clearTimeout(wheelScrollEndTimer);
   wheelScrollEndTimer = setTimeout(() => {
     settleWheelSelection();
-  }, 160);
-};
-
-const scrollWheelToActive = (behavior = 'smooth') => {
-  const container = document.getElementById('weekPillsList');
-  if (!container) return;
-  const activeItem = container.querySelector(`.week-wheel-item[data-week-id="${state.currentWeekId}"]`);
-  if (!activeItem) return;
-
-  isProgrammaticWheelScroll = true;
-  container.classList.add('is-programmatic-scroll');
-  container.classList.remove('is-user-scrolling');
-  clearTimeout(programmaticScrollTimer);
-
-  const containerWidth = container.clientWidth;
-  const itemWidth = activeItem.offsetWidth || 150;
-  const sidePad = Math.max(8, Math.round((containerWidth - itemWidth) / 2));
-  const sidePadStr = `${sidePad}px`;
-  if (container.style.paddingLeft !== sidePadStr) {
-    container.style.paddingLeft = sidePadStr;
-    container.style.paddingRight = sidePadStr;
-  }
-
-  const targetLeft = Math.max(0, activeItem.offsetLeft - sidePad);
-  container.scrollTo({ left: targetLeft, behavior });
-  updateWeekNavButtons();
-
-  programmaticScrollTimer = setTimeout(() => {
-    isProgrammaticWheelScroll = false;
-    container.classList.remove('is-programmatic-scroll');
-  }, behavior === 'smooth' ? 320 : 120);
+  }, 140);
 };
 
 const renderWeekPills = () => {
@@ -1216,6 +1209,9 @@ const bindEvents = () => {
 
   const weekWheelTrack = document.getElementById('weekPillsList');
   if (weekWheelTrack) {
+    let wheelVelocityHistory = [];
+    let wheelMomentumAnimId = null;
+
     weekWheelTrack.addEventListener('pointerdown', (e) => {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       isWheelPointerDown = true;
@@ -1228,7 +1224,6 @@ const bindEvents = () => {
         wheelMomentumAnimId = null;
       }
       isUserInteractingWithWheel = true;
-      weekWheelTrack.classList.add('is-user-scrolling');
     });
 
     window.addEventListener('pointermove', (e) => {
@@ -1277,7 +1272,7 @@ const bindEvents = () => {
       clearTimeout(wheelScrollEndTimer);
       wheelScrollEndTimer = setTimeout(() => {
         settleWheelSelection();
-      }, 160);
+      }, 140);
     };
 
     window.addEventListener('pointerup', finishPointerInteraction, { passive: true });
@@ -1286,6 +1281,7 @@ const bindEvents = () => {
     weekWheelTrack.addEventListener('scroll', onWheelTrackScroll, { passive: true });
     if ('onscrollend' in window) {
       weekWheelTrack.addEventListener('scrollend', () => {
+        clearTimeout(wheelScrollEndTimer);
         if (!isProgrammaticWheelScroll && !isWheelPointerDown) {
           settleWheelSelection();
         }

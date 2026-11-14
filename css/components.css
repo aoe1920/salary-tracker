@@ -693,18 +693,14 @@ body.dark-mode .week-wheel-container {
   -ms-overflow-style: none !important;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-x;
-  scroll-behavior: smooth;
-  scroll-snap-type: x proximity;
+  scroll-snap-type: x mandatory;
   overscroll-behavior-x: contain;
-  will-change: scroll-position;
   mask-image: linear-gradient(to right, transparent 0%, black 12px, black calc(100% - 12px), transparent 100%);
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12px, black calc(100% - 12px), transparent 100%);
 }
 
-.week-wheel-track.is-programmatic-scroll,
-.week-wheel-track.is-user-scrolling {
+.week-wheel-track.is-programmatic-scroll {
   scroll-snap-type: none !important;
-  scroll-behavior: auto !important;
 }
 
 .week-wheel-track::-webkit-scrollbar {
@@ -811,7 +807,7 @@ body.dark-mode .week-wheel-item .wheel-item-sub {
 
 .week-wheel-item.active .wheel-item-name {
   color: #ffffff;
-  font-weight: 700;
+  font-weight: 600;
   text-shadow: none;
 }
 
