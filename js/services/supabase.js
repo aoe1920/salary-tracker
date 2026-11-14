@@ -744,7 +744,8 @@ export const restoreVerifiedUserData = () => {
   state.settings.workplaceRates = { 'Mặc định': 25000 };
   state.settings.workplaceColors = { 'Mặc định': '#6366f1' };
   state.settings.defaultRate = 25000;
-  state.currentWeekId = state.weeks[state.weeks.length - 1].id;
+  const latest = getLatestWeek() || state.weeks[state.weeks.length - 1];
+  state.currentWeekId = latest ? latest.id : state.weeks[state.weeks.length - 1].id;
   localStorage.setItem(getWeeksStorageKey(), JSON.stringify(state.weeks));
   localStorage.setItem(getSettingsStorageKey(), JSON.stringify(state.settings));
   localStorage.setItem('salary_tracker_vault_backup', JSON.stringify(state.weeks));
@@ -1036,7 +1037,8 @@ export const loadState = async () => {
   } catch (err) {
     console.error('Error loading state:', err);
     state.weeks = JSON.parse(JSON.stringify(GUEST_DEFAULT_DATA));
-    state.currentWeekId = state.weeks[state.weeks.length - 1].id;
+    const latest = getLatestWeek() || state.weeks[state.weeks.length - 1];
+    state.currentWeekId = latest ? latest.id : state.weeks[state.weeks.length - 1].id;
   }
 };
 
@@ -1553,6 +1555,13 @@ export const handleLoginSubmit = async (e) => {
       if (state.settings && (!state.settings.avatar || state.settings.avatar === 'default')) {
         state.settings.avatar = activeAvatar;
       }
+      if (state.weeks && state.weeks.length > 0) {
+        const latest = getLatestWeek() || state.weeks[state.weeks.length - 1];
+        if (latest) {
+          state.currentWeekId = latest.id;
+          localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
+        }
+      }
       const cachedWeeksStr = JSON.stringify(state.weeks);
       const cachedSettingsStr = JSON.stringify(state.settings);
       document.getElementById('authModal').style.display = 'none';
@@ -1562,19 +1571,25 @@ export const handleLoginSubmit = async (e) => {
       triggerAppRender();
       showToast(t('auth_login_success', 'Đăng nhập thành công. Chào @{username}.').replace('{username}', username));
       loadState().then(() => {
-        const changed =
-          cachedWeeksStr !== JSON.stringify(state.weeks) ||
-          cachedSettingsStr !== JSON.stringify(state.settings);
-        if (changed) {
-          triggerAppRender();
-          updateSyncStatusUI();
-        } else {
-          updateHeaderAuthUI();
-          updateSyncStatusUI();
+        if (state.weeks && state.weeks.length > 0) {
+          const latestAfter = getLatestWeek() || state.weeks[state.weeks.length - 1];
+          if (latestAfter) {
+            state.currentWeekId = latestAfter.id;
+            localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
+          }
         }
+        triggerAppRender();
+        updateSyncStatusUI();
       }).catch(() => {});
     } else {
       await loadState();
+      if (state.weeks && state.weeks.length > 0) {
+        const latest = getLatestWeek() || state.weeks[state.weeks.length - 1];
+        if (latest) {
+          state.currentWeekId = latest.id;
+          localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
+        }
+      }
       document.getElementById('authModal').style.display = 'none';
       document.getElementById('formLogin').reset();
       updateHeaderAuthUI();
@@ -2218,7 +2233,8 @@ export const setupRealtimeSync = () => {
                 state.weeks.forEach((w, idx) => ensureWeekStartDate(w, idx));
                 syncShiftsTypeConsistency(state.weeks);
                 if (!state.weeks.some(w => w.id === state.currentWeekId)) {
-                  state.currentWeekId = state.weeks[state.weeks.length - 1].id;
+                  const latest = getLatestWeek() || state.weeks[state.weeks.length - 1];
+                  state.currentWeekId = latest ? latest.id : state.weeks[state.weeks.length - 1].id;
                 }
               }
               triggerAppRender();
@@ -2281,7 +2297,8 @@ export const setupAutoSync = () => {
               state.weeks.forEach((w, idx) => ensureWeekStartDate(w, idx));
               syncShiftsTypeConsistency(state.weeks);
               if (!state.weeks.some(w => w.id === state.currentWeekId)) {
-                state.currentWeekId = state.weeks[state.weeks.length - 1].id;
+                const latest = getLatestWeek() || state.weeks[state.weeks.length - 1];
+                state.currentWeekId = latest ? latest.id : state.weeks[state.weeks.length - 1].id;
               }
             }
             triggerAppRender();

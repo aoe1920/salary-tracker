@@ -99,19 +99,16 @@ export const getLatestWeek = () => {
   if (!state.weeks || !Array.isArray(state.weeks) || state.weeks.length === 0) {
     return null;
   }
-  let latest = state.weeks[0];
-  let latestDate = latest.startDate || '';
+  let latest = state.weeks[state.weeks.length - 1];
+  let maxDate = '';
   for (let i = 0; i < state.weeks.length; i++) {
     const w = state.weeks[i];
     if (!w) continue;
-    const wDate = w.startDate || '';
-    if (wDate && (!latestDate || wDate >= latestDate)) {
+    const d = w.startDate || '';
+    if (d && (!maxDate || d >= maxDate)) {
+      maxDate = d;
       latest = w;
-      latestDate = wDate;
     }
-  }
-  if (!latestDate) {
-    latest = state.weeks[state.weeks.length - 1];
   }
   return latest || state.weeks[state.weeks.length - 1];
 };

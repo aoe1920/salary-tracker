@@ -165,7 +165,7 @@ const scrollWheelToActive = (behavior = 'smooth') => {
   const itemCenter = activeItem.offsetLeft + (activeItem.offsetWidth / 2);
   const targetLeft = Math.max(0, Math.round(itemCenter - containerCenter));
 
-  if (Math.abs(container.scrollLeft - targetLeft) < 3) {
+  if (behavior === 'smooth' && Math.abs(container.scrollLeft - targetLeft) < 3) {
     updateWeekNavButtons();
     return;
   }
@@ -174,7 +174,11 @@ const scrollWheelToActive = (behavior = 'smooth') => {
   container.classList.add('is-programmatic-scroll');
   clearTimeout(programmaticScrollTimer);
 
-  container.scrollTo({ left: targetLeft, behavior });
+  if (behavior === 'auto') {
+    container.scrollLeft = targetLeft;
+  } else {
+    container.scrollTo({ left: targetLeft, behavior });
+  }
   updateWeekNavButtons();
 
   programmaticScrollTimer = setTimeout(() => {
@@ -271,10 +275,13 @@ const renderWeekPills = () => {
     scrollWheelToActive('auto');
     setTimeout(() => {
       scrollWheelToActive('auto');
-    }, 120);
+    }, 60);
     setTimeout(() => {
       scrollWheelToActive('auto');
-    }, 300);
+    }, 150);
+    setTimeout(() => {
+      scrollWheelToActive('auto');
+    }, 350);
   });
   updateWeekNavButtons();
 };
@@ -1385,16 +1392,32 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupRealtimeSync();
   setupAutoSync();
 
-  window.addEventListener('load', () => {
+  const ensureLatestWeekActive = () => {
     if (state.weeks && state.weeks.length > 0) {
       const latest = getLatestWeek() || state.weeks[state.weeks.length - 1];
-      if (latest && state.currentWeekId !== latest.id) {
-        state.currentWeekId = latest.id;
-        localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
-        renderApp();
-      } else {
-        scrollWheelToActive('auto');
+      if (latest) {
+        if (state.currentWeekId !== latest.id) {
+          state.currentWeekId = latest.id;
+          localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
+          renderApp();
+        } else {
+          scrollWheelToActive('auto');
+        }
       }
     }
-  });
+  };
+
+  ensureLatestWeekActive();
+
+  if (document.readyState === 'complete') {
+    ensureLatestWeekActive();
+  } else {
+    window.addEventListener('load', ensureLatestWeekActive, { once: true });
+  }
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => {
+      ensureLatestWeekActive();
+    });
+  }
 });
