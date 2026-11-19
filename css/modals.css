@@ -4664,29 +4664,19 @@ body.dark-mode .stats-summary-kpis {
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
-  scrollbar-width: thin !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.stats-canvas-wrap::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .stats-canvas-wrap.is-dragging {
   cursor: grabbing;
   scroll-behavior: auto !important;
-}
-
-@media (hover: hover) {
-  .stats-canvas-wrap::-webkit-scrollbar {
-    display: block !important;
-    height: 4px !important;
-  }
-  .stats-canvas-wrap::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .stats-canvas-wrap::-webkit-scrollbar-thumb {
-    background: rgba(15, 23, 42, 0.15);
-    border-radius: 9999px;
-  }
-  body.dark-mode .stats-canvas-wrap::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.18);
-  }
 }
 
 .stats-timeline-canvas {
