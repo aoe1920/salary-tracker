@@ -487,7 +487,21 @@
             <div class="stats-chart-header">
               <span class="stats-box-title font-mono" id="timelineChartTitle" data-i18n="chart_title_daily">Thu nhập
                 theo ngày</span>
-              <span class="stats-box-tag font-mono" id="timelineChartSubtitle">đ</span>
+              <div class="stats-chart-header-right">
+                <div class="timeline-nav-group" id="timelineNavGroup" style="display: none;">
+                  <button type="button" class="btn-morphic btn-timeline-nav" id="btnTimelinePrev" data-i18n-title="btn_prev_period" title="Trượt về trước" aria-label="Trượt về trước">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13">
+                      <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                  </button>
+                  <button type="button" class="btn-morphic btn-timeline-nav" id="btnTimelineNext" data-i18n-title="btn_next_period" title="Trượt về sau" aria-label="Trượt về sau">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13">
+                      <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                  </button>
+                </div>
+                <span class="stats-box-tag font-mono" id="timelineChartSubtitle">đ</span>
+              </div>
             </div>
             <div class="stats-canvas-wrap">
               <canvas id="timelineChartCanvas" class="stats-timeline-canvas"></canvas>

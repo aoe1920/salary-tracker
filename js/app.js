@@ -6,7 +6,7 @@ import { supabaseClient, loadState, saveWeeks, syncWithSupabase, saveSettings, i
 import { triggerHaptic, initGlobalHaptics } from './ui/haptic.js';
 import { showToast, showToastWithAction } from './ui/toast.js';
 import { setupCustomSelect, syncCustomSelect, closeAllCustomSelects } from './ui/select.js';
-import { drawDashboardWeekChart, setAllWeeksModalOpener, renderAnalyticsDashboard, analyticsState } from './ui/chart.js';
+import { drawDashboardWeekChart, setAllWeeksModalOpener, renderAnalyticsDashboard, analyticsState, initTimelineInteractions } from './ui/chart.js';
 import { renderSlipCanvas, openShareSlipModal, downloadSlipImage, copySlipImageToClipboard } from './ui/canvas-slip.js';
 import { exportCurrentWeekCSV, exportAllWeeksCSV, backupJSON, restoreJSON, setExportAppRenderer } from './ui/export.js';
 import { showConfirmDialog, showAlertDialog, initDialogHandlers } from './ui/dialog.js';
@@ -1115,6 +1115,8 @@ const bindEvents = () => {
       }
     });
   });
+
+  initTimelineInteractions();
 
   window.addEventListener('resize', () => {
     scrollWheelToActive('auto');

@@ -4611,6 +4611,36 @@ body.dark-mode .stats-summary-kpis {
   justify-content: space-between;
 }
 
+.stats-chart-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.timeline-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.btn-timeline-nav {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.btn-timeline-nav:disabled {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+
 .stats-box-title {
   font-size: 0.8rem;
   font-weight: 600;
@@ -4629,7 +4659,34 @@ body.dark-mode .stats-summary-kpis {
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  scrollbar-width: thin !important;
+}
+
+.stats-canvas-wrap.is-dragging {
+  cursor: grabbing;
+  scroll-behavior: auto !important;
+}
+
+@media (hover: hover) {
+  .stats-canvas-wrap::-webkit-scrollbar {
+    display: block !important;
+    height: 4px !important;
+  }
+  .stats-canvas-wrap::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .stats-canvas-wrap::-webkit-scrollbar-thumb {
+    background: rgba(15, 23, 42, 0.15);
+    border-radius: 9999px;
+  }
+  body.dark-mode .stats-canvas-wrap::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.18);
+  }
 }
 
 .stats-timeline-canvas {

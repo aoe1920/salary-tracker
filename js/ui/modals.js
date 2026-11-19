@@ -6,7 +6,7 @@ import { showToast, showToastWithAction } from './toast.js';
 import { showConfirmDialog, showAlertDialog } from './dialog.js';
 import { triggerHaptic, triggerFieldError, clearFieldErrors } from './haptic.js';
 import { setupCustomSelect, syncCustomSelect } from './select.js';
-import { renderAnalyticsDashboard } from './chart.js';
+import { renderAnalyticsDashboard, resetTimelineScrollFilter } from './chart.js';
 import { EYE_OPEN_SVG, EYE_OFF_SVG, EYE_OPEN_PATH, EYE_OFF_PATH } from '../config.js';
 import { AVATARS, getAvatarSvg } from './avatars.js';
 
@@ -912,6 +912,7 @@ export const switchSummaryTab = (tab) => {
 };
 
 export const openAllWeeksModal = (initialTab = 'analytics') => {
+  resetTimelineScrollFilter();
   let totalHours = 0;
   let totalEarnings = 0;
   let totalShifts = 0;

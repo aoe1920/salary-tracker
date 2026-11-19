@@ -477,9 +477,143 @@ const drawTimelineChart = (data) => {
     }
   });
 
+  let shouldScrollToEnd = false;
   if (width > containerW && parent) {
+    if (lastTimelineTimeFilter !== analyticsState.timeFilter) {
+      lastTimelineTimeFilter = analyticsState.timeFilter;
+      shouldScrollToEnd = true;
+    }
     requestAnimationFrame(() => {
-      parent.scrollLeft = parent.scrollWidth;
+      if (shouldScrollToEnd) {
+        parent.scrollLeft = parent.scrollWidth;
+      }
+      updateTimelineNavControls(parent);
+    });
+  } else if (parent) {
+    lastTimelineTimeFilter = analyticsState.timeFilter;
+    updateTimelineNavControls(parent);
+  }
+};
+
+let lastTimelineTimeFilter = null;
+
+export const resetTimelineScrollFilter = () => {
+  lastTimelineTimeFilter = null;
+};
+
+export const updateTimelineNavControls = (parent) => {
+  const wrap = parent || document.querySelector('.stats-canvas-wrap');
+  if (!wrap) return;
+  const navGroup = document.getElementById('timelineNavGroup');
+  const btnPrev = document.getElementById('btnTimelinePrev');
+  const btnNext = document.getElementById('btnTimelineNext');
+  if (!navGroup) return;
+
+  const hasOverflow = wrap.scrollWidth > wrap.clientWidth + 4;
+  navGroup.style.display = hasOverflow ? 'inline-flex' : 'none';
+
+  if (hasOverflow && btnPrev && btnNext) {
+    const maxScroll = wrap.scrollWidth - wrap.clientWidth;
+    btnPrev.disabled = wrap.scrollLeft <= 2;
+    btnNext.disabled = wrap.scrollLeft >= maxScroll - 2;
+  }
+};
+
+export const initTimelineInteractions = () => {
+  const wrap = document.querySelector('.stats-canvas-wrap');
+  if (!wrap || wrap.dataset.boundInteractions === 'true') return;
+  wrap.dataset.boundInteractions = 'true';
+
+  let isPointerDown = false;
+  let startX = 0;
+  let scrollStart = 0;
+  let velocityHistory = [];
+  let momentumAnimId = null;
+
+  wrap.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    isPointerDown = true;
+    startX = e.clientX;
+    scrollStart = wrap.scrollLeft;
+    velocityHistory = [{ time: performance.now(), x: e.clientX }];
+    if (momentumAnimId) {
+      cancelAnimationFrame(momentumAnimId);
+      momentumAnimId = null;
+    }
+    wrap.classList.add('is-dragging');
+  });
+
+  window.addEventListener('pointermove', (e) => {
+    if (!isPointerDown) return;
+    const deltaX = e.clientX - startX;
+    wrap.scrollLeft = scrollStart - deltaX;
+    const now = performance.now();
+    velocityHistory.push({ time: now, x: e.clientX });
+    if (velocityHistory.length > 5) {
+      velocityHistory.shift();
+    }
+    updateTimelineNavControls(wrap);
+  }, { passive: true });
+
+  const finishPointer = (e) => {
+    if (!isPointerDown) return;
+    isPointerDown = false;
+    wrap.classList.remove('is-dragging');
+
+    if (e && e.pointerType === 'mouse' && velocityHistory.length >= 2) {
+      const last = velocityHistory[velocityHistory.length - 1];
+      const first = velocityHistory[0];
+      const dt = Math.max(1, last.time - first.time);
+      const dx = last.x - first.x;
+      let vx = -(dx / dt) * 16;
+      if (Math.abs(vx) > 1.2) {
+        const runMomentum = () => {
+          if (isPointerDown) return;
+          wrap.scrollLeft += vx;
+          vx *= 0.94;
+          updateTimelineNavControls(wrap);
+          if (Math.abs(vx) > 0.4) {
+            momentumAnimId = requestAnimationFrame(runMomentum);
+          } else {
+            momentumAnimId = null;
+          }
+        };
+        momentumAnimId = requestAnimationFrame(runMomentum);
+      }
+    }
+  };
+
+  window.addEventListener('pointerup', finishPointer, { passive: true });
+  window.addEventListener('pointercancel', finishPointer, { passive: true });
+
+  wrap.addEventListener('scroll', () => {
+    updateTimelineNavControls(wrap);
+  }, { passive: true });
+
+  wrap.addEventListener('wheel', (e) => {
+    if (wrap.scrollWidth > wrap.clientWidth) {
+      const delta = Math.abs(e.deltaX) >= Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (delta !== 0) {
+        e.preventDefault();
+        wrap.scrollLeft += delta;
+        updateTimelineNavControls(wrap);
+      }
+    }
+  }, { passive: false });
+
+  const btnPrev = document.getElementById('btnTimelinePrev');
+  if (btnPrev) {
+    btnPrev.addEventListener('click', (e) => {
+      e.preventDefault();
+      wrap.scrollBy({ left: -240, behavior: 'smooth' });
+    });
+  }
+
+  const btnNext = document.getElementById('btnTimelineNext');
+  if (btnNext) {
+    btnNext.addEventListener('click', (e) => {
+      e.preventDefault();
+      wrap.scrollBy({ left: 240, behavior: 'smooth' });
     });
   }
 };
@@ -615,6 +749,7 @@ export const renderAnalyticsDashboard = () => {
 
   drawTimelineChart(data);
   drawDonutChart(data);
+  initTimelineInteractions();
 
   const breakdownContainer = document.getElementById('workplaceBreakdownList');
   if (breakdownContainer) {
