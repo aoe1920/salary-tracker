@@ -3628,6 +3628,8 @@ body.dark-mode .btn-logout-action {
     flex-shrink: 0;
     padding: 1px 5px;
     border-radius: var(--radius-pill);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
   }
 }
 

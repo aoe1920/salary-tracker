@@ -80,12 +80,11 @@ const renderWeekChartCanvas = (values, maxVal, startValues, targetValues, ease) 
   if (points.length > 0) {
     const areaGrad = ctx.createLinearGradient(0, padTop, 0, padTop + chartH);
     if (isDark) {
-      areaGrad.addColorStop(0, 'rgba(59, 130, 246, 0.22)');
-      areaGrad.addColorStop(0.7, 'rgba(16, 185, 129, 0.08)');
+      areaGrad.addColorStop(0, 'rgba(16, 185, 129, 0.18)');
       areaGrad.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
     } else {
-      areaGrad.addColorStop(0, 'rgba(37, 99, 235, 0.16)');
-      areaGrad.addColorStop(1, 'rgba(37, 99, 235, 0.0)');
+      areaGrad.addColorStop(0, 'rgba(5, 150, 105, 0.14)');
+      areaGrad.addColorStop(1, 'rgba(5, 150, 105, 0.0)');
     }
 
     ctx.beginPath();
@@ -105,9 +104,8 @@ const renderWeekChartCanvas = (values, maxVal, startValues, targetValues, ease) 
     ctx.fill();
 
     const strokeGrad = ctx.createLinearGradient(padLeft, 0, width - padRight, 0);
-    strokeGrad.addColorStop(0, '#3b82f6');
-    strokeGrad.addColorStop(0.5, '#10b981');
-    strokeGrad.addColorStop(1, '#8b5cf6');
+    strokeGrad.addColorStop(0, isDark ? '#34d399' : '#059669');
+    strokeGrad.addColorStop(1, '#10b981');
 
     ctx.beginPath();
     ctx.moveTo(points[0].x, points[0].y);
@@ -124,8 +122,8 @@ const renderWeekChartCanvas = (values, maxVal, startValues, targetValues, ease) 
     points.forEach((pt) => {
       const isActiveDay = ease >= 0.5 ? (pt.targetVal > 0) : (pt.startVal > 0);
       ctx.fillStyle = isDark
-        ? (isActiveDay ? '#60a5fa' : '#94a3b8')
-        : (isActiveDay ? '#1d4ed8' : '#64748b');
+        ? (isActiveDay ? '#34d399' : '#94a3b8')
+        : (isActiveDay ? '#047857' : '#64748b');
       ctx.font = '600 11px Inter, -apple-system, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText(pt.day, pt.x, height - 3);
