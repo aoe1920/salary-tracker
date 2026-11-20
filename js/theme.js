@@ -34,6 +34,14 @@ export const applyTheme = (theme, save = true, clickEvent = null) => {
     if (morphIcon) {
       morphIcon.setAttribute('icon', isDark ? MOON_PATH : SUN_PATH);
     }
+    const curWeek = getCurrentWeek();
+    if (curWeek) {
+      drawDashboardWeekChart(curWeek, false);
+    }
+    const allWeeksModal = document.getElementById('allWeeksModal');
+    if (allWeeksModal && allWeeksModal.style.display === 'flex') {
+      renderAnalyticsDashboard();
+    }
   };
 
   const persistThemeSettings = () => {
@@ -46,16 +54,6 @@ export const applyTheme = (theme, save = true, clickEvent = null) => {
         localStorage.setItem(settingsKey, JSON.stringify(state.settings));
       } catch (_) {}
     }
-
-    const allWeeksModal = document.getElementById('allWeeksModal');
-    if (allWeeksModal && allWeeksModal.style.display === 'flex') {
-      renderAnalyticsDashboard();
-    }
-
-    const curWeek = getCurrentWeek();
-    if (curWeek) {
-      drawDashboardWeekChart(curWeek, true);
-    }
   };
 
   if (!isStateChange || !save) {
@@ -63,31 +61,6 @@ export const applyTheme = (theme, save = true, clickEvent = null) => {
     persistThemeSettings();
     return;
   }
-
-  const toggleBtn = document.getElementById('btnToggleTheme');
-  let targetBtn = toggleBtn;
-  if (clickEvent && clickEvent.target) {
-    const clicked = clickEvent.target.closest('#btnToggleTheme');
-    if (clicked) targetBtn = clicked;
-  }
-
-  let x = window.innerWidth - 45;
-  let y = 35;
-
-  if (targetBtn) {
-    const rect = targetBtn.getBoundingClientRect();
-    x = Math.round(rect.left + rect.width / 2);
-    y = Math.round(rect.top + rect.height / 2);
-  } else if (clickEvent && typeof clickEvent.clientX === 'number' && (clickEvent.clientX > 0 || clickEvent.clientY > 0)) {
-    x = clickEvent.clientX;
-    y = clickEvent.clientY;
-  }
-
-  const maxCornerDist = Math.hypot(
-    Math.max(x, window.innerWidth - x),
-    Math.max(y, window.innerHeight - y)
-  );
-  const endRadius = Math.ceil(maxCornerDist * 1.15) + 60;
 
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     performThemeChange();
@@ -98,10 +71,6 @@ export const applyTheme = (theme, save = true, clickEvent = null) => {
   if (typeof document.startViewTransition === 'function') {
     try {
       const thisVTId = ++currentVTId;
-      document.documentElement.style.setProperty('--vt-x', `${x}px`);
-      document.documentElement.style.setProperty('--vt-y', `${y}px`);
-      document.documentElement.style.setProperty('--vt-r', `${endRadius}px`);
-
       document.documentElement.classList.add('theme-vt-active', isDark ? 'theme-vt-to-dark' : 'theme-vt-to-light');
 
       const transition = document.startViewTransition(() => {
@@ -111,16 +80,13 @@ export const applyTheme = (theme, save = true, clickEvent = null) => {
       const cleanupVT = () => {
         if (thisVTId !== currentVTId) return;
         document.documentElement.classList.remove('theme-vt-active', 'theme-vt-to-dark', 'theme-vt-to-light');
-        document.documentElement.style.removeProperty('--vt-x');
-        document.documentElement.style.removeProperty('--vt-y');
-        document.documentElement.style.removeProperty('--vt-r');
         persistThemeSettings();
       };
 
       if (transition && typeof transition.finished?.then === 'function') {
         transition.finished.finally(cleanupVT);
       } else {
-        setTimeout(cleanupVT, 1250);
+        setTimeout(cleanupVT, 350);
       }
       return;
     } catch (e) {
@@ -133,7 +99,7 @@ export const applyTheme = (theme, save = true, clickEvent = null) => {
   persistThemeSettings();
   setTimeout(() => {
     document.body.classList.remove('theme-transitioning');
-  }, 850);
+  }, 260);
 };
 
 export const toggleTheme = (clickEvent = null) => {

@@ -184,11 +184,6 @@ body.dark-mode::before {
 
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  mix-blend-mode: normal;
-}
-
-::view-transition-old(root),
-::view-transition-new(root) {
   mix-blend-mode: normal !important;
 }
 
@@ -209,30 +204,15 @@ html.theme-vt-active::view-transition-old(root) {
 
 html.theme-vt-active::view-transition-new(root) {
   z-index: 99999;
-  animation: vtThemeRipple 0.78s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+  animation: vtThemeFade 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
 }
 
-@media (max-width: 768px) {
-  html.theme-vt-active::view-transition-new(root) {
-    animation: vtThemeMobileFade 0.34s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
-  }
-}
-
-@keyframes vtThemeMobileFade {
+@keyframes vtThemeFade {
   0% {
     opacity: 0;
   }
   100% {
     opacity: 1;
-  }
-}
-
-@keyframes vtThemeRipple {
-  0% {
-    clip-path: circle(0px at var(--vt-x, 100%) var(--vt-y, 0px));
-  }
-  100% {
-    clip-path: circle(var(--vt-r, 150vmax) at var(--vt-x, 100%) var(--vt-y, 0px));
   }
 }
 
@@ -250,7 +230,7 @@ body.theme-transitioning .btn-action-primary,
 body.theme-transitioning .btn-action-danger,
 body.theme-transitioning .modal-surface,
 body.theme-transitioning .toast-capsule {
-  transition: background-color 0.38s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.38s cubic-bezier(0.22, 1, 0.36, 1), color 0.38s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.38s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  transition: background-color 0.24s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.24s cubic-bezier(0.16, 1, 0.3, 1), color 0.24s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.24s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .font-mono {

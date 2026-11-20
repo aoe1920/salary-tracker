@@ -182,7 +182,7 @@ export const drawDashboardWeekChart = (week, animate = true) => {
   const isDark = typeof document !== 'undefined' && document.body && document.body.classList.contains('dark-mode');
   const themeChanged = lastRenderedIsDark !== null && lastRenderedIsDark !== isDark;
 
-  if (!currentRenderedValues || (!animate && !themeChanged) || prefersReduced) {
+  if (!currentRenderedValues || !animate || prefersReduced) {
     lastRenderedIsDark = isDark;
     currentRenderedValues = [...targetValues];
     currentRenderedMax = targetMax;
