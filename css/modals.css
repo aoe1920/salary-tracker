@@ -1029,7 +1029,7 @@ body.dark-mode .btn-table-delete:hover {
   background: #f8fafc;
   border: 1px solid rgba(15, 23, 42, 0.12);
   border-radius: var(--radius-md);
-  padding: 0.75rem 0.85rem;
+  padding: 0.85rem 0.95rem;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 
@@ -1436,7 +1436,7 @@ input[type="password"] {
   max-height: 540px;
   opacity: 1;
   overflow: visible;
-  padding: 8px 8px 12px;
+  padding: 8px 2px 4px;
   transform: translateY(0) scaleY(1);
   pointer-events: auto;
 }
@@ -2101,10 +2101,46 @@ body.dark-mode .profile-legal-box {
 }
 
 .auth-actions-group {
-  margin-top: 0.35rem;
+  margin-top: 0.55rem;
   display: flex;
   justify-content: flex-end;
-  padding: 4px;
+  align-items: center;
+  padding: 2px 0;
+}
+
+#btnSubmitChangePassword {
+  background: #2563eb !important;
+  border: 1px solid #1d4ed8 !important;
+  color: #ffffff !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transition: background-color 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease, transform 0.1s ease !important;
+}
+
+#btnSubmitChangePassword:hover {
+  background: #1d4ed8 !important;
+  border-color: #1e40af !important;
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.12) !important;
+}
+
+#btnSubmitChangePassword:active {
+  transform: scale(0.96) !important;
+}
+
+body.dark-mode #btnSubmitChangePassword {
+  background: #2563eb !important;
+  border: 1px solid #3b82f6 !important;
+  color: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+body.dark-mode #btnSubmitChangePassword:hover {
+  background: #3b82f6 !important;
+  border-color: #60a5fa !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5) !important;
 }
 
 .btn-submit-action {
