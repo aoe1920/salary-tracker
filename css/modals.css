@@ -3505,13 +3505,10 @@ body.dark-mode .btn-logout-action {
     min-width: 38px !important;
     min-height: 38px !important;
     padding: 0 !important;
-    border: 2px solid var(--primary) !important;
+    border: 1.5px solid var(--primary) !important;
     border-radius: 9px !important;
     background: var(--primary) !important;
-    box-shadow:
-      0 3px 10px -1px rgba(37, 99, 235, 0.3),
-      0 1px 4px rgba(15, 23, 42, 0.12),
-      inset 0 1px 1.5px rgba(255, 255, 255, 0.45) !important;
+    box-shadow: 0 2px 6px -1px rgba(37, 99, 235, 0.3) !important;
     overflow: hidden !important;
   }
 
