@@ -507,10 +507,17 @@ export const updateTimelineNavControls = (parent) => {
   const navGroup = document.getElementById('timelineNavGroup');
   const btnPrev = document.getElementById('btnTimelinePrev');
   const btnNext = document.getElementById('btnTimelineNext');
-  if (!navGroup) return;
+
+  if (analyticsState.timeFilter === 'recent') {
+    wrap.classList.remove('can-scroll', 'is-dragging');
+    wrap.scrollLeft = 0;
+    if (navGroup) navGroup.style.display = 'none';
+    return;
+  }
 
   const hasOverflow = wrap.scrollWidth > wrap.clientWidth + 4;
-  navGroup.style.display = hasOverflow ? 'inline-flex' : 'none';
+  wrap.classList.toggle('can-scroll', hasOverflow);
+  if (navGroup) navGroup.style.display = hasOverflow ? 'inline-flex' : 'none';
 
   if (hasOverflow && btnPrev && btnNext) {
     const maxScroll = wrap.scrollWidth - wrap.clientWidth;
@@ -532,6 +539,7 @@ export const initTimelineInteractions = () => {
 
   wrap.addEventListener('pointerdown', (e) => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
+    if (analyticsState.timeFilter === 'recent' || wrap.scrollWidth <= wrap.clientWidth + 4) return;
     isPointerDown = true;
     startX = e.clientX;
     scrollStart = wrap.scrollLeft;
@@ -544,7 +552,7 @@ export const initTimelineInteractions = () => {
   });
 
   window.addEventListener('pointermove', (e) => {
-    if (!isPointerDown) return;
+    if (!isPointerDown || analyticsState.timeFilter === 'recent') return;
     const deltaX = e.clientX - startX;
     wrap.scrollLeft = scrollStart - deltaX;
     const now = performance.now();
@@ -591,6 +599,7 @@ export const initTimelineInteractions = () => {
   }, { passive: true });
 
   wrap.addEventListener('wheel', (e) => {
+    if (analyticsState.timeFilter === 'recent') return;
     if (wrap.scrollWidth > wrap.clientWidth) {
       const delta = Math.abs(e.deltaX) >= Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
       if (delta !== 0) {

@@ -30,32 +30,72 @@ const INTERACTIVE_SELECTOR = 'button, [role="button"], a.btn, input[type="button
 
 let lastHandledElement = null;
 let lastHandledTime = 0;
+let activePointerId = null;
+let activeTarget = null;
+let startX = 0;
+let startY = 0;
+let isSwiping = false;
 
-const handleInteractiveTouch = (e) => {
+const getHapticType = (target) => {
+  const hapticSetting = target.getAttribute('data-haptic');
+  if (hapticSetting) return hapticSetting;
+  if (target.classList.contains('dock-fab') || target.classList.contains('btn-primary')) {
+    return 'medium';
+  }
+  if (target.classList.contains('btn-danger') || target.classList.contains('danger')) {
+    return 'danger';
+  }
+  return 'light';
+};
+
+const handlePointerDown = (e) => {
   if (!e.target || typeof e.target.closest !== 'function') return;
   const target = e.target.closest(INTERACTIVE_SELECTOR);
   if (!target) return;
   if (target.disabled || target.hasAttribute('disabled') || target.classList.contains('disabled')) return;
+  if (target.getAttribute('data-haptic') === 'none') return;
 
-  const hapticSetting = target.getAttribute('data-haptic');
-  if (hapticSetting === 'none') return;
+  activePointerId = e.pointerId;
+  activeTarget = target;
+  startX = e.clientX;
+  startY = e.clientY;
+  isSwiping = false;
+};
 
-  const now = Date.now();
-  lastHandledElement = target;
-  lastHandledTime = now;
-
-  let type = hapticSetting;
-  if (!type) {
-    if (target.classList.contains('dock-fab') || target.classList.contains('btn-primary')) {
-      type = 'medium';
-    } else if (target.classList.contains('btn-danger') || target.classList.contains('danger')) {
-      type = 'danger';
-    } else {
-      type = 'light';
-    }
+const handlePointerMove = (e) => {
+  if (activeTarget === null || e.pointerId !== activePointerId) return;
+  if (Math.hypot(e.clientX - startX, e.clientY - startY) > 10) {
+    isSwiping = true;
   }
+};
 
-  triggerHaptic(type);
+const handlePointerUp = (e) => {
+  if (activeTarget === null || e.pointerId !== activePointerId) return;
+  const target = activeTarget;
+  const wasSwiping = isSwiping;
+  activePointerId = null;
+  activeTarget = null;
+  isSwiping = false;
+
+  if (wasSwiping) return;
+  if (target.disabled || target.hasAttribute('disabled') || target.classList.contains('disabled')) return;
+  if (target.getAttribute('data-haptic') === 'none') return;
+
+  const releasedEl = document.elementFromPoint(e.clientX, e.clientY);
+  if (releasedEl && (releasedEl === target || target.contains(releasedEl))) {
+    const now = Date.now();
+    lastHandledElement = target;
+    lastHandledTime = now;
+    triggerHaptic(getHapticType(target));
+  }
+};
+
+const handlePointerCancel = (e) => {
+  if (e.pointerId === activePointerId) {
+    activePointerId = null;
+    activeTarget = null;
+    isSwiping = false;
+  }
 };
 
 const handleClickFallback = (e) => {
@@ -74,19 +114,7 @@ const handleClickFallback = (e) => {
 
   lastHandledElement = target;
   lastHandledTime = now;
-
-  let type = hapticSetting;
-  if (!type) {
-    if (target.classList.contains('dock-fab') || target.classList.contains('btn-primary')) {
-      type = 'medium';
-    } else if (target.classList.contains('btn-danger') || target.classList.contains('danger')) {
-      type = 'danger';
-    } else {
-      type = 'light';
-    }
-  }
-
-  triggerHaptic(type);
+  triggerHaptic(getHapticType(target));
 };
 
 let isGlobalHapticsInitialized = false;
@@ -96,7 +124,10 @@ export const initGlobalHaptics = () => {
   if (typeof window === 'undefined' || typeof document === 'undefined') return;
 
   isGlobalHapticsInitialized = true;
-  document.addEventListener('pointerdown', handleInteractiveTouch, { capture: true, passive: true });
+  document.addEventListener('pointerdown', handlePointerDown, { capture: true, passive: true });
+  document.addEventListener('pointermove', handlePointerMove, { capture: true, passive: true });
+  document.addEventListener('pointerup', handlePointerUp, { capture: true, passive: true });
+  document.addEventListener('pointercancel', handlePointerCancel, { capture: true, passive: true });
   document.addEventListener('click', handleClickFallback, { capture: true, passive: true });
 };
 

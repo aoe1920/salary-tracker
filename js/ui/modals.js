@@ -1453,11 +1453,15 @@ export const renderProfileWorkplacesEditList = () => {
     card.className = `profile-wp-edit-item ${isDefault ? 'is-default-item' : ''}`;
     card.dataset.wp = wp;
     card.innerHTML = `
-      <div class="profile-wp-edit-top">
-        <div class="profile-wp-edit-info">
-          <span class="profile-wp-dot" style="background-color: ${wpCol.fill};"></span>
-          <span class="profile-wp-edit-name font-sans"><span class="profile-wp-edit-name-inner">${escapeHtml(wp)}</span></span>
-          ${isDefault ? `<span class="profile-wp-tag-default font-mono">${t('tag_default_workplace', 'Mặc định')}</span>` : ''}
+      <div class="profile-wp-edit-left">
+        <span class="profile-wp-dot" style="background-color: ${wpCol.fill};"></span>
+        <span class="profile-wp-edit-name font-sans"><span class="profile-wp-edit-name-inner">${escapeHtml(wp)}</span></span>
+        ${isDefault ? `<span class="profile-wp-tag-default font-mono">${t('tag_default_workplace', 'Mặc định')}</span>` : ''}
+      </div>
+      <div class="profile-wp-edit-right">
+        <div class="profile-wp-rate-input-wrap">
+          <input type="text" inputmode="numeric" class="form-input profile-wp-rate-input font-mono" data-p-rate="${escapeHtml(wp)}" value="${formatWpRateDisplay(rate)}" placeholder="25.000" autocomplete="off" title="${t('workplace_rate', 'Đơn giá')}">
+          <span class="profile-wp-rate-tag font-mono">đ/h</span>
         </div>
         <div class="profile-wp-edit-actions">
           ${hasMultiple && !isDefault ? `
@@ -1480,13 +1484,6 @@ export const renderProfileWorkplacesEditList = () => {
               <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
             </svg>
           </button>
-        </div>
-      </div>
-      <div class="profile-wp-edit-bottom">
-        <span class="profile-wp-rate-label font-sans">Đơn giá theo giờ:</span>
-        <div class="profile-wp-rate-input-wrap">
-          <input type="text" inputmode="numeric" class="form-input profile-wp-rate-input font-mono" data-p-rate="${escapeHtml(wp)}" value="${formatWpRateDisplay(rate)}" placeholder="25.000" autocomplete="off">
-          <span class="profile-wp-rate-tag font-mono">đ/h</span>
         </div>
       </div>
     `;
