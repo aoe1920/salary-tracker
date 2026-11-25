@@ -1093,14 +1093,6 @@ const bindEvents = () => {
   setupCustomSelect('shiftWorkplace');
   setupCustomSelect('filterWorkplaceSelect');
 
-  const kpiCardWp = document.getElementById('kpiCardWorkplaces');
-  if (kpiCardWp) {
-    kpiCardWp.addEventListener('click', () => {
-      triggerHaptic('light');
-      openUserProfileModal();
-    });
-  }
-
   document.querySelectorAll('[data-time-filter]').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('[data-time-filter]').forEach(b => b.classList.remove('active'));
