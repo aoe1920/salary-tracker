@@ -4,46 +4,46 @@
 
 # Salary Tracker
 
-**Smart Shift Scheduling, Automated Wage Analytics & Instant Payslips**
+**Quản lý ca làm thông minh, theo dõi thu nhập & xuất phiếu lương tức thì**
 
-An offline-first Progressive Web App for part-time workers, freelancers, and multi-job professionals to log shifts, compute overtime accurately, and export payslips in seconds.
+Ứng dụng web tiến bộ (PWA) hoạt động ngoại tuyến (Offline-First) dành cho người đi làm thêm, freelancer và người làm nhiều nơi. Giúp ghi chép ca làm, tính giờ tăng ca (OT) chính xác và xuất phiếu lương chi tiết trong tích tắc.
 
-[![Live Demo](https://img.shields.io/badge/Demo-aoe1920.github.io%2Fsalary--tracker-3b82f6?style=flat-square&logo=googlechrome&logoColor=white)](https://aoe1920.github.io/salary-tracker/)
-[![Platform](https://img.shields.io/badge/Platform-PWA%20%7C%20iOS%20%7C%20Android%20%7C%20Desktop-6366f1?style=flat-square&logo=pwa&logoColor=white)](https://aoe1920.github.io/salary-tracker/)
-[![Database](https://img.shields.io/badge/Database-Supabase%20PostgreSQL-3ECF8E?style=flat-square&logo=supabase&logoColor=white)](https://supabase.com)
-[![Architecture](https://img.shields.io/badge/Architecture-Vanilla%20ESM-f59e0b?style=flat-square&logo=javascript&logoColor=black)](https://developer.mozilla.org/)
-[![License](https://img.shields.io/badge/License-MIT-gray?style=flat-square)](LICENSE)
+[![Bản thử nghiệm](https://img.shields.io/badge/Demo-aoe1920.github.io%2Fsalary--tracker-3b82f6?style=flat-square&logo=googlechrome&logoColor=white)](https://aoe1920.github.io/salary-tracker/)
+[![Nền tảng](https://img.shields.io/badge/N%E1%BB%81n%20t%E1%BA%A3ng-PWA%20%7C%20iOS%20%7C%20Android%20%7C%20Desktop-6366f1?style=flat-square&logo=pwa&logoColor=white)](https://aoe1920.github.io/salary-tracker/)
+[![Cơ sở dữ liệu](https://img.shields.io/badge/C%C6%A1%20s%E1%BB%9F%20d%E1%BB%AF%20li%E1%BB%87u-Supabase%20PostgreSQL-3ECF8E?style=flat-square&logo=supabase&logoColor=white)](https://supabase.com)
+[![Kiến trúc](https://img.shields.io/badge/Ki%E1%BA%BFn%20tr%FAc-Vanilla%20ESM-f59e0b?style=flat-square&logo=javascript&logoColor=black)](https://developer.mozilla.org/)
+[![Bản quyền](https://img.shields.io/badge/B%E1%BA%A3n%20quy%E1%BB%81n-MIT-gray?style=flat-square)](LICENSE)
 
 <br/>
 
 <a href="https://aoe1920.github.io/salary-tracker/">
-  <img src="https://img.shields.io/badge/%E2%96%B6_Launch_App-aoe1920.github.io%2Fsalary--tracker-2563eb?style=for-the-badge" alt="Launch Web App">
+  <img src="https://img.shields.io/badge/%E2%96%B6_M%E1%BB%9F_%E1%BB%A9ng_d%E1%BB%A5ng-aoe1920.github.io%2Fsalary--tracker-2563eb?style=for-the-badge" alt="Mở ứng dụng Salary Tracker">
 </a>
 
 </div>
 
 ---
 
-## Key Features
+## Tính năng nổi bật
 
-- **Precision Shift & OT Engine:** Auto-classifies Morning/Afternoon/Evening shifts, handles overnight hours past midnight, break deductions, allowances, deductions, and `1.5x–3x` overtime multipliers.
-- **Multi-Workplace & Rate Snapshots:** Color-coded workplaces with historical hourly rate snapshots so future wage raises never alter past week totals.
-- **HD Payslips & Data Portability:** Render crisp HTML5 Canvas payslips (download PNG or copy to clipboard), export Excel-ready UTF-8 CSV reports, and backup/restore full JSON data.
-- **Offline-First Cloud Sync:** Zero-latency local persistence with Service Worker caching and automatic Supabase PostgreSQL RLS sync with timestamp-aware conflict checks.
-
----
-
-## Install as App (PWA)
-
-- **iOS (Safari):** Tap **Share** → **Add to Home Screen** → **Add**.
-- **Android (Chrome):** Open **Menu (⋮)** → **Install app**.
-- **Desktop (Chrome / Edge):** Click the **Install** icon in the address bar.
+- **Tính giờ & tăng ca (OT) chuẩn xác:** Tự động phân loại ca (Sáng / Chiều / Tối), xử lý ca đêm qua ngày, khấu trừ giờ nghỉ, phụ cấp, giảm trừ và tính hệ số OT từ `1.5x` đến `3x`.
+- **Đa nơi làm việc & Chốt mức lương lịch sử:** Phân biệt nơi làm việc theo mã màu riêng biệt; lưu snapshot mức lương tại thời điểm tạo ca, giúp việc điều chỉnh lương tương lai không làm sai lệch thống kê các tuần trước đó.
+- **Phiếu lương HD & Xuất dữ liệu đa định dạng:** Kết xuất phiếu lương đồ họa sắc nét bằng HTML5 Canvas (tải ảnh PNG hoặc sao chép nhanh vào clipboard), xuất báo cáo bảng tính CSV (chuẩn UTF-8 BOM hiển thị chuẩn tiếng Việt trên Excel), hỗ trợ sao lưu và phục hồi toàn bộ dữ liệu qua JSON.
+- **Offline-First & Đồng bộ Cloud tức thì:** Phản hồi 0ms trên thiết bị với Service Worker và LocalStorage; tự động đồng bộ đám mây qua Supabase PostgreSQL kèm Row Level Security (RLS) bảo mật tuyệt đối và đối soát mốc thời gian để tránh xung đột dữ liệu.
 
 ---
 
-## Tech Stack & Quickstart
+## Cài đặt như một ứng dụng (PWA)
 
-Zero build tools or bundlers required — runs on native **ES2022 Modules**, **CSS3**, **HTML5 Canvas**, **Service Worker**, and **Supabase (PostgreSQL + GoTrue Auth + RLS)**.
+- **iOS (Safari):** Bấm biểu tượng **Chia sẻ (Share)** → Chọn **Thêm vào MH chính (Add to Home Screen)** → Bấm **Thêm (Add)**.
+- **Android (Chrome):** Bấm biểu tượng **Menu (⋮)** → Chọn **Cài đặt ứng dụng (Install app)**.
+- **Máy tính (Chrome / Edge):** Bấm biểu tượng **Cài đặt (Install)** ở thanh địa chỉ trình duyệt.
+
+---
+
+## Công nghệ & Khởi chạy nhanh
+
+Không phụ thuộc vào công cụ build hay bundler — ứng dụng chạy trực tiếp bằng **ES2022 Native Modules**, **CSS3**, **HTML5 Canvas**, **Service Worker** và **Supabase (PostgreSQL + GoTrue Auth + RLS)**.
 
 ```bash
 git clone https://github.com/aoe1920/salary-tracker.git
@@ -51,13 +51,13 @@ cd salary-tracker
 npx serve .
 ```
 
-Open `http://localhost:3000` in your browser.
+Mở trình duyệt tại `http://localhost:3000`.
 
 ---
 
-## Database Setup (Self-Hosting)
+## Thiết lập Cơ sở dữ liệu (Tự lưu trữ / Self-Host)
 
-Run the following SQL in your Supabase SQL Editor to create the table, Row Level Security policy, and auth helper functions:
+Chạy đoạn mã SQL sau trong Supabase SQL Editor để khởi tạo bảng dữ liệu, chính sách bảo mật Row Level Security và các hàm xác thực:
 
 ```sql
 create table if not exists public.user_salary_data (
@@ -112,6 +112,6 @@ grant execute on function public.get_login_email(text) to anon, authenticated;
 
 ---
 
-## License
+## Bản quyền
 
-Licensed under the [MIT License](LICENSE).
+Phát hành theo giấy phép [MIT License](LICENSE).

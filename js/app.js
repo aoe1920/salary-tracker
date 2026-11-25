@@ -50,8 +50,6 @@ const renderDateDisplay = () => {
   if (headerDateEl) headerDateEl.textContent = `${dayName}, ${dateStr}`;
 };
 
-let currentSlideClass = 'shifts-list-fade';
-
 const goToAdjacentWeek = (direction) => {
   if (!state.weeks || !state.weeks.length) return false;
   const currentIndex = state.weeks.findIndex(w => w.id === state.currentWeekId);
@@ -59,7 +57,6 @@ const goToAdjacentWeek = (direction) => {
   const targetIndex = currentIndex + direction;
   if (targetIndex >= 0 && targetIndex < state.weeks.length) {
     triggerHaptic('light');
-    currentSlideClass = direction > 0 ? 'shifts-slide-next' : 'shifts-slide-prev';
     const targetWeek = state.weeks[targetIndex];
     state.currentWeekId = targetWeek.id;
     localStorage.setItem('salary_tracker_current_week', targetWeek.id);
@@ -200,9 +197,6 @@ const settleWheelSelection = () => {
   const targetWeekId = closestItem.getAttribute('data-week-id');
   if (targetWeekId && targetWeekId !== state.currentWeekId) {
     triggerHaptic('light');
-    const oldIdx = state.weeks.findIndex(w => w.id === state.currentWeekId);
-    const newIdx = state.weeks.findIndex(w => w.id === targetWeekId);
-    currentSlideClass = newIdx > oldIdx ? 'shifts-slide-next' : 'shifts-slide-prev';
     state.currentWeekId = targetWeekId;
     localStorage.setItem('salary_tracker_current_week', targetWeekId);
     container.querySelectorAll('.week-wheel-item').forEach(it => {
@@ -253,9 +247,6 @@ const renderWeekPills = () => {
       });
       if (state.currentWeekId !== week.id) {
         triggerHaptic('light');
-        const oldIdx = state.weeks.findIndex(w => w.id === state.currentWeekId);
-        const newIdx = state.weeks.findIndex(w => w.id === week.id);
-        currentSlideClass = newIdx > oldIdx ? 'shifts-slide-next' : 'shifts-slide-prev';
         state.currentWeekId = week.id;
         localStorage.setItem('salary_tracker_current_week', week.id);
         container.querySelectorAll('.week-wheel-item').forEach(it => {
@@ -410,8 +401,7 @@ const renderWeekDetails = () => {
 const renderShiftsList = () => {
   const listContainer = document.getElementById('shiftsList');
   if (listContainer) {
-    listContainer.className = `shifts-stack ${currentSlideClass}`;
-    currentSlideClass = 'shifts-list-fade';
+    listContainer.className = 'shifts-stack';
     listContainer.innerHTML = '';
   }
 
