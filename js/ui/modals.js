@@ -1040,16 +1040,6 @@ export const openAllWeeksModal = (initialTab = 'analytics') => {
   });
 };
 
-export const renderShiftWorkplacesList = () => {};
-
-export const addWorkplaceFromShiftModal = () => {};
-
-export const openWorkplaceModal = () => openUserProfileModal();
-
-export const closeWorkplaceModal = () => closeModal('userProfileModal');
-
-export const toggleWorkplacePanel = () => openUserProfileModal();
-
 export const openAuthModal = (defaultTab = 'login') => {
   const modal = document.getElementById('authModal');
   if (!modal) return;
@@ -1079,11 +1069,6 @@ export const openResetPasswordModal = () => {
   setTimeout(() => {
     document.getElementById('resetNewPassword')?.focus();
   }, 100);
-};
-
-export const closeResetPasswordModal = () => {
-  const modal = document.getElementById('resetPasswordModal');
-  if (modal) modal.style.display = 'none';
 };
 
 export const switchAuthTab = (tab) => {
@@ -1336,10 +1321,6 @@ export const expandProfileWorkplacesEdit = () => {
   if (rateInput) rateInput.value = '';
 
   renderProfileWorkplacesEditList();
-  updateProfileWorkplacesBadge();
-};
-
-export const renderProfileWorkplaces = () => {
   updateProfileWorkplacesBadge();
 };
 

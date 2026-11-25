@@ -1430,9 +1430,6 @@ body.dark-mode .sl-date-capsule {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
 
 .sl-day-tag {
   font-size: 0.75rem;

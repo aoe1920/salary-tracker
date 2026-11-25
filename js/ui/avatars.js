@@ -49,8 +49,3 @@ export const getAvatarSvg = (id) => {
   const item = getAvatarById(id);
   return item.svg;
 };
-
-export const getAvatarName = (id) => {
-  const item = getAvatarById(id);
-  return item.name;
-};

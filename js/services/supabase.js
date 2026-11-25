@@ -730,13 +730,6 @@ export const VERIFIED_USER_SETTINGS = {
   avatar: 'vibrent_1'
 };
 
-export const reconcileWeeksWithVerified = (weeks) => {
-  if (Array.isArray(weeks) && weeks.length > 0) {
-    return weeks;
-  }
-  return JSON.parse(JSON.stringify(GUEST_DEFAULT_DATA));
-};
-
 export const restoreVerifiedUserData = () => {
   state.weeks = JSON.parse(JSON.stringify(VERIFIED_USER_WEEKS));
   if (!state.settings) state.settings = {};

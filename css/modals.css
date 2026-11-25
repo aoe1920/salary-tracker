@@ -3008,21 +3008,6 @@ body.dark-mode .profile-wp-rate-input {
   font-family: var(--font-mono);
   color: var(--text-muted);
 }
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
-  border: 1px solid rgba(15, 23, 42, 0.18);
-  border-radius: var(--radius-xs);
-  background: #ffffff;
-  color: var(--text-main);
-  text-align: right;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-body.dark-mode .profile-wp-rate-input {
-  background: #0d0e15;
-  border-color: rgba(255, 255, 255, 0.16);
-}
 
 .profile-wp-rate-tag {
   position: absolute;
