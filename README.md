@@ -29,6 +29,13 @@ A modern, offline-first Progressive Web App designed for shift workers, freelanc
 
 **Salary Tracker** replaces messy notebooks and complex spreadsheets with a streamlined, elegant, and private workspace. Built with an offline-first architecture, it empowers part-time employees, freelancers, and multi-job shift workers to manage unpredictable work hours, calculate accurate gross salaries, and generate professional payslips with a single tap.
 
+### Key Capabilities
+
+- **Smart Shift & OT Engine:** Auto-detects Morning/Afternoon/Evening shifts, handles overnight shifts past midnight, break deductions, and `1.5x–3x` overtime multipliers.
+- **Multi-Workplace & Rate Snapshots:** Color-coded workplaces with historical hourly rate snapshots so wage raises never alter past weeks.
+- **HD Payslips & Data Portability:** Generate crisp HTML5 Canvas payslip images (download or copy to clipboard), plus full UTF-8 CSV exports (Excel-ready) and JSON backup/restore.
+- **Offline-First Cloud Sync:** Instant local persistence with automatic Supabase PostgreSQL RLS sync and timestamp-aware conflict checks.
+
 ---
 
 ## PWA Installation

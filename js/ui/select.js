@@ -81,6 +81,34 @@ export const setupCustomSelect = (selectId) => {
         if (modalBody) modalBody.classList.add('has-open-dropdown');
       }
     });
+
+    trigger.addEventListener('keydown', (e) => {
+      const items = Array.from(menu.querySelectorAll('.custom-select-option'));
+      if (!items.length) return;
+      const isOpen = wrapper.classList.contains('open');
+      const curIdx = items.findIndex(el => el.classList.contains('is-selected'));
+
+      if (e.key === 'Escape' && isOpen) {
+        e.preventDefault();
+        closeAllCustomSelects();
+        trigger.focus();
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (!isOpen) {
+          trigger.click();
+          return;
+        }
+        const delta = e.key === 'ArrowDown' ? 1 : -1;
+        const nextIdx = (curIdx + delta + items.length) % items.length;
+        items[nextIdx].click();
+        wrapper.classList.add('open');
+        trigger.setAttribute('aria-expanded', 'true');
+        items[nextIdx].scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'Enter' && isOpen) {
+        e.preventDefault();
+        closeAllCustomSelects();
+      }
+    });
   }
 
   const menu = wrapper.querySelector('.custom-select-menu');

@@ -768,6 +768,9 @@ export const syncPendingToCloud = async (isManual = false) => {
 
   if (!state.currentUser || !supabaseClient) {
     clearPendingSync();
+    try {
+      localStorage.setItem(`${getWeeksStorageKey()}_ts`, String(Date.now()));
+    } catch (_) {}
     updateSyncStatusUI();
     if (isManual) showToast('Chế độ khách: Dữ liệu được lưu an toàn trên trình duyệt.');
     return true;
@@ -775,6 +778,9 @@ export const syncPendingToCloud = async (isManual = false) => {
 
   if (!hasValidShifts(state.weeks)) {
     clearPendingSync();
+    try {
+      localStorage.setItem(`${getWeeksStorageKey()}_ts`, String(Date.now()));
+    } catch (_) {}
     updateSyncStatusUI();
     return true;
   }
@@ -793,6 +799,9 @@ export const syncPendingToCloud = async (isManual = false) => {
     if (error) throw error;
 
     clearPendingSync();
+    try {
+      localStorage.setItem(`${getWeeksStorageKey()}_ts`, String(Date.now()));
+    } catch (_) {}
     updateSyncStatusUI();
     if (isManual) {
       showToast(t('toast_sync_manual_done', 'Đã đồng bộ thành công dữ liệu đám mây.'));
@@ -816,6 +825,7 @@ export const loadState = async () => {
     let loadedSettings = null;
 
     if (state.currentUser && supabaseClient) {
+      let localPendingWeeks = null;
       if (isPending) {
         const cachedWeeks = localStorage.getItem(getWeeksStorageKey());
         const cachedSettings = localStorage.getItem(getSettingsStorageKey());
@@ -823,7 +833,7 @@ export const loadState = async () => {
           try {
             const parsed = JSON.parse(cachedWeeks);
             if (Array.isArray(parsed) && parsed.length > 0) {
-              loadedWeeks = parsed;
+              localPendingWeeks = parsed;
             }
           } catch (_) {}
         }
@@ -832,7 +842,7 @@ export const loadState = async () => {
         }
       }
 
-      if (!loadedWeeks) {
+      if (navigator.onLine || !localPendingWeeks) {
         const { data, error } = await supabaseClient
           .from('user_salary_data')
           .select('*')
@@ -840,21 +850,30 @@ export const loadState = async () => {
           .maybeSingle();
 
         if (!error && data) {
-          if (Array.isArray(data.weeks) && data.weeks.length > 0) {
+          const cloudTs = data.updated_at ? new Date(data.updated_at).getTime() : 0;
+          const localTs = Number(localStorage.getItem(`${getWeeksStorageKey()}_ts`) || 0);
+          const cloudIsNewer = !localPendingWeeks || cloudTs > localTs;
+
+          if (cloudIsNewer && Array.isArray(data.weeks) && data.weeks.length > 0) {
             loadedWeeks = data.weeks;
             clearPendingSync();
             try {
+              localStorage.setItem(`${getWeeksStorageKey()}_ts`, String(cloudTs || Date.now()));
               localStorage.removeItem(GUEST_WEEKS_KEY);
               localStorage.removeItem(GUEST_SETTINGS_KEY);
               localStorage.removeItem('salary_tracker_vault_backup');
             } catch (_) {}
           }
-          if (data.settings) loadedSettings = data.settings;
+          if (cloudIsNewer && data.settings) loadedSettings = data.settings;
           if (data.username && typeof data.username === 'string' && state.currentUser) {
             const clean = data.username.trim().replace(/\s+/g, '').toLowerCase();
             if (clean) state.currentUser.username = clean;
           }
         }
+      }
+
+      if (!loadedWeeks && localPendingWeeks) {
+        loadedWeeks = localPendingWeeks;
       }
 
       if (!loadedWeeks) {
@@ -1050,6 +1069,9 @@ export const saveWeeks = () => {
   }
   const weeksKey = getWeeksStorageKey();
   localStorage.setItem(weeksKey, JSON.stringify(state.weeks));
+  try {
+    localStorage.setItem(`${weeksKey}_ts`, String(Date.now()));
+  } catch (_) {}
   if (hasValidShifts(state.weeks)) {
     localStorage.setItem('salary_tracker_vault_backup', JSON.stringify(state.weeks));
   }

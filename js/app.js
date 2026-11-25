@@ -364,7 +364,7 @@ const renderWeekDetails = () => {
     const yearMatch = (week.name || '').match(/20\d\d/) || (dateRange || '').match(/20\d\d/);
     const yearStr = yearMatch ? yearMatch[0] : new Date().getFullYear();
     const nameWithoutYear = localizedName.replace(/20\d\d/g, '').replace(/[()]/g, '').trim();
-    titleEl.innerHTML = `<span class="period-bold">${nameWithoutYear}</span> <span class="hero-period-year">${yearStr}</span>`;
+    titleEl.innerHTML = `<span class="period-bold">${escapeHtml(nameWithoutYear)}</span> <span class="hero-period-year">${escapeHtml(String(yearStr))}</span>`;
   }
 
   const dateRangeEl = document.getElementById('currentWeekDateRange');
@@ -1413,5 +1413,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.fonts.ready.then(() => {
       ensureLatestWeekActive();
     });
+  }
+
+  if (window.visualViewport) {
+    const syncKeyboardState = () => {
+      const isKb = window.matchMedia('(pointer: coarse)').matches && (window.innerHeight - window.visualViewport.height > 150);
+      document.body.classList.toggle('keyboard-open', isKb);
+    };
+    window.visualViewport.addEventListener('resize', syncKeyboardState, { passive: true });
   }
 });
