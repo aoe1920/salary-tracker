@@ -1101,6 +1101,9 @@ export const saveSettings = () => {
   const settingsKey = getSettingsStorageKey();
   if (state.settings) {
     localStorage.setItem(settingsKey, JSON.stringify(state.settings));
+    try {
+      localStorage.setItem(`${getWeeksStorageKey()}_ts`, String(Date.now()));
+    } catch (_) {}
   }
   if (state.currentUser) {
     state.currentUser.avatar = state.settings?.avatar || 'default';

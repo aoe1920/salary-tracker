@@ -1419,6 +1419,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const syncKeyboardState = () => {
       const isKb = window.matchMedia('(pointer: coarse)').matches && (window.innerHeight - window.visualViewport.height > 150);
       document.body.classList.toggle('keyboard-open', isKb);
+      if (isKb && document.activeElement && /^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) {
+        document.activeElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
     };
     window.visualViewport.addEventListener('resize', syncKeyboardState, { passive: true });
   }

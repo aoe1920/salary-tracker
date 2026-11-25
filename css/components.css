@@ -2065,3 +2065,13 @@ body.dark-mode .floating-dock .btn-morphic-primary:active {
     contain-intrinsic-size: 0 72px;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-dock,
+  .shift-ledger-row,
+  .shift-card,
+  .btn-morphic {
+    transition: none !important;
+    animation: none !important;
+  }
+}

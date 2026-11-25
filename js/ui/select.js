@@ -92,18 +92,26 @@ export const setupCustomSelect = (selectId) => {
         e.preventDefault();
         closeAllCustomSelects();
         trigger.focus();
-      } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Home' || e.key === 'End') {
         e.preventDefault();
         if (!isOpen) {
           trigger.click();
           return;
         }
-        const delta = e.key === 'ArrowDown' ? 1 : -1;
-        const nextIdx = (curIdx + delta + items.length) % items.length;
+        let nextIdx = 0;
+        if (e.key === 'End') {
+          nextIdx = items.length - 1;
+        } else if (e.key !== 'Home') {
+          const delta = e.key === 'ArrowDown' ? 1 : -1;
+          nextIdx = (curIdx + delta + items.length) % items.length;
+        }
         items[nextIdx].click();
         wrapper.classList.add('open');
         trigger.setAttribute('aria-expanded', 'true');
         items[nextIdx].scrollIntoView({ block: 'nearest' });
+      } else if (e.key === ' ' && !isOpen) {
+        e.preventDefault();
+        trigger.click();
       } else if (e.key === 'Enter' && isOpen) {
         e.preventDefault();
         closeAllCustomSelects();
@@ -139,6 +147,7 @@ export const setupCustomSelect = (selectId) => {
     const isSelected = opt.value === select.value || (opt.selected && !select.value);
     item.className = 'custom-select-option' + (isSelected ? ' is-selected' : '');
     item.setAttribute('role', 'option');
+    item.setAttribute('aria-selected', isSelected ? 'true' : 'false');
     item.setAttribute('data-value', opt.value);
 
     if (selectId === 'shiftWorkplace' && opt.value) {
