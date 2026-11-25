@@ -4,7 +4,7 @@
 
 # Salary Tracker
 
-**Quản lý ca làm thông minh, theo dõi thu nhập & xuất phiếu lương tức thì**
+**Quản lý ca làm thông minh, theo dõi thu nhập và xuất phiếu lương tức thì**
 
 Ứng dụng PWA hoạt động offline-first dành cho người làm thêm, freelancer và nhân sự làm việc tại nhiều cơ sở. Hỗ trợ ghi chép ca làm việc, tính tiền làm thêm giờ chuẩn xác và xuất phiếu lương trong tích tắc.
 
@@ -25,10 +25,10 @@
 
 ## Tính năng nổi bật
 
-- **Tính giờ & OT chuẩn xác:** Tự động nhận diện ca sáng, chiều hoặc tối, xử lý trơn tru ca đêm qua ngày, khấu trừ giờ nghỉ, phụ cấp, giảm trừ và tính hệ số tăng ca từ 1.5x đến 3x.
-- **Quản lý nhiều nơi làm việc & Lưu snapshot lương:** Mỗi nơi làm việc có mã màu riêng biệt, tự động lưu snapshot mức lương tại thời điểm tạo ca để việc điều chỉnh lương sau này không làm thay đổi số liệu các tuần cũ.
-- **Xuất phiếu lương HD & Dữ liệu linh hoạt:** Tạo phiếu lương sắc nét bằng HTML5 Canvas để tải ảnh PNG hoặc copy nhanh vào clipboard. Hỗ trợ xuất file CSV chuẩn UTF-8 xem mượt mà trên Excel, kèm tính năng backup và khôi phục toàn bộ dữ liệu qua JSON.
-- **Offline-First & Cloud Sync:** Thao tác mượt mà với độ trễ 0ms nhờ Service Worker và LocalStorage. Tự động đồng bộ hai chiều lên Supabase PostgreSQL qua Row Level Security và kiểm tra timestamp để tránh xung đột dữ liệu.
+- **Tính giờ và OT chuẩn xác:** Tự động nhận diện ca sáng, chiều hoặc tối, xử lý trơn tru ca đêm qua ngày, khấu trừ giờ nghỉ, phụ cấp, giảm trừ và tính hệ số tăng ca từ 1.5x đến 3x.
+- **Quản lý nhiều nơi làm việc và lưu snapshot lương:** Mỗi nơi làm việc có mã màu riêng biệt, tự động lưu snapshot mức lương tại thời điểm tạo ca để việc điều chỉnh lương sau này không làm thay đổi số liệu các tuần cũ.
+- **Xuất phiếu lương HD và dữ liệu linh hoạt:** Tạo phiếu lương sắc nét bằng HTML5 Canvas để tải ảnh PNG hoặc copy nhanh vào clipboard. Hỗ trợ xuất file CSV chuẩn UTF-8 xem mượt mà trên Excel, kèm tính năng backup và khôi phục toàn bộ dữ liệu qua JSON.
+- **Offline-First và Cloud Sync:** Thao tác mượt mà với độ trễ 0ms nhờ Service Worker và LocalStorage. Tự động đồng bộ hai chiều lên Supabase PostgreSQL qua Row Level Security và kiểm tra timestamp để tránh xung đột dữ liệu.
 
 ---
 
@@ -40,7 +40,7 @@
 
 ---
 
-## Tech Stack & Quickstart
+## Tech Stack và Quickstart
 
 Chạy trực tiếp không cần build hay bundler với ES2022 Native Modules, CSS3, HTML5 Canvas, Service Worker và Supabase.
 
@@ -54,7 +54,7 @@ Mở trình duyệt tại `http://localhost:3000`.
 
 ---
 
-## Cấu hình Database & Self-Host
+## Cấu hình Database và Self-Host
 
 Chạy đoạn mã sau trong Supabase SQL Editor để khởi tạo bảng dữ liệu, chính sách RLS và các hàm hỗ trợ auth:
 
