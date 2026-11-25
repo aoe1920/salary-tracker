@@ -5523,14 +5523,36 @@ body.dark-mode .input-with-tag .tag {
     min-height: 34px !important;
   }
 
+  .profile-wp-rate-input-wrap {
+    flex: 1;
+    width: auto;
+    max-width: 155px;
+  }
+
   .profile-wp-rate-input {
-    height: 28px !important;
-    min-height: 28px !important;
+    height: 30px !important;
+    min-height: 30px !important;
+    padding: 0.15rem 2.35rem 0.15rem 0.55rem !important;
   }
 
   .profile-wp-edit-item {
-    height: 36px !important;
-    min-height: 36px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    height: auto !important;
+    min-height: auto !important;
+    padding: 0.45rem 0.6rem !important;
+    gap: 0.38rem !important;
+  }
+
+  .profile-wp-edit-left {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .profile-wp-edit-right {
+    width: 100%;
+    justify-content: space-between;
+    gap: 0.5rem;
   }
 
   .form-input,
