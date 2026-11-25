@@ -6,7 +6,7 @@
 
 **Quản lý ca làm thông minh, theo dõi thu nhập & xuất phiếu lương tức thì**
 
-Ứng dụng web tiến bộ (PWA) hoạt động ngoại tuyến (Offline-First) dành cho người đi làm thêm, freelancer và người làm nhiều nơi. Giúp ghi chép ca làm, tính giờ tăng ca (OT) chính xác và xuất phiếu lương chi tiết trong tích tắc.
+Ứng dụng PWA hoạt động offline-first dành cho người làm thêm, freelancer và nhân sự làm việc tại nhiều cơ sở. Hỗ trợ ghi chép ca làm việc, tính tiền làm thêm giờ chuẩn xác và xuất phiếu lương trong tích tắc.
 
 [![Live Demo](https://img.shields.io/badge/Demo-aoe1920.github.io%2Fsalary--tracker-3b82f6?style=flat-square&logo=googlechrome&logoColor=white)](https://aoe1920.github.io/salary-tracker/)
 [![Platform](https://img.shields.io/badge/Platform-PWA%20%7C%20iOS%20%7C%20Android%20%7C%20Desktop-6366f1?style=flat-square&logo=pwa&logoColor=white)](https://aoe1920.github.io/salary-tracker/)
@@ -26,24 +26,24 @@
 
 ## Tính năng nổi bật
 
-- **Tính giờ & tăng ca (OT) chuẩn xác:** Tự động phân loại ca (Sáng / Chiều / Tối), xử lý ca đêm qua ngày, khấu trừ giờ nghỉ, phụ cấp, giảm trừ và tính hệ số OT từ `1.5x` đến `3x`.
-- **Đa nơi làm việc & Chốt mức lương lịch sử:** Phân biệt nơi làm việc theo mã màu riêng biệt; lưu snapshot mức lương tại thời điểm tạo ca, giúp việc điều chỉnh lương tương lai không làm sai lệch thống kê các tuần trước đó.
-- **Phiếu lương HD & Xuất dữ liệu đa định dạng:** Kết xuất phiếu lương đồ họa sắc nét bằng HTML5 Canvas (tải ảnh PNG hoặc sao chép nhanh vào clipboard), xuất báo cáo bảng tính CSV (chuẩn UTF-8 BOM hiển thị chuẩn tiếng Việt trên Excel), hỗ trợ sao lưu và phục hồi toàn bộ dữ liệu qua JSON.
-- **Offline-First & Đồng bộ Cloud tức thì:** Phản hồi 0ms trên thiết bị với Service Worker và LocalStorage; tự động đồng bộ đám mây qua Supabase PostgreSQL kèm Row Level Security (RLS) bảo mật tuyệt đối và đối soát mốc thời gian để tránh xung đột dữ liệu.
+- **Tính giờ & OT chuẩn xác:** Tự động nhận diện ca sáng, chiều hoặc tối, xử lý trơn tru ca đêm qua ngày, khấu trừ giờ nghỉ, phụ cấp, giảm trừ và tính hệ số tăng ca từ 1.5x đến 3x.
+- **Quản lý nhiều nơi làm việc & Lưu snapshot lương:** Mỗi nơi làm việc có mã màu riêng biệt, tự động lưu snapshot mức lương tại thời điểm tạo ca để việc điều chỉnh lương sau này không làm thay đổi số liệu các tuần cũ.
+- **Xuất phiếu lương HD & Dữ liệu linh hoạt:** Tạo phiếu lương sắc nét bằng HTML5 Canvas để tải ảnh PNG hoặc copy nhanh vào clipboard. Hỗ trợ xuất file CSV chuẩn UTF-8 xem mượt mà trên Excel, kèm tính năng backup và khôi phục toàn bộ dữ liệu qua JSON.
+- **Offline-First & Cloud Sync:** Thao tác mượt mà với độ trễ 0ms nhờ Service Worker và LocalStorage. Tự động đồng bộ hai chiều lên Supabase PostgreSQL qua Row Level Security và kiểm tra timestamp để tránh xung đột dữ liệu.
 
 ---
 
-## Cài đặt như một ứng dụng (PWA)
+## Cài đặt PWA
 
-- **iOS (Safari):** Bấm biểu tượng **Chia sẻ (Share)** → Chọn **Thêm vào MH chính (Add to Home Screen)** → Bấm **Thêm (Add)**.
-- **Android (Chrome):** Bấm biểu tượng **Menu (⋮)** → Chọn **Cài đặt ứng dụng (Install app)**.
-- **Máy tính (Chrome / Edge):** Bấm biểu tượng **Cài đặt (Install)** ở thanh địa chỉ trình duyệt.
+- **iOS Safari:** Nhấn nút Share → chọn Add to Home Screen.
+- **Android Chrome:** Mở menu ba chấm → chọn Install app.
+- **Desktop Chrome / Edge:** Nhấn biểu tượng Install ngay trên thanh địa chỉ.
 
 ---
 
-## Công nghệ & Khởi chạy nhanh
+## Tech Stack & Quickstart
 
-Không phụ thuộc vào công cụ build hay bundler — ứng dụng chạy trực tiếp bằng **ES2022 Native Modules**, **CSS3**, **HTML5 Canvas**, **Service Worker** và **Supabase (PostgreSQL + GoTrue Auth + RLS)**.
+Chạy trực tiếp không cần build hay bundler với ES2022 Native Modules, CSS3, HTML5 Canvas, Service Worker và Supabase.
 
 ```bash
 git clone https://github.com/aoe1920/salary-tracker.git
@@ -55,9 +55,9 @@ Mở trình duyệt tại `http://localhost:3000`.
 
 ---
 
-## Thiết lập Cơ sở dữ liệu (Tự lưu trữ / Self-Host)
+## Cấu hình Database & Self-Host
 
-Chạy đoạn mã SQL sau trong Supabase SQL Editor để khởi tạo bảng dữ liệu, chính sách bảo mật Row Level Security và các hàm xác thực:
+Chạy đoạn mã sau trong Supabase SQL Editor để khởi tạo bảng dữ liệu, chính sách RLS và các hàm hỗ trợ auth:
 
 ```sql
 create table if not exists public.user_salary_data (
@@ -112,6 +112,6 @@ grant execute on function public.get_login_email(text) to anon, authenticated;
 
 ---
 
-## Bản quyền
+## License
 
-Phát hành theo giấy phép [MIT License](LICENSE).
+Dự án phát hành theo giấy phép [MIT License](LICENSE).
