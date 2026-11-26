@@ -5591,9 +5591,6 @@ body.dark-mode .app-dialog-backdrop {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  transform: scale3d(0.96, 0.96, 1) translate3d(0, 4px, 0);
-  opacity: 0;
-  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
@@ -5602,11 +5599,6 @@ body.dark-mode .modal-surface-dialog {
   background: #141724;
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 20px 48px -4px rgba(0, 0, 0, 0.7), 0 4px 14px rgba(0, 0, 0, 0.4);
-}
-
-.app-dialog-backdrop.open .modal-surface-dialog {
-  transform: scale3d(1, 1, 1) translate3d(0, 0, 0);
-  opacity: 1;
 }
 
 .modal-surface-dialog .modal-header,
@@ -5760,13 +5752,13 @@ body.dark-mode .app-dialog-detail-card {
 
 .modal-surface-dialog .modal-footer,
 .app-dialog-footer {
-  padding: 0.85rem 1.25rem !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
+  padding: 0.85rem 1.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
   border-top: 1px solid rgba(15, 23, 42, 0.12);
   background: #f8fafc;
-  gap: 0.65rem;
+  gap: 0.5rem;
   border-bottom-left-radius: var(--radius-lg);
   border-bottom-right-radius: var(--radius-lg);
 }
@@ -5778,7 +5770,7 @@ body.dark-mode .app-dialog-detail-card {
     margin: auto;
   }
   .app-dialog-footer {
-    padding: 0.65rem 1rem !important;
+    padding: 0.75rem 1rem;
   }
   .app-dialog-header {
     padding: 0.85rem 1rem;

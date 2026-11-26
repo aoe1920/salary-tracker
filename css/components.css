@@ -315,40 +315,40 @@ body.dark-mode .btn-morphic-danger:hover {
 }
 
 .btn-action-primary {
-  background: #2563eb;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.95) 0%, rgba(37, 99, 235, 0.95) 100%);
   color: #ffffff;
-  border: 1px solid #1d4ed8;
+  border: 1px solid rgba(255, 255, 255, 0.4);
   font-weight: 600;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
+  box-shadow: 0 6px 16px -2px rgba(37, 99, 235, 0.36), inset 0 1px 1.5px rgba(255, 255, 255, 0.6), inset 0 -1px 2px rgba(0, 0, 0, 0.16);
 }
 
 .btn-action-primary:hover {
-  background: #1d4ed8;
-  border-color: #1e40af;
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.98) 0%, rgba(37, 99, 235, 1) 100%);
+  border-color: rgba(255, 255, 255, 0.6);
   color: #ffffff;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 10px 22px -2px rgba(37, 99, 235, 0.48), inset 0 1px 1.5px rgba(255, 255, 255, 0.8);
 }
 
 .btn-action-primary.is-copied {
-  background: #10b981 !important;
-  border-color: #059669 !important;
-  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3) !important;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 6px 16px -2px rgba(16, 185, 129, 0.36), inset 0 1px 1.5px rgba(255, 255, 255, 0.6) !important;
   color: #ffffff !important;
   transform: scale(1.02) !important;
 }
 
 .btn-action-secondary {
-  background: #ffffff;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.95) 100%);
   color: var(--text-main);
   border: 1px solid rgba(203, 213, 225, 0.8);
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08), inset 0 1px 1.5px #ffffff, inset 0 -1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .btn-action-secondary:hover {
-  background: #f8fafc;
+  background: #ffffff;
   border-color: rgba(148, 163, 184, 0.9);
   color: var(--text-main);
-  box-shadow: 0 2px 5px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12), inset 0 1px 1.5px #ffffff;
 }
 
 .btn-action-primary:active,
@@ -372,7 +372,7 @@ body.dark-mode .btn-morphic-danger:hover {
 .avatar-choice-btn:active,
 .btn-logout-action:active,
 .segmented-btn-3d:active {
-  transform: scale(0.93) translateY(0) !important;
+  transform: scale(0.94) translateY(0) !important;
   transition-duration: 0.06s !important;
 }
 
@@ -388,18 +388,18 @@ body.dark-mode .btn-morphic-danger:hover {
 }
 
 .btn-action-danger {
-  background: #dc2626;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.92) 0%, rgba(220, 38, 38, 0.92) 100%);
   color: #ffffff;
-  border: 1px solid #b91c1c;
+  border: 1px solid rgba(255, 255, 255, 0.4);
   font-weight: 600;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
+  box-shadow: 0 6px 16px -2px rgba(239, 68, 68, 0.36), inset 0 1px 1.5px rgba(255, 255, 255, 0.6), inset 0 -1px 2px rgba(0, 0, 0, 0.16);
 }
 
 .btn-action-danger:hover {
-  background: #b91c1c;
-  border-color: #991b1b;
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.98) 0%, rgba(220, 38, 38, 1) 100%);
+  border-color: rgba(255, 255, 255, 0.6);
   color: #ffffff;
-  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.2);
+  box-shadow: 0 10px 22px -2px rgba(239, 68, 68, 0.48), inset 0 1px 1.5px rgba(255, 255, 255, 0.8);
 }
 
 .btn-action-primary svg,
@@ -436,52 +436,52 @@ body.dark-mode .btn-morphic-danger:hover {
 }
 
 body.dark-mode .btn-action-primary {
-  background: #2563eb;
-  border-color: #3b82f6;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.85) 0%, rgba(37, 99, 235, 0.92) 100%);
+  border-color: rgba(255, 255, 255, 0.25);
   color: #ffffff;
-  box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 6px 16px -2px rgba(37, 99, 235, 0.44), inset 0 1px 1.5px rgba(255, 255, 255, 0.4), inset 0 -1px 2px rgba(0, 0, 0, 0.25);
 }
 
 body.dark-mode .btn-action-primary:hover {
-  background: #3b82f6;
-  border-color: #60a5fa;
-  box-shadow: 0 3px 8px -1px rgba(0, 0, 0, 0.45);
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.92) 0%, rgba(37, 99, 235, 0.98) 100%);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 10px 22px -2px rgba(37, 99, 235, 0.56), inset 0 1px 1.5px rgba(255, 255, 255, 0.58);
 }
 
 body.dark-mode .btn-action-primary.is-copied {
-  background: #059669 !important;
-  border-color: #10b981 !important;
-  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35) !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.9) 0%, rgba(5, 150, 105, 0.96) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.42), inset 0 1px 1.5px rgba(255, 255, 255, 0.45) !important;
   color: #ffffff !important;
   transform: scale(1.02) !important;
 }
 
 body.dark-mode .btn-action-secondary {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.12);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.04) 100%);
+  border-color: rgba(255, 255, 255, 0.16);
   color: #f1f5f9;
-  box-shadow: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.14);
 }
 
 body.dark-mode .btn-action-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.08) 100%);
+  border-color: rgba(255, 255, 255, 0.26);
   color: #ffffff;
-  box-shadow: none;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.36), inset 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
 body.dark-mode .btn-action-danger {
-  background: #dc2626;
-  border-color: #ef4444;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.84) 0%, rgba(220, 38, 38, 0.9) 100%);
+  border-color: rgba(255, 255, 255, 0.24);
   color: #ffffff;
-  box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 6px 16px -2px rgba(239, 68, 68, 0.4), inset 0 1px 1.5px rgba(255, 255, 255, 0.36), inset 0 -1px 2px rgba(0, 0, 0, 0.25);
 }
 
 body.dark-mode .btn-action-danger:hover {
-  background: #ef4444;
-  border-color: #f87171;
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.92) 0%, rgba(220, 38, 38, 0.98) 100%);
+  border-color: rgba(255, 255, 255, 0.42);
   color: #ffffff;
-  box-shadow: 0 3px 8px -1px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 10px 22px -2px rgba(239, 68, 68, 0.52), inset 0 1px 1.5px rgba(255, 255, 255, 0.5);
 }
 
 .dashboard-hero-header {

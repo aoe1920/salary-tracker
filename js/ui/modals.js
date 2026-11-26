@@ -878,7 +878,7 @@ export const renderMonthlyReport = () => {
   });
 };
 
-export const switchSummaryTab = (tab) => {
+export const switchSummaryTab = (tab, skipStretch = false) => {
   const btnAnalytics = document.getElementById('tabBtnSummaryAnalytics');
   const btnTable = document.getElementById('tabBtnSummaryTable');
   const btnMonthly = document.getElementById('tabBtnSummaryMonthly');
@@ -905,10 +905,12 @@ export const switchSummaryTab = (tab) => {
   const navBar = document.querySelector('.summary-tab-nav');
   if (navBar) {
     requestAnimationFrame(() => {
-      syncSlimeGlider(navBar, false);
+      syncSlimeGlider(navBar, skipStretch);
     });
   }
-  triggerModalLiquidStretch(document.getElementById('allWeeksModal'));
+  if (!skipStretch) {
+    triggerModalLiquidStretch(document.getElementById('allWeeksModal'));
+  }
 };
 
 export const openAllWeeksModal = (initialTab = 'analytics') => {
@@ -1031,7 +1033,7 @@ export const openAllWeeksModal = (initialTab = 'analytics') => {
   if (elAvgWeek) elAvgWeek.textContent = fmtCurrency(state.weeks.length > 0 ? totalEarnings / state.weeks.length : 0);
 
   document.getElementById('allWeeksModal').style.display = 'flex';
-  switchSummaryTab(initialTab);
+  switchSummaryTab(initialTab, true);
   requestAnimationFrame(() => {
     const navBar = document.querySelector('.summary-tab-nav');
     if (navBar) syncSlimeGlider(navBar, true);
@@ -1044,7 +1046,7 @@ export const openAuthModal = (defaultTab = 'login') => {
   const modal = document.getElementById('authModal');
   if (!modal) return;
 
-  switchAuthTab(defaultTab);
+  switchAuthTab(defaultTab, true);
   clearAuthErrors();
   modal.style.display = 'flex';
   requestAnimationFrame(() => {
@@ -1071,7 +1073,7 @@ export const openResetPasswordModal = () => {
   }, 100);
 };
 
-export const switchAuthTab = (tab) => {
+export const switchAuthTab = (tab, skipStretch = false) => {
   const btnLogin = document.getElementById('tabBtnLogin');
   const btnRegister = document.getElementById('tabBtnRegister');
   const formLogin = document.getElementById('formLogin');
@@ -1116,10 +1118,12 @@ export const switchAuthTab = (tab) => {
   const tabsRowEl = document.querySelector('.auth-tabs-row');
   if (tabsRowEl && tabsRowEl.style.display !== 'none') {
     requestAnimationFrame(() => {
-      syncSlimeGlider(tabsRowEl, false);
+      syncSlimeGlider(tabsRowEl, skipStretch);
     });
   }
-  triggerModalLiquidStretch(document.getElementById('authModal'));
+  if (!skipStretch) {
+    triggerModalLiquidStretch(document.getElementById('authModal'));
+  }
 };
 
 export const clearAuthErrors = () => {
@@ -2207,7 +2211,10 @@ export const setupPasswordToggles = () => {
 
 export const closeModal = (modalId) => {
   const modal = document.getElementById(modalId);
-  if (modal) modal.style.display = 'none';
+  if (modal) {
+    modal.style.display = 'none';
+    modal.querySelector('.modal-surface')?.classList.remove('modal-liquid-stretch');
+  }
   if (modalId === 'userProfileModal') {
     collapseAvatarPicker();
     collapsePasswordSection();
@@ -2223,7 +2230,6 @@ export const openLegalModal = (targetTab = 'terms') => {
   const modal = document.getElementById('legalModal');
   if (!modal) return;
   modal.style.display = 'flex';
-  triggerModalLiquidStretch(modal);
 
   const tabTerms = document.getElementById('tabLegalTerms');
   const tabPrivacy = document.getElementById('tabLegalPrivacy');

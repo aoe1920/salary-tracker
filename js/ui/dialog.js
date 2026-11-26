@@ -27,11 +27,7 @@ const closeDialog = (result) => {
   const modal = document.getElementById('appDialogModal');
   if (modal) {
     modal.classList.remove('open');
-    setTimeout(() => {
-      if (!modal.classList.contains('open')) {
-        modal.style.display = 'none';
-      }
-    }, 180);
+    modal.style.display = 'none';
   }
 
   if (activeDialogResolve) {

@@ -222,6 +222,7 @@ const onWheelTrackScroll = () => {
 };
 
 const renderWeekPills = () => {
+  clearTimeout(wheelScrollEndTimer);
   const container = document.getElementById('weekPillsList');
   if (!container) return;
   container.innerHTML = '';

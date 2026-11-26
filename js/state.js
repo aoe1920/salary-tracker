@@ -120,3 +120,17 @@ export const getCurrentWeek = () => {
   return state.weeks.find(w => w.id === state.currentWeekId) || getLatestWeek() || state.weeks[state.weeks.length - 1];
 };
 
+export const selectLatestWeek = () => {
+  if (!state.weeks || !Array.isArray(state.weeks) || state.weeks.length === 0) {
+    return null;
+  }
+  const latest = getLatestWeek() || state.weeks[state.weeks.length - 1];
+  if (latest) {
+    state.currentWeekId = latest.id;
+    try {
+      localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
+    } catch (_) {}
+  }
+  return latest;
+};
+

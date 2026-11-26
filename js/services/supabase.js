@@ -1,5 +1,5 @@
 import { SUPABASE_URL, SUPABASE_ANON_KEY, GUEST_DEFAULT_DATA, GUEST_WEEKS_KEY, GUEST_SETTINGS_KEY, LOCAL_CACHE_WEEKS_KEY, LOCAL_CACHE_SETTINGS_KEY, PENDING_SYNC_KEY } from '../config.js';
-import { state, getWeeksStorageKey, getSettingsStorageKey, normalizeWorkplacesAndRates, getLatestWeek } from '../state.js';
+import { state, getWeeksStorageKey, getSettingsStorageKey, normalizeWorkplacesAndRates, getLatestWeek, selectLatestWeek } from '../state.js';
 import { t } from '../i18n.js';
 import { ensureWeekStartDate, syncShiftsTypeConsistency, getMondayDate } from '../calculator.js';
 import { showToast } from '../ui/toast.js';
@@ -1253,6 +1253,7 @@ export const restoreCachedStateSync = () => {
   } catch (_) {}
 };
 
+let isManualLoginInFlight = false;
 let authStateListenerInitialized = false;
 export const initAuthStateListener = () => {
   if (authStateListenerInitialized || !supabaseClient) return;
@@ -1260,6 +1261,46 @@ export const initAuthStateListener = () => {
   supabaseClient.auth.onAuthStateChange(async (event, session) => {
     if (event === 'PASSWORD_RECOVERY') {
       window.dispatchEvent(new CustomEvent('app:auth-recovery', { detail: { session } }));
+      return;
+    }
+    if (event === 'SIGNED_IN' && !isManualLoginInFlight && session?.user) {
+      const isNewSessionUser = !state.currentUser || state.currentUser.id !== session.user.id;
+      if (!isNewSessionUser) return;
+      const u = session.user;
+      const username = getCleanUsername(u);
+      if (!state.settings) state.settings = {};
+      if (u.user_metadata?.avatar) {
+        state.settings.avatar = u.user_metadata.avatar;
+      }
+      const activeAvatar = state.settings.avatar || u.user_metadata?.avatar || 'default';
+      state.currentUser = {
+        id: u.id,
+        email: u.email,
+        username,
+        identities: u.identities,
+        app_metadata: u.app_metadata,
+        user_metadata: u.user_metadata,
+        avatar: activeAvatar
+      };
+      if (u.email) {
+        setLocalEmailForUsername(username, u.email);
+      }
+      try {
+        localStorage.setItem('salary_tracker_cached_user', JSON.stringify({
+          id: u.id,
+          email: u.email,
+          username,
+          avatar: activeAvatar
+        }));
+        localStorage.removeItem(GUEST_WEEKS_KEY);
+        localStorage.removeItem(GUEST_SETTINGS_KEY);
+        localStorage.removeItem('salary_tracker_vault_backup');
+      } catch (_) {}
+      await loadState();
+      selectLatestWeek();
+      updateHeaderAuthUI();
+      updateSyncStatusUI();
+      triggerAppRender();
     }
   });
 };
@@ -1485,6 +1526,7 @@ export const handleLoginSubmit = async (e) => {
 
   const submitBtn = document.getElementById('btnFormLoginSubmit');
   if (submitBtn) submitBtn.disabled = true;
+  isManualLoginInFlight = true;
 
   try {
     let cleanInput = rawInput.trim();
@@ -1567,49 +1609,36 @@ export const handleLoginSubmit = async (e) => {
       localStorage.removeItem('salary_tracker_vault_backup');
     } catch (_) {}
 
+    const closeAuthModalCleanly = () => {
+      const authModal = document.getElementById('authModal');
+      if (authModal) {
+        authModal.style.display = 'none';
+        authModal.querySelector('.modal-surface')?.classList.remove('modal-liquid-stretch');
+      }
+      document.getElementById('formLogin')?.reset();
+    };
+
     const hasUserCache = Boolean(localStorage.getItem(getWeeksStorageKey()));
     if (hasUserCache) {
       restoreCachedStateSync();
       if (state.settings && (!state.settings.avatar || state.settings.avatar === 'default')) {
         state.settings.avatar = activeAvatar;
       }
-      if (state.weeks && state.weeks.length > 0) {
-        const latest = getLatestWeek() || state.weeks[state.weeks.length - 1];
-        if (latest) {
-          state.currentWeekId = latest.id;
-          localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
-        }
-      }
-      const cachedWeeksStr = JSON.stringify(state.weeks);
-      const cachedSettingsStr = JSON.stringify(state.settings);
-      document.getElementById('authModal').style.display = 'none';
-      document.getElementById('formLogin').reset();
+      selectLatestWeek();
+      closeAuthModalCleanly();
       updateHeaderAuthUI();
       updateSyncStatusUI();
       triggerAppRender();
       showToast(t('auth_login_success', 'Đăng nhập thành công. Chào @{username}.').replace('{username}', username));
       loadState().then(() => {
-        if (state.weeks && state.weeks.length > 0) {
-          const latestAfter = getLatestWeek() || state.weeks[state.weeks.length - 1];
-          if (latestAfter) {
-            state.currentWeekId = latestAfter.id;
-            localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
-          }
-        }
+        selectLatestWeek();
         triggerAppRender();
         updateSyncStatusUI();
       }).catch(() => {});
     } else {
       await loadState();
-      if (state.weeks && state.weeks.length > 0) {
-        const latest = getLatestWeek() || state.weeks[state.weeks.length - 1];
-        if (latest) {
-          state.currentWeekId = latest.id;
-          localStorage.setItem('salary_tracker_current_week', state.currentWeekId);
-        }
-      }
-      document.getElementById('authModal').style.display = 'none';
-      document.getElementById('formLogin').reset();
+      selectLatestWeek();
+      closeAuthModalCleanly();
       updateHeaderAuthUI();
       updateSyncStatusUI();
       triggerAppRender();
@@ -1619,6 +1648,7 @@ export const handleLoginSubmit = async (e) => {
     errorEl.textContent = `${t('auth_err_conn_prefix', 'Lỗi kết nối: ')}${err.message}`;
     errorEl.style.display = 'block';
   } finally {
+    isManualLoginInFlight = false;
     if (submitBtn) submitBtn.disabled = false;
   }
 };
