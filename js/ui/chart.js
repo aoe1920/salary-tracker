@@ -538,7 +538,7 @@ export const initTimelineInteractions = () => {
   let momentumAnimId = null;
 
   wrap.addEventListener('pointerdown', (e) => {
-    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    if (e.pointerType !== 'mouse' || e.button !== 0) return;
     if (analyticsState.timeFilter === 'recent' || wrap.scrollWidth <= wrap.clientWidth + 4) return;
     isPointerDown = true;
     startX = e.clientX;
@@ -552,7 +552,7 @@ export const initTimelineInteractions = () => {
   });
 
   window.addEventListener('pointermove', (e) => {
-    if (!isPointerDown || analyticsState.timeFilter === 'recent') return;
+    if (!isPointerDown || e.pointerType !== 'mouse' || analyticsState.timeFilter === 'recent') return;
     const deltaX = e.clientX - startX;
     wrap.scrollLeft = scrollStart - deltaX;
     const now = performance.now();

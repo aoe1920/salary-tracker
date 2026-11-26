@@ -150,6 +150,7 @@
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
+  touch-action: pan-y;
   position: relative;
 }
 
@@ -376,6 +377,9 @@ select option {
   padding: 0.35rem;
   max-height: 240px;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-6px) scale(0.98);
@@ -674,6 +678,9 @@ body.dark-mode .calc-val#previewSalary {
 
 .table-container {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x pan-y;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -1952,6 +1959,9 @@ body.dark-mode .legal-tab-btn.active {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
   padding-right: 0.35rem;
   scrollbar-width: thin;
   scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
@@ -2201,6 +2211,7 @@ body.dark-mode .btn-submit-action:hover {
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
+  touch-action: pan-y;
   padding-bottom: 0.5rem;
 }
 
@@ -2789,7 +2800,9 @@ body.dark-mode .profile-wp-add-btn:hover {
   max-height: 115px;
   overflow-y: auto;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
+  touch-action: pan-y;
   padding-right: 2px;
 }
 
@@ -3071,7 +3084,9 @@ body.dark-mode .profile-wp-rename-input {
   max-height: 80px;
   overflow-y: auto;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
+  touch-action: pan-y;
   padding-right: 2px;
 }
 
@@ -3609,7 +3624,8 @@ body.dark-mode .btn-logout-action {
     padding: 0 10px;
     height: 100%;
     gap: 20px;
-    touch-action: pan-x;
+    touch-action: pan-x pan-y;
+    scroll-snap-type: x proximity;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-x: contain;
     border-radius: var(--radius-pill);
@@ -3625,7 +3641,7 @@ body.dark-mode .btn-logout-action {
     box-sizing: border-box;
     scroll-snap-align: center;
     scroll-snap-stop: normal;
-    touch-action: pan-x;
+    touch-action: pan-x pan-y;
   }
 
   .week-wheel-item .wheel-item-name {
@@ -3986,6 +4002,9 @@ body.dark-mode .shift-add-wp-card {
   gap: 0.45rem;
   max-height: 270px;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
   padding-right: 2px;
 }
 
@@ -4683,7 +4702,7 @@ body.dark-mode .stats-summary-kpis {
 
 .stats-canvas-wrap.can-scroll {
   overflow-x: auto;
-  touch-action: pan-x;
+  touch-action: pan-x pan-y;
   cursor: grab;
 }
 
